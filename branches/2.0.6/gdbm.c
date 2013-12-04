@@ -309,6 +309,9 @@ int disk_freeze(data)
     return(-1);
   }
 
+  /* all done! */
+  DSC_FLAG2(main_index[obj]) &= ~IN_MEMORY;
+
   return(0);
 }
 
