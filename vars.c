@@ -1,0 +1,283 @@
+/* vars.c */
+
+#include "config.h"
+
+/*
+ *		       This file is part of TeenyMUD II.
+ *		 Copyright(C) 1993, 1994, 1995 by Jason Downs.
+ *                           All rights reserved.
+ * 
+ * TeenyMUD II is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * TeenyMUD II is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program (see the file 'COPYING'); if not, write to
+ * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+ * USA.
+ *
+ */
+
+/* AIX requires this to be the first thing in the file. */
+#ifdef __GNUC__
+#define alloca	__builtin_alloca
+#else	/* not __GNUC__ */
+#ifdef HAVE_ALLOCA_H
+#include <alloca.h>
+#else	/* not HAVE_ALLOCA_H */
+#ifdef _AIX
+ #pragma alloca
+#endif	/* not _AIX */
+#endif	/* not HAVE_ALLOCA_H */
+#endif 	/* not __GNUC__ */
+
+#include <stdio.h>
+#include <sys/types.h>
+#ifdef HAVE_STRING_H
+#include <string.h>
+#else
+#include <strings.h>
+#endif			/* HAVE_STRING_H */
+#include <ctype.h>
+
+#include "conf.h"
+#include "teeny.h"
+#include "externs.h"
+
+#include "hash/hash.h"
+
+/* 'variable' handlers / 'list' creation and handlers */
+
+static int Var_Inited = 0;
+static Hash_Table Var_Table;
+
+char *var_get(owner, key)
+    int owner;
+    char *key;
+{
+  char sbuff[32], *buff;
+  register Hash_Entry *entry;
+
+  if((key == (char *)NULL) || (key[0] == '\0'))
+    return((char *)NULL);
+
+  if(!Var_Inited)
+    return((char *)NULL);
+
+  snprintf(sbuff, sizeof(sbuff), "%d-", owner);
+  buff = (char *)alloca(strlen(sbuff) + strlen(key) + 1);
+  if(buff == (char *)NULL)
+    panic("var_get: stack allocation failed.\n");
+  strcpy(buff, sbuff);
+  strcat(buff, key);
+
+  entry = Hash_FindEntry(&Var_Table, buff);
+  if(entry == (Hash_Entry *)NULL)
+    return((char *)NULL);
+  return((char *)Hash_GetValue(entry));
+}
+
+void var_delete(owner, key)
+    int owner;
+    char *key;
+{
+  char sbuff[32], *buff;
+  register Hash_Entry *entry;
+
+  if((key == (char *)NULL) || (key[0] == '\0'))
+    return;
+
+  if(!Var_Inited)
+    return;
+
+  snprintf(sbuff, sizeof(sbuff), "%d-", owner);
+  buff = (char *)alloca(strlen(sbuff) + strlen(key) + 1);
+  if(buff == (char *)NULL)
+    panic("var_get: stack allocation failed.\n");
+  strcpy(buff, sbuff);
+  strcat(buff, key);
+
+  entry = Hash_FindEntry(&Var_Table, buff);
+  if(entry == (Hash_Entry *)NULL)
+    return;
+  ty_free((VOID *)Hash_GetValue(entry));
+  Hash_DeleteEntry(&Var_Table, entry);
+}
+
+void var_set(owner, key, value)
+    int owner;
+    char *key, *value;
+{
+  char sbuff[32], *buff;
+  register Hash_Entry *entry;
+  int new;
+
+  if((key == (char *)NULL) || (key[0] == '\0')
+     || (value == (char *)NULL) || (value[0] == '\0'))
+    return;
+
+  if(!Var_Inited) {
+    Hash_InitTable(&Var_Table, 0, HASH_STRING_KEYS);
+    Var_Inited = 1;
+  }
+
+  snprintf(sbuff, sizeof(sbuff), "%d-", owner);
+  buff = (char *)alloca(strlen(sbuff) + strlen(key) + 1);
+  if(buff == (char *)NULL)
+    panic("var_set: stack allocation failed.\n");
+  strcpy(buff, sbuff);
+  strcat(buff, key);
+
+  entry = Hash_CreateEntry(&Var_Table, buff, &new);
+  if(!new)
+    ty_free((VOID *)Hash_GetValue(entry));
+  Hash_SetValue(entry, (char *)ty_strdup(value, "var_set.value"));
+}
+
+/* add an element to a list, doing proper quoting and all. */
+
+static char slist_ret[BUFFSIZ];	/* elem size limit */
+
+void slist_add(elem, buffer, bufsiz)
+    char *elem, *buffer;
+    int bufsiz;
+{
+  int quote = 0;
+  int first = 0;
+  register char *ptr, *bptr;
+
+  if((elem == (char *)NULL) || (buffer == (char *)NULL))
+    return;
+
+  /* is the buffer empty? */
+  if((buffer[0] == '\0') && bufsiz) {
+    strcpy(buffer, "{}");
+    first++;
+  } else if((buffer[0] == '{') && (buffer[1] == '}')) {
+    first++;
+  }
+  bufsiz -= strlen(buffer);
+  if(bufsiz <= 0)
+    return;
+
+  /* should we quote it? */
+  ptr = elem;
+  while(*ptr != '\0') {
+    if(isspace(*ptr))
+      quote++;
+
+    ptr++;
+  }
+
+  /* add as much of the element in as we can. */
+  bptr = &buffer[strlen(buffer)-1];	/* remove trailing brace */
+  ptr = elem;
+
+  /* insert any leading space and any needing quote. */
+  if(!first) {
+    *bptr++ = ' ';
+    bufsiz--;
+  }
+  if(quote) {
+    *bptr++ = '\"';
+    bufsiz--;
+  }
+
+  while((*ptr != '\0') && (bufsiz > 2)
+	 && ((ptr - elem) < sizeof(slist_ret))) {
+    if((*ptr == '\"') || (*ptr == '{') || (*ptr == '}')
+       || (*ptr == '[') || (*ptr == ']')) {
+      *bptr++ = '\\';
+      bufsiz--;
+    }
+    *bptr++ = *ptr++;
+    bufsiz--;
+  }
+  if(quote) {
+    *bptr++ = '\"';
+    bufsiz--;
+  }
+  *bptr++ = '}';
+  *bptr = '\0';
+}
+
+/* return the next (or first) element of a list. */
+char *slist_next(list, nptr)
+    char *list, **nptr;
+{
+  register char *ptr, *bptr;
+
+  if(list == (char *)NULL)
+    return((char *)NULL);
+  if(*nptr == (char *)NULL) {
+    for(ptr = list; (*ptr != '\0') &&
+	((*ptr == '{') || isspace(*ptr)); ptr++);
+    if(*ptr == '\0')
+      return((char *)NULL);
+  } else
+    ptr = *nptr;
+
+  if((*ptr == '\0') || (*ptr == '}'))
+    return((char *)NULL);
+
+  while((*ptr != '\0') && isspace(*ptr))
+    ptr++;
+  if(*ptr == '\0')
+    return((char *)NULL);
+
+  bptr = slist_ret;
+  if(*ptr == '\"') {	/* quoted element */
+    /* eat leading quote. */
+    ptr++;
+
+    while((*ptr != '\0') && (*ptr != '\"') && (*ptr != '}')
+    	  && ((bptr - slist_ret) < sizeof(slist_ret))) {
+      if(*ptr == '\\') {
+        ptr++;
+
+	if(*ptr != '\0')
+	  *bptr++ = *ptr++;
+      } else
+        *bptr++ = *ptr++;
+    }
+
+    if((bptr - slist_ret) >= sizeof(slist_ret)) {
+      /* try to find the end of this element */
+      while((*ptr != '\0') && (*ptr != '\"') && (ptr[-1] != '\\'))
+	ptr++;
+    }
+
+    /* find the beginning of the next element. */
+    if(*ptr == '\"')
+      ptr++;
+    while((*ptr != '\0') && (*ptr != '\"') && isspace(*ptr))
+      ptr++;
+  } else {
+    while((*ptr != '\0') && !isspace(*ptr) && (*ptr != '}')
+	  && ((bptr - slist_ret) < sizeof(slist_ret))) {
+      if(*ptr == '\\') {
+        ptr++;
+
+        if(*ptr != '\0')
+	  *bptr++ = *ptr++;
+      } else
+        *bptr++ = *ptr++;
+    }
+
+    if((bptr - slist_ret) >= sizeof(slist_ret)) {
+      /* try to find the end of this element */
+      while((*ptr != '\0') && !isspace(*ptr) && (ptr[-1] != '\\'))
+	ptr++;
+    }
+  }
+  *bptr = '\0';
+
+  *nptr = ptr; /* point at terminating quote or space! */
+  return(slist_ret);
+}
