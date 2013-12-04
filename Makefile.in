@@ -1,0 +1,290 @@
+# TeenyMUD 2.0 Makefile
+#
+#		       This file is part of TeenyMUD II.
+#	    Copyright(C) 1995 by Jason Downs.  All rights reserved.
+# 
+# TeenyMUD II is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# TeenyMUD II is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (see the file 'COPYING'); if not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+SHELL=  /bin/sh
+INCLUDE=        -I. -I${srcdir}
+
+CC=	@CC@
+YACC=	@YACC@
+RANLIB=	@RANLIB@
+
+# Place any extra compiler flags here.
+#
+# This is what I use, with gcc 2.7.x:
+# COPTS= @CFLAGS@ -Wall
+COPTS= @CFLAGS@
+
+# Link options (NOT libraries) go here.
+LDFLAGS= @LDFLAGS@
+
+# If your make doesn't set MAKE, set it below.
+@SET_MAKE@
+
+# Set this to & to do parallel makes on a Sequent.
+P=
+
+# Choose your database library.
+#
+# GNU dbm
+GDBMSRC= gdbm.c
+GDBMOBJ= gdbm.o
+GDBMDEF= -DUSE_GDBM
+GDBMLIB= -lgdbm
+# 4.4BSD db library
+BDBMSRC= bsddbm.c
+BDBMOBJ= bsddbm.o
+BDBMDEF= -DUSE_BSDDBM
+BDBMLIB= -ldb
+
+DBMSRC=	@dbm_src@
+DBMOBJ=	@dbm_obj@
+DBMDEF=	@dbm_def@
+DBMLIB= @dbm_lib@
+
+# The termcap library.  Could be -ltermcap on BSD, -ltermlib on POSIX,
+# or even -lcurses on older SYSV and such.
+TERMCAP= @termlib@
+
+# Add an extra libraries you might need, here.
+#EXTRALIB= -lgnumalloc
+
+MUDSRC= act.c attrutils.c boolexp.c buildcmds.c commands.c conf.c dbcmds.c \
+	dbutils.c display.c fcache.c getdate.c group.c help.c interface.c \
+	lockout.c look.c main.c match.c money.c move.c notify.c parse.c \
+	prims.c queue.c recycle.c set.c speech.c tcpip.c utils.c vars.c \
+	wild.c wiz.c version.c
+MUDOBJ=	act.o attrutils.o boolexp.o buildcmds.o commands.o conf.o dbcmds.o \
+	dbutils.o display.o fcache.o getdate.o group.o help.o interface.o \
+	lockout.o look.o main.o match.o money.o move.o notify.o parse.o \
+	prims.o queue.o recycle.o set.o speech.o tcpip.o utils.o vars.o \
+	wild.o wiz.o version.o
+CNVSRC=	convertdb.c textdb.c textin.c textout.c
+CNVOBJ= convertdb.o textdb.o textin.o textout.o
+SANSRC= sanity.c
+SANOBJ= sanity.o
+TDBSRC=	teenydbm.c
+TDBOBJ=	teenydbm.o
+DBSRC=	globals.c cache.c db.c ptable.c attributes.c boolutils.c
+DBOBJ=	globals.o cache.o db.o ptable.o attributes.o boolutils.o ${DBMOBJ}
+DDBOBJ=	dbconf.o
+MSCSRC=	log.c misc.c
+MSCOBJ= log.o misc.o
+
+SRCS=	${MUDSRC} ${CNVSRC} ${SANSRC} ${DBSRC} ${MSCSRC} ${GDBMSRC} \
+		${BDBMSRC}
+
+HDRS=	attrs.h autoconf.h commands.h conf.h config.h conn.h externs.h \
+	fcache.h flaglist.h prims.h ptable.h teeny.h teenydb.h textdb.h \
+	hash/hash.h sha/sha_wrap.h gnu/getopt.h
+
+LIBS=	gnu/gnu.a hash/hash.a sha/sha.a ${DBMLIB} @LIBS@ compat/compat.a \
+		${EXTRALIB}
+
+CFLAGS=	${COPTS} ${INCLUDE} ${DBMDEF}
+LFLAGS= -abchnux ${INCLUDE} ${DBMDEF}
+
+# sanity doesn't work, teenydbm is under development
+all: teenymud convertdb
+
+# Subdirs
+compat.a:
+	@cd compat;${MAKE} COPTS="${COPTS}" P="${P}" compat.a;cd ..
+
+hash.a:
+	@cd hash;${MAKE} COPTS="${COPTS}" P="${P}" hash.a;cd ..
+
+sha.a:
+	@cd sha;${MAKE} COPTS="${COPTS}" P="${P}" sha.a;cd ..
+
+gnu.a:
+	@cd gnu;${MAKE} COPTS="${COPTS}" P="${P}" gnu.a;cd ..
+
+readline.a:
+	@cd readline;${MAKE} COPTS="${COPTS}" P="${P}" readline.a;cd ..
+
+# Special targets
+getdate.c: ${srcdir}/getdate.y
+	@echo "Expect 10 shift/reduce conflicts."
+	${YACC} ${srcdir}/getdate.y
+	@rm -f getdate.c
+	@mv y.tab.c getdate.c
+
+dbconf.o: ${srcdir}/conf.c
+# (Old compilers like to barf at both -c and -o options.)
+	-@ln ${srcdir}/conf.c dbconf.c
+	${CC} ${CFLAGS} -c -DINTERNAL dbconf.c
+	-@rm dbconf.c
+
+# And the binaries...
+teenymud: ${P} compat.a hash.a sha.a gnu.a ${MUDOBJ} ${DBOBJ} ${MSCOBJ}
+	${CC} ${CFLAGS} ${MUDOBJ} ${DBOBJ} ${MSCOBJ} -o teenymud ${LIBS} ${LDFLAGS}
+
+convertdb: ${P} compat.a hash.a gnu.a ${CNVOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ}
+	${CC} ${CFLAGS} ${CNVOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ} -o convertdb ${LIBS} ${LDFLAGS}
+
+teenydbm: ${P} compat.a hash.a gnu.a readline.a ${TDBOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ}
+	${CC} ${CFLAGS} ${TDBOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ} -o teenydbm hash/hash.a readline/readline.a gnu/gnu.a ${DBMLIB} compat/compat.a ${TERMCAP} ${LDFLAGS}
+
+sanity: ${P} compat.a hash.a ${SANOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ}
+	${CC} ${CFLAGS} ${SANOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ} -o sanity ${LIBS} ${LDFLAGS}
+
+install:
+	@echo "You don't `install' this package automatically."
+
+clean:
+	cd compat;${MAKE} clean;cd ..
+	cd hash;${MAKE} clean;cd ..
+	cd sha;${MAKE} clean;cd ..
+	cd gnu;${MAKE} clean;cd ..
+#	-cd readline;${MAKE} clean; cd ..
+	-rm -f *.o teenymud convertdb sanity teenydbm
+
+real-clean:
+	cd compat;${MAKE} real-clean;cd ..
+	cd hash;${MAKE} real-clean;cd ..
+	cd sha;${MAKE} real-clean;cd ..
+	cd gnu;${MAKE} real-clean;cd ..
+#	-cd readline;${MAKE} real-clean;cd ..
+	-rm -r *.o teenymud convertdb sanity teenydbm Makefile autoconf.h \
+	config.status config.log config.cache getdate.c buildnum
+
+# I don't know when the last time the lint rules actually worked was...
+teenymud-lint:
+	lint ${LFLAGS} ${MUDSRC} ${DBSRC} ${MSCSRC}
+
+convertdb-lint:
+	lint ${LFLAGS} ${CNVSRC} ${DBSRC} ${MSCSRC}
+
+teenydbm-list:
+	list ${LFLAGS} ${CNVSRC} ${DBSRC} ${MSCSRC}
+
+sanity-lint:
+	lint ${LFLAGS} ${SANSRC} ${DBSRC} ${MSCSRC}
+
+lint: teenymud-lint convertdb-lint
+
+# Target to check #include dependencies for circular references.
+# Prints the circularity, if any, on stderr; exits if num lines of
+# circularity > 0.  This assumes your 'make' uses "sh", not "csh".
+#
+# Posted to USENET by:
+# Mike McGaughey                  AARNET: mmcg@bruce.cs.monash.edu.au
+#
+
+depcheck:
+	@echo "Checking for cycles in #include dependencies"
+	-@rm -f depcheck_list
+	@grep '^#[ 	]*include' ${SRCS} ${HDRS} |\
+	grep -v '<' | \
+	sed 's,:[^"]*"\([^"]*\)".*, \1,' | \
+	tsort > /dev/null 2> depcheck_list
+	@cat depcheck_list
+	@(dcn=`wc -l depcheck_list`; rm -f depcheck_list; exit $$dcn)
+
+# Target to reassemble #include dependencies.
+# I didn't write this - who did?
+
+depend: depcheck
+	@echo "Assembling dependency lists"
+	@grep '^#[ 	]*include' ${SRCS} ${HDRS} |\
+	grep -v '<' | \
+	sed 's,:[^"]*"\([^"]*\)".*,: \1,' | \
+	sed 's/\.[cly]/.o/' | \
+	awk ' { if ($$1 != prev) { print rec; rec = $$0; prev = $$1; } \
+		else { if (length(rec $$2) > 78) { print rec; rec = $$0; } \
+		       else rec = rec " " $$2 } } \
+	      END { print rec } ' > makedep
+	@echo '/^# DO NOT DELETE THIS LINE/+1,$$d' >eddep
+	@echo '$$r makedep' >>eddep
+	@echo 'w' >>eddep
+	@cp Makefile.in Makefile.bak
+	@ed - Makefile.in < eddep
+	@rm eddep makedep
+
+# DO NOT DELETE THIS LINE -- make depend requires it.
+
+act.o: config.h conf.h teeny.h externs.h
+attrutils.o: config.h conf.h teeny.h attrs.h externs.h
+boolexp.o: config.h conf.h teeny.h flaglist.h externs.h
+buildcmds.o: config.h conf.h teeny.h commands.h ptable.h sha/sha_wrap.h
+buildcmds.o: externs.h
+commands.o: config.h conf.h teeny.h commands.h externs.h hash/hash.h
+conf.o: config.h conf.h teeny.h commands.h externs.h hash/hash.h
+dbcmds.o: config.h conf.h teeny.h commands.h teenydb.h externs.h
+dbutils.o: config.h conf.h teeny.h commands.h teenydb.h externs.h
+display.o: config.h conf.h teeny.h flaglist.h attrs.h externs.h
+fcache.o: config.h conf.h fcache.h teeny.h externs.h hash/hash.h
+getdate.o: config.h
+group.o: config.h conf.h teeny.h commands.h externs.h
+help.o: config.h conf.h teeny.h commands.h externs.h hash/hash.h
+interface.o: config.h conf.h teeny.h commands.h fcache.h conn.h externs.h
+lockout.o: config.h conf.h teeny.h commands.h externs.h
+look.o: config.h conf.h teeny.h commands.h externs.h
+main.o: config.h conf.h teeny.h ptable.h sha/sha_wrap.h gnu/getopt.h externs.h
+match.o: config.h conf.h teeny.h ptable.h externs.h
+money.o: config.h conf.h teeny.h commands.h externs.h
+move.o: config.h conf.h teeny.h commands.h externs.h
+notify.o: config.h conf.h teeny.h teenydb.h externs.h
+parse.o: config.h conf.h teeny.h prims.h externs.h hash/hash.h
+prims.o: config.h conf.h teeny.h prims.h ptable.h sha/sha_wrap.h externs.h
+queue.o: config.h conf.h teeny.h commands.h externs.h
+recycle.o: config.h conf.h teeny.h ptable.h commands.h externs.h
+set.o: config.h conf.h flaglist.h teeny.h commands.h sha/sha_wrap.h externs.h
+speech.o: config.h conf.h teeny.h commands.h externs.h
+tcpip.o: config.h conf.h teeny.h commands.h externs.h conn.h
+utils.o: config.h conf.h teeny.h commands.h ptable.h sha/sha_wrap.h externs.h
+vars.o: config.h conf.h teeny.h externs.h hash/hash.h
+wild.o: config.h conf.h teeny.h externs.h
+wiz.o: config.h conf.h teeny.h commands.h ptable.h sha/sha_wrap.h externs.h
+version.o: config.h conf.h teeny.h commands.h externs.h
+convertdb.o: config.h conf.h teeny.h teenydb.h textdb.h ptable.h sha/sha_wrap.h
+convertdb.o: gnu/getopt.h externs.h
+textdb.o: config.h conf.h teeny.h teenydb.h textdb.h externs.h
+textin.o: config.h conf.h teeny.h teenydb.h textdb.h sha/sha_wrap.h externs.h
+textout.o: config.h conf.h teeny.h teenydb.h textdb.h externs.h
+sanity.o: config.h conf.h teeny.h teenydb.h gnu/getopt.h externs.h
+globals.o: config.h conf.h teeny.h flaglist.h
+cache.o: config.h conf.h teeny.h teenydb.h externs.h
+db.o: config.h conf.h teeny.h teenydb.h ptable.h externs.h
+ptable.o: config.h conf.h teeny.h teenydb.h ptable.h externs.h hash/hash.h
+attributes.o: config.h conf.h teeny.h teenydb.h externs.h
+boolutils.o: config.h conf.h teeny.h externs.h
+log.o: config.h conf.h teeny.h externs.h
+misc.o: config.h conf.h flaglist.h teeny.h externs.h
+gdbm.o: config.h conf.h teeny.h teenydb.h externs.h
+bsddbm.o: config.h conf.h teeny.h teenydb.h externs.h
+attrs.h: config.h
+commands.h: config.h
+conf.h: config.h
+config.h: autoconf.h
+conn.h: config.h
+externs.h: config.h
+fcache.h: config.h
+prims.h: config.h hash/hash.h
+ptable.h: config.h
+teeny.h: config.h
+teenydb.h: config.h
+textdb.h: config.h
+hash/hash.h: hash/list.h
+sha/sha_wrap.h: config.h
