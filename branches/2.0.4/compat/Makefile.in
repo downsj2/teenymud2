@@ -1,0 +1,71 @@
+# Compat library for TeenyMUD II
+#
+#		       This file is part of TeenyMUD II.
+#	    Copyright(C) 1995 by Jason Downs.  All rights reserved.
+# 
+# TeenyMUD II is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# TeenyMUD II is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (see the file 'COPYING'); if not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+# This library includes various code, based on defines in config.h
+
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+SHELL = /bin/sh
+
+CC=	@CC@
+RANLIB=	@RANLIB@
+CFLAGS=	${COPTS} -I.. -I${srcdir}/.. -I${srcdir}
+
+OBJ = compat.o random.o strerror.o strcasecmp.o strftime.o vprintf.o \
+	bcopy.o strtol.o strtod.o waitpid.o strstr.o strtok.o strchr.o \
+	alloca.o strtoul.o
+
+SRCS = compat.c random.c strerror.c strcasecmp.c strftime.c vprintf.c \
+	bcopy.c strtol.c strtod.c waitpid.c strstr.c strtok.c strchr.c \
+	alloca.c strtoul.c
+
+HDRS = ../autoconf.h ${srcdir}/../config.h
+
+all: compat.a
+
+clean:
+	-rm -f *.o compat.a
+
+real-clean:
+	-rm -r *.o compat.a Makefile
+
+compat.a: ${P} ${OBJ}
+	-rm -f compat.a
+	ar q compat.a `@LORDER@ ${OBJ} | tsort`
+#	ar q compat.a ${OBJ}
+	${RANLIB} compat.a
+
+compat.o: ${srcdir}/../config.h
+random.o: ${srcdir}/../config.h
+strerror.o: ${srcdir}/../config.h
+strcasecmp.o: ${srcdir}/../config.h
+strftime.o: ${srcdir}/../config.h
+vprintf.o: ${srcdir}/../config.h
+bcopy.o: ${srcdir}/../config.h
+strtol.o: ${srcdir}/../config.h
+strtod.o: ${srcdir}/../config.h
+waitpid.o: ${srcdir}/../config.h
+strstr.o: ${srcdir}/../config.h
+strtok.o: ${srcdir}/../config.h
+strchr.o: ${srcdir}/../config.h
+alloca.o: ${srcdir}/../config.h
+strtoul.o: ${srcdir}/../config.h
+${srcdir}/../config.h: ../autoconf.h

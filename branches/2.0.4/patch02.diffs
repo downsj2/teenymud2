@@ -1,0 +1,311 @@
+*** patch01/NEWS	Wed Sep 20 15:43:02 1995
+--- NEWS	Sat Oct  7 17:56:59 1995
+***************
+*** 102,104 ****
+--- 102,116 ----
+  	* Player names may not be changed if global registration is in effect,
+  	  except by GOD (who no longer has to supply a password).
+  	* Added the TRANSPARENT flag and transparent exits.
++ 
++ Changes since TeenyMUD 2.0.4beta:
++ 	* Fixed parse_boolexp() NULL checking.		[PL#1]
++ 	* Fixed AUDIBLE/OBVIOUS clash.			[PL#1]
++ 	* Fixed isBUILDER macro.			[PL#2]
++ 	* Fixed password buffer lengths.		[PL#2]
++ 	* QUIET puppets are quieter.			[PL#2]
++ 	* Fixed a small bug in resolve_player that was	[PL#2]
++ 	  causing big problems.
++ 	* Fixed the format of WHERE output to handle	[PL#2]
++ 	  longer port and fd numbers.
++ 	* Fixed free_help to not free FMODTIME.		[PL#2]
+*** patch01/config.h	Fri Oct  6 16:38:21 1995
+--- config.h	Fri Oct  6 16:37:34 1995
+***************
+*** 72,81 ****
+  #endif				/* HAVE_VOID_PTR */
+  
+  /* version number. */
+! #define VERSION		"2.0.4alpha"
+  
+  /* maximum length of a player name */
+  #define MAXPNAMELEN	16
+  /* maximum length of an attribute name */
+  #define MAXATTRNAME	128
+  /* maximum arguments to a primitive and such */
+--- 72,83 ----
+  #endif				/* HAVE_VOID_PTR */
+  
+  /* version number. */
+! #define VERSION		"2.0.4beta"
+  
+  /* maximum length of a player name */
+  #define MAXPNAMELEN	16
++ /* maximum length of a player password */
++ #define MAXPWDLEN	128
+  /* maximum length of an attribute name */
+  #define MAXATTRNAME	128
+  /* maximum arguments to a primitive and such */
+*** patch01/globals.c	Sun Oct  1 01:40:53 1995
+--- globals.c	Fri Oct  6 16:39:23 1995
+***************
+*** 191,198 ****
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#1 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#1";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+--- 191,198 ----
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#2 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#2";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+*** patch01/help.c	Sun Jun 18 07:54:39 1995
+--- help.c	Sat Oct  7 17:57:39 1995
+***************
+*** 144,150 ****
+  
+    for(entry = Hash_EnumFirst(table, &srch); entry != (Hash_Entry *)NULL;
+        entry = Hash_EnumNext(&srch)) {
+!     ty_free((VOID *)Hash_GetValue(entry));
+    }
+  #endif
+    Hash_DeleteTable(table);
+--- 144,151 ----
+  
+    for(entry = Hash_EnumFirst(table, &srch); entry != (Hash_Entry *)NULL;
+        entry = Hash_EnumNext(&srch)) {
+!     if(strcmp((char *)Hash_GetKey(table, entry), Mod_Entry) != 0)
+!       ty_free((VOID *)Hash_GetValue(entry));
+    }
+  #endif
+    Hash_DeleteTable(table);
+*** patch01/interface.c	Tue Sep 19 06:54:54 1995
+--- interface.c	Sat Oct  7 16:13:29 1995
+***************
+*** 598,607 ****
+  	}
+  
+  	if (who->user != (char *)NULL) {
+! 	  snprintf(line, sizeof(line), "%-20s%8s  %-2d %-4d %s@%s", namebuf,
+  	  	  locbuf, who->fd, who->port, who->user, who->host);
+  	} else {
+! 	  snprintf(line, sizeof(line), "%-20s%8s  %-2d %-4d %s", namebuf,
+  		   locbuf, who->fd, who->port, who->host);
+  	}
+        }
+--- 598,607 ----
+  	}
+  
+  	if (who->user != (char *)NULL) {
+! 	  snprintf(line, sizeof(line), "%-20s%8s  %-3d %-5d %s@%s", namebuf,
+  	  	  locbuf, who->fd, who->port, who->user, who->host);
+  	} else {
+! 	  snprintf(line, sizeof(line), "%-20s%8s  %-3d %-5d %s", namebuf,
+  		   locbuf, who->fd, who->port, who->host);
+  	}
+        }
+***************
+*** 646,652 ****
+    case LIST_WHERE:
+      strcpy(line, "Player Name         Location");
+      if(wizard)
+!       strcat(line, "  Fd Port User/Site");
+      break;
+    case LIST_SESSION:
+      strcpy(line,
+--- 646,652 ----
+    case LIST_WHERE:
+      strcpy(line, "Player Name         Location");
+      if(wizard)
+!       strcat(line, "  Fd  Port  User/Site");
+      break;
+    case LIST_SESSION:
+      strcpy(line,
+*** patch01/match.c	Mon Aug 21 15:34:39 1995
+--- match.c	Sat Oct  7 15:59:10 1995
+***************
+*** 796,802 ****
+      curr_value = best_value;
+    }
+  
+!   if ((curr_match == -1) || isPLAYER(curr_match)) {
+      if (!strcasecmp(name, "me")) {
+        curr_match = player; 
+      } else {
+--- 796,802 ----
+      curr_value = best_value;
+    }
+  
+!   if (curr_match == -1) {
+      if (!strcasecmp(name, "me")) {
+        curr_match = player; 
+      } else {
+*** patch01/queue.c	Sat Sep  2 16:53:56 1995
+--- queue.c	Fri Oct  6 16:51:36 1995
+***************
+*** 734,740 ****
+    /* As per MUSH, this command resets the cause. */
+    handle_cmds(obj, obj, argtwo, 0, (char **)NULL);
+  
+!   if(!(switches & CMD_QUIET))
+      notify_player(player, cause, player, "Ok.", NOT_QUIET);
+  }
+  
+--- 734,740 ----
+    /* As per MUSH, this command resets the cause. */
+    handle_cmds(obj, obj, argtwo, 0, (char **)NULL);
+  
+!   if(!(switches & CMD_QUIET) && !isQUIET(obj))
+      notify_player(player, cause, player, "Ok.", NOT_QUIET);
+  }
+  
+*** patch01/teeny.h	Sun Oct  1 02:34:08 1995
+--- teeny.h	Fri Oct  6 12:50:59 1995
+***************
+*** 328,334 ****
+  			 && Flag1(_x,OBVIOUS,"isOBVIOUS"))
+  /* XXX */
+  #define isBUILDER(_x)	((Typeof(getowner(_x)) == TYP_PLAYER) \
+! 			 && Flag1(getowner(_x),BUILDER,"isBUILDER"))
+  #define isBUILDING_OK(_x)	((Typeof(_x) != TYP_PLAYER) \
+  			 && Flag1(_x,BUILDING_OK,"isBUILDING_OK"))
+  #define isENTER_OK(_x)	((Typeof(_x) != TYP_EXIT) \
+--- 328,334 ----
+  			 && Flag1(_x,OBVIOUS,"isOBVIOUS"))
+  /* XXX */
+  #define isBUILDER(_x)	((Typeof(getowner(_x)) == TYP_PLAYER) \
+! 			 && Flags(getowner(_x),mudconf.build_flags,"isBUILDER"))
+  #define isBUILDING_OK(_x)	((Typeof(_x) != TYP_PLAYER) \
+  			 && Flag1(_x,BUILDING_OK,"isBUILDING_OK"))
+  #define isENTER_OK(_x)	((Typeof(_x) != TYP_EXIT) \
+*** patch01/utils.c	Sun Aug 13 04:33:39 1995
+--- utils.c	Sat Oct  7 15:44:38 1995
+***************
+*** 239,245 ****
+  int parse_name_pwd(str, name, pwd)
+      char *str, **name, **pwd;
+  {
+!   static char nbuf[MAXPNAMELEN + 1], pbuf[9];
+    char *p;
+  
+    if (str == (char *)NULL)
+--- 239,245 ----
+  int parse_name_pwd(str, name, pwd)
+      char *str, **name, **pwd;
+  {
+!   static char nbuf[MAXPNAMELEN + 1], pbuf[MAXPWDLEN + 1];
+    char *p;
+  
+    if (str == (char *)NULL)
+***************
+*** 252,258 ****
+  
+    if (*str != '\"') {		/* the name isn't quoted, fuck */
+      /* assume the first word is name, all other is pword */
+!     for (p = nbuf; *str && !isspace(*str) && (p - nbuf) <= MAXPNAMELEN;
+  	 *p++ = *str++);
+      if (*str == '\0')
+        return (-1);
+--- 252,258 ----
+  
+    if (*str != '\"') {		/* the name isn't quoted, fuck */
+      /* assume the first word is name, all other is pword */
+!     for (p = nbuf; *str && !isspace(*str) && (p - nbuf) < sizeof(nbuf);
+  	 *p++ = *str++);
+      if (*str == '\0')
+        return (-1);
+***************
+*** 263,269 ****
+      if (*str == '\0')
+        *pwd = (char *) NULL;
+      else {
+!       for (p = pbuf; *str && (p - pbuf) < 9; *p++ = *str++);
+        *p = '\0';
+        *pwd = pbuf;		/* Assume no trailing whitespace. */
+      }
+--- 263,269 ----
+      if (*str == '\0')
+        *pwd = (char *) NULL;
+      else {
+!       for (p = pbuf; *str && (p - pbuf) < sizeof(pbuf); *p++ = *str++);
+        *p = '\0';
+        *pwd = pbuf;		/* Assume no trailing whitespace. */
+      }
+***************
+*** 278,284 ****
+        return (-1);
+      p = nbuf;
+      *name = nbuf;
+!     while (*str && *str != '\"' && (p - nbuf) <= MAXPNAMELEN) {
+        if (!isspace(*str)) {
+  	*p++ = *str++;
+  	continue;
+--- 278,284 ----
+        return (-1);
+      p = nbuf;
+      *name = nbuf;
+!     while (*str && *str != '\"' && (p - nbuf) < sizeof(nbuf)) {
+        if (!isspace(*str)) {
+  	*p++ = *str++;
+  	continue;
+***************
+*** 294,300 ****
+      if (*str == '\0')
+        *pwd = (char *) NULL;
+      else {
+!       for (p = pbuf; *str && (p - pbuf) < 9; *p++ = *str++);
+        *p = '\0';
+        *pwd = pbuf;
+      }
+--- 294,300 ----
+      if (*str == '\0')
+        *pwd = (char *) NULL;
+      else {
+!       for (p = pbuf; *str && (p - pbuf) < sizeof(pbuf); *p++ = *str++);
+        *p = '\0';
+        *pwd = pbuf;
+      }
+*** patch01/wiz.c	Thu Jul  6 10:44:36 1995
+--- wiz.c	Fri Oct  6 16:36:08 1995
+***************
+*** 437,443 ****
+      char *argone, *argtwo;
+  {
+    int newplayer, loc;
+!   char *name, *pwd, nbuf[MAXPNAMELEN + 1], pbuf[9], buf[MEDBUFFSIZ];
+    char *newname, *pname;
+  
+    if ((argone == (char *)NULL) || (argone[0] == '\0')
+--- 437,444 ----
+      char *argone, *argtwo;
+  {
+    int newplayer, loc;
+!   char *name, *pwd, nbuf[MAXPNAMELEN + 1], pbuf[MAXPWDLEN + 1];
+!   char buf[MEDBUFFSIZ];
+    char *newname, *pname;
+  
+    if ((argone == (char *)NULL) || (argone[0] == '\0')
+***************
+*** 478,484 ****
+      return;
+    }
+    for (pwd = pbuf; *argtwo && isspace(*argtwo); argtwo++);
+!   for (; *argtwo && (pwd - pbuf) < 9; *pwd++ = *argtwo++);
+    *pwd = '\0';
+  
+    if(!mudconf.registration) {
+--- 479,485 ----
+      return;
+    }
+    for (pwd = pbuf; *argtwo && isspace(*argtwo); argtwo++);
+!   for (; *argtwo && (pwd - pbuf) < sizeof(pbuf); *pwd++ = *argtwo++);
+    *pwd = '\0';
+  
+    if(!mudconf.registration) {

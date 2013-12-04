@@ -1,0 +1,95 @@
+*** patch02/NEWS	Sat Oct  7 17:56:59 1995
+--- NEWS	Wed Oct 25 09:04:39 1995
+***************
+*** 114,116 ****
+--- 114,118 ----
+  	* Fixed the format of WHERE output to handle	[PL#2]
+  	  longer port and fd numbers.
+  	* Fixed free_help to not free FMODTIME.		[PL#2]
++ 	* Fixed set_str_elt() for player names.		[PL#3]
++ 	* Fixed some text db conversion bugs.		[PL#3]
+*** patch02/db.c	Thu Jul 13 20:46:18 1995
+--- db.c	Wed Oct 25 01:03:56 1995
+***************
+*** 241,246 ****
+--- 241,247 ----
+    /* is this a player? */
+    if ((code == NAME) && (DSC_TYPE(main_index[obj]) == TYP_PLAYER)) {
+      if((value != (char *)NULL) && value[0]) {
++       ptable_delete(obj);
+        ptable_add(obj, value);
+      } else {
+        ptable_delete(obj);
+*** patch02/globals.c	Fri Oct  6 16:39:23 1995
+--- globals.c	Wed Oct 25 01:04:54 1995
+***************
+*** 191,198 ****
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#2 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#2";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+--- 191,198 ----
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#3 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#3";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+*** patch02/textin.c	Thu Aug 17 16:06:42 1995
+--- textin.c	Wed Oct 25 08:53:24 1995
+***************
+*** 643,654 ****
+    int nflags = flags;
+  
+    if (read_version < 300) {
+!     if(strcmp(str, SITE) == 0)
+        nflags = SITE_FLGS;
+!     if(strcmp(str, PASSWORD) == 0)
+        nflags = PASSWORD_FLGS;
+      if(flags & 0x00000100)
+        nflags |= A_PRIVATE;
+    } else if (!(read_flags & DB_IMMUTATTRS)) {
+      /* SITE_FLAGS changed. */
+      if(strcmp(str, SITE) == 0)
+--- 643,660 ----
+    int nflags = flags;
+  
+    if (read_version < 300) {
+!     if(strcmp(str, SITE) == 0) {
+        nflags = SITE_FLGS;
+!     } else if(strcmp(str, PASSWORD) == 0) {
+        nflags = PASSWORD_FLGS;
++     } else
++       nflags = 0;
++ 
++ #if 0
++     /* This seems to be bogus... */
+      if(flags & 0x00000100)
+        nflags |= A_PRIVATE;
++ #endif
+    } else if (!(read_flags & DB_IMMUTATTRS)) {
+      /* SITE_FLAGS changed. */
+      if(strcmp(str, SITE) == 0)
+***************
+*** 1198,1204 ****
+  	      fprintf(stderr, txt_eoferr, i);
+  	      return(-1);
+  	    }
+! 	    addr = ntohl(strtol(txt_buffer, &ptr, 10));
+  	    if(ptr == txt_buffer) {
+  	      fprintf(stderr, txt_numerr, i);
+  	      return(-1);
+--- 1204,1210 ----
+  	      fprintf(stderr, txt_eoferr, i);
+  	      return(-1);
+  	    }
+! 	    addr = htonl(strtol(txt_buffer, &ptr, 10));
+  	    if(ptr == txt_buffer) {
+  	      fprintf(stderr, txt_numerr, i);
+  	      return(-1);
