@@ -1,0 +1,17 @@
+This is a hashing package developed by the Sprite project at
+U.C. Berkeley. See the man pages for details. This package
+uses the "List" package so you'll need that too.
+
+-----
+
+This is a doubly-linked list package developed by the Sprite project
+at U.C. Berkeley. See the man pages for details.
+
+-----
+
+This package is actually a combination of the Sprite List and Hash
+packages, hacked up for use with TeenyMUD 2.0 by Jason Downs.
+
+There have been a few modifications, such as the demise of some
+Sprite-isms (such as ClientData), and the inclusion of a case-insensetive
+keys.
