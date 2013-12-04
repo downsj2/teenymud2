@@ -1,0 +1,16 @@
+Wish/TODO List:
+---------------
+
+	* Fix object flags once and for all.  Array?  Real bitfield?
+	  (Array == lots of memory, bitfield == broken compilers.)
+
+	* Access Control Lists.  Really non-bool Control Locks, but ACL
+	  sounds cooler.
+
+	* Convert all of the command routines to argv/argc.
+
+	* Finish peer communication support.  TCP layer needs it's own
+	  state information so that we don't have to lookup host names
+	  all the time.
+
+	* Finish the command line based manager.

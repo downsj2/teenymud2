@@ -1,0 +1,755 @@
+This is patch #5 for TeenyMUD 2.0.4b.  This patch contains some rather
+far reaching changes to things like the object matching code.  Complete
+support for empty player passwords is also included, as well as some
+fixes to `@name' and a new conf option.  See the NEWS file for more
+information.
+
+Be sure to do a `make clean' before rebuilding the server.  Also note that
+this patch updates the help.txt file.
+
+*** patch04/NEWS	Wed Nov  8 12:55:43 1995
+--- NEWS	Thu Nov  9 14:13:25 1995
+***************
+*** 122,124 ****
+--- 122,139 ----
+  	* Fixed bug so that iqueue entries actually	[PL#4]
+  	  run, allowing things like @foreach to actually
+  	  work again.
++ 	* Added the `registername' conf option.		[PL#5]
++ 	* Fixed parse_name_pwd() to not return failure	[PL#5]
++ 	  if pwd is NULL.
++ 	* Finished adding support for NULL player	[PL#5]
++ 	  passwords.  Some support was there, but if you used it,
++ 	  it'd probably crash the game, so this was an appropiate
++ 	  thing to fix.
++ 	* Fixed locking code so that *player works	[PL#5]
++ 	  again.  I believe that's the only place RSLV_SPLATOK
++ 	  should be used.
++ 	* Fixed resolve_player() to be more general,	[PL#5]
++ 	  and match things as well.  Also made RSLV_ALLOK
++ 	  default behaviour for Wizards.  This makes resolve_player()
++ 	  the general matching routine for things that might be able
++ 	  to hear things, like it should've already been.
+*** patch04/boolexp.c	Sun Oct  1 01:53:15 1995
+--- boolexp.c	Thu Nov  9 14:08:07 1995
+***************
+*** 280,286 ****
+    b->type = BOOLEXP_CONST;
+  
+    /* do that match */
+!   (b->dat).thing = resolve_object(parse_player, parse_cause, buf, RSLV_NOISY);
+    if ((b->dat).thing == -1) {
+      boolexp_free(b);
+      return((struct boolexp *)NULL);
+--- 280,287 ----
+    b->type = BOOLEXP_CONST;
+  
+    /* do that match */
+!   (b->dat).thing = resolve_object(parse_player, parse_cause, buf,
+! 				  RSLV_NOISY|RSLV_SPLATOK);
+    if ((b->dat).thing == -1) {
+      boolexp_free(b);
+      return((struct boolexp *)NULL);
+*** patch04/buildcmds.c	Tue Sep 19 07:03:22 1995
+--- buildcmds.c	Thu Nov  9 11:09:01 1995
+***************
+*** 428,434 ****
+      }
+      break;
+    case TYP_PLAYER:
+!     if (mudconf.registration && !isWIZARD(player)) {
+        if(!(switches & CMD_QUIET))
+          notify_player(player, cause, player,
+  		      "Player names may not be changed right now.", NOT_QUIET);
+--- 428,434 ----
+      }
+      break;
+    case TYP_PLAYER:
+!     if (mudconf.registration && mudconf.registername && !isWIZARD(player)) {
+        if(!(switches & CMD_QUIET))
+          notify_player(player, cause, player,
+  		      "Player names may not be changed right now.", NOT_QUIET);
+*** patch04/conf.c	Sat Sep  2 18:16:01 1995
+--- conf.c	Thu Nov  9 11:06:02 1995
+***************
+*** 94,99 ****
+--- 94,100 ----
+  
+    {"hostnames", (VOID *) &mudconf.hostnames, CONF_BOOL, CONF_NORM},
+    {"registration", (VOID *) &mudconf.registration, CONF_BOOL, CONF_NORM},
++   {"registername", (VOID *) &mudconf.registername, CONF_BOOL, CONF_NORM},
+    {"logcommands", (VOID *) &mudconf.logcommands, CONF_BOOL, CONF_NORM},
+    {"enable_quota", (VOID *) &mudconf.enable_quota, CONF_BOOL, CONF_NORM},
+    {"enable_money", (VOID *) &mudconf.enable_money, CONF_BOOL, CONF_NORM},
+***************
+*** 232,237 ****
+--- 233,239 ----
+  
+    mudconf.hostnames = 1;
+    mudconf.registration = 0;
++   mudconf.registername = 1;
+    mudconf.logcommands = 0;
+    mudconf.enable_quota = 1;
+    mudconf.enable_money = 1;
+*** patch04/conf.h	Sat Sep  2 18:48:57 1995
+--- conf.h	Thu Nov  9 11:04:38 1995
+***************
+*** 49,54 ****
+--- 49,56 ----
+  
+    bool hostnames;		/* look up hostnames */
+    bool registration;		/* disable all player creation */
++   bool registername;		/* don't allow players to change their @names
++ 				   when registration is in effect. */
+    bool logcommands;		/* log all commands */
+    bool enable_quota;		/* enable object quota */
+    bool enable_money;		/* enable pennies */
+***************
+*** 59,65 ****
+    bool file_access;		/* allow objects to access files */
+    bool file_exec;		/* allow objects to exec files */
+    bool enable_rwho;		/* talk to MJR Rwho servers */
+!   bool hfile_autoload;		/* auto load the hased text files */
+  
+    int default_port;		/* default player port number */
+    int rwho_port;		/* Rwho server port number */
+--- 61,67 ----
+    bool file_access;		/* allow objects to access files */
+    bool file_exec;		/* allow objects to exec files */
+    bool enable_rwho;		/* talk to MJR Rwho servers */
+!   bool hfile_autoload;		/* auto load the hashed text files */
+  
+    int default_port;		/* default player port number */
+    int rwho_port;		/* Rwho server port number */
+*** patch04/globals.c	Wed Nov  8 11:12:23 1995
+--- globals.c	Thu Nov  9 14:14:06 1995
+***************
+*** 191,198 ****
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#4 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#4";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+--- 191,198 ----
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#5 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#5";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+*** patch04/match.c	Sat Oct  7 15:59:10 1995
+--- match.c	Thu Nov  9 14:30:56 1995
+***************
+*** 613,618 ****
+--- 613,619 ----
+        return (-1);
+      }
+    }
++ 
+    /* Check these first.  Don't want to confuse these. */
+    if (strcasecmp("me", name) == 0)
+      return (player);
+***************
+*** 770,775 ****
+--- 771,782 ----
+      return (-1);
+    }
+  
++   /* Check these first.  Don't want to confuse these. */
++   if (strcasecmp("me", name) == 0)
++     return (player);
++   if (could_hear(loc) && (strcasecmp("here", name) == 0))
++     return (loc);
++ 
+    if(get_int_elt(player, CONTENTS, &list) == -1) {
+      logfile(LOG_ERROR, "resolve_player: bad contents list on object #%d\n",
+  	    player);
+***************
+*** 777,783 ****
+        resolve_mesg(player, cause, curr_match, TYP_PLAYER);
+      return(curr_match);
+    }
+!   matched = match_contents(player, cause, name, list, MAT_PLAYERS);
+    if(best_value > curr_value){
+      curr_match = matched;
+      curr_value = best_value;
+--- 784,790 ----
+        resolve_mesg(player, cause, curr_match, TYP_PLAYER);
+      return(curr_match);
+    }
+!   matched = match_contents(player, cause, name, list, MAT_THINGS|MAT_PLAYERS);
+    if(best_value > curr_value){
+      curr_match = matched;
+      curr_value = best_value;
+***************
+*** 790,869 ****
+        resolve_mesg(player, cause, curr_match, TYP_PLAYER);
+      return(curr_match);
+    }
+!   matched = match_contents(player, cause, name, list, MAT_PLAYERS);
+!   if(best_value > curr_value){
+      curr_match = matched;
+      curr_value = best_value;
+    }
+  
+    if (curr_match == -1) {
+!     if (!strcasecmp(name, "me")) {
+!       curr_match = player; 
+!     } else {
+!       switch(name[0]) {
+!       case '#':
+! 	if(isWIZARD(player)) {
+! 	  name++;
+  
+!           matched = (int)strtol(name, &ptr, 10);
+!           if ((ptr != name) && exists_object(matched) && isPLAYER(matched)) {
+! 	    curr_match = matched;
+!           } else {
+! 	    curr_match = -1;
+!           }
+! 	}
+! 	break;
+!       case '*':
+!         if((flags & RSLV_ALLOK) || (flags & RSLV_SPLATOK) || isWIZARD(player)) {
+!           name++;
+  
+!           matched = match_active_player(name);
+!           if (exists_object(matched)) {
+! 	    curr_match = matched;
+!           } else {
+! 	    curr_match = match_player(name);
+!           }
+! 	}
+! 	break;
+!       case '@':
+!         if (flags & RSLV_ATOK) {
+!           name++;
+! 
+! 	  matched = match_active_player(name);
+! 	  if(!exists_object(matched))
+! 	    matched = match_player(name);
+! 	  if(!exists_object(matched))
+! 	    matched = resolve_player(player, cause, name,
+! 				     ((flags & ~RSLV_ATOK)|RSLV_RECURSE));
+! 	  if(exists_object(matched)) {
+! 	    int nmat;
+! 
+! 	    if(get_int_elt(matched, LOC, &nmat) == -1) {
+! 	      logfile(LOG_ERROR, "resolve_object: bad location on object #%d\n",
+! 	    	      matched);
+! 	      if(domesg(flags))
+! 	        notify_player(player, cause, player,
+! 			      "That has no location!", NOT_QUIET);
+! 	      return(-1);
+! 	    } else {
+! 	      matched = nmat;
+! 	      curr_match = matched;
+! 	    }
+! 	  } else
+! 	    curr_match = -1;
+          }
+!         break;
+!       default:
+!         if(flags & RSLV_ALLOK) {
+!           matched = match_active_player(name);
+!           if (exists_object(matched)) {
+  	    curr_match = matched;
+!           } else {
+! 	    curr_match = match_player(name);
+!           }
+  	} else
+  	  curr_match = -1;
+        }
+      }
+    }
+  
+--- 797,873 ----
+        resolve_mesg(player, cause, curr_match, TYP_PLAYER);
+      return(curr_match);
+    }
+!   matched = match_contents(player, cause, name, list, MAT_THINGS|MAT_PLAYERS);
+!   if(best_value > curr_value) {
+      curr_match = matched;
+      curr_value = best_value;
+    }
+  
+    if (curr_match == -1) {
+!     switch(name[0]) {
+!     case '#':
+!       if(isWIZARD(player)) {
+! 	name++;
+  
+!         matched = (int)strtol(name, &ptr, 10);
+!         if ((ptr != name) && exists_object(matched) && isPLAYER(matched)) {
+! 	  curr_match = matched;
+!         } else {
+! 	  curr_match = -1;
+!         }
+!       }
+!       break;
+!     case '*':
+!       if((flags & RSLV_ALLOK) || (flags & RSLV_SPLATOK) || isWIZARD(player)) {
+!         name++;
+  
+!         matched = match_active_player(name);
+!         if (exists_object(matched)) {
+! 	  curr_match = matched;
+!         } else {
+! 	  curr_match = match_player(name);
+          }
+!       }
+!       break;
+!     case '@':
+!       if (flags & RSLV_ATOK) {
+!         name++;
+! 
+! 	matched = match_active_player(name);
+! 	if(!exists_object(matched))
+! 	  matched = match_player(name);
+! 	if(!exists_object(matched))
+! 	  matched = resolve_player(player, cause, name,
+! 				   ((flags & ~RSLV_ATOK)|RSLV_RECURSE));
+! 	if(exists_object(matched)) {
+! 	  int nmat;
+! 
+! 	  if(get_int_elt(matched, LOC, &nmat) == -1) {
+! 	    logfile(LOG_ERROR, "resolve_player: bad location on object #%d\n",
+! 	  	    matched);
+! 	    if(domesg(flags))
+! 	      notify_player(player, cause, player,
+! 			    "That has no location!", NOT_QUIET);
+! 	    return(-1);
+! 	  } else {
+! 	    matched = nmat;
+  	    curr_match = matched;
+! 	  }
+  	} else
+  	  curr_match = -1;
+        }
++       break;
++     default:
++       /* If all else fails. */
++       if((flags & RSLV_ALLOK) || isWIZARD(player)) {
++         matched = match_active_player(name);
++         if (exists_object(matched)) {
++ 	  curr_match = matched;
++         } else {
++ 	  curr_match = match_player(name);
++         }
++       } else
++ 	curr_match = -1;
+      }
+    }
+  
+*** patch04/sample.conf	Tue Jul  4 01:36:35 1995
+--- sample.conf	Thu Nov  9 11:06:38 1995
+***************
+*** 27,32 ****
+--- 27,33 ----
+  #
+  hostnames	yes
+  registration	no
++ registername	yes
+  logcommands	yes
+  enable_quota	yes
+  enable_money	yes
+*** patch04/teeny.h	Fri Oct  6 12:50:59 1995
+--- teeny.h	Thu Nov  9 14:24:26 1995
+***************
+*** 407,412 ****
+--- 407,414 ----
+  			 (isEXIT(_x) ? mudconf.exit_cost : \
+  				(isTHING(_x) ? mudconf.thing_cost : 0)))
+  
++ #define could_hear(_x)	(isPLAYER(_x) || isTHING(_x))
++ 
+  #define is_list(_x)	((_x == CONTENTS) || (_x == EXITS) || (_x == ROOMS))
+  
+  #define notify_oall(_p,_c,_s,_st,_f)	notify_except2(_p,_c,_s,_st,_p,-1,_f)
+*** patch04/utils.c	Sat Oct  7 15:44:38 1995
+--- utils.c	Thu Nov  9 13:10:40 1995
+***************
+*** 77,89 ****
+    /* No guests can be created from the greet screen. */
+    if ((code == -1) 
+        && (!ok_player_name(name) || (strncasecmp(name, "guest", 5) == 0)
+! 	  || (pwd == (char *)NULL) || (pwd[0] == '\0')))
+      return(-1);
+  
+    /* Create a player in object number STARTING_LOC */
+    player = create_obj(TYP_PLAYER);
+    ret = set_str_elt(player, NAME, name);
+!   if (ret != -1)
+      ret = attr_add(player, PASSWORD, cryptpwd(pwd), PASSWORD_FLGS);
+    if (code == -1) {
+      if (ret != -1) {
+--- 77,89 ----
+    /* No guests can be created from the greet screen. */
+    if ((code == -1) 
+        && (!ok_player_name(name) || (strncasecmp(name, "guest", 5) == 0)
+! 	  || (pwd == (char *)NULL)))
+      return(-1);
+  
+    /* Create a player in object number STARTING_LOC */
+    player = create_obj(TYP_PLAYER);
+    ret = set_str_elt(player, NAME, name);
+!   if ((ret != -1) && (pwd != (char *)NULL) && pwd[0])
+      ret = attr_add(player, PASSWORD, cryptpwd(pwd), PASSWORD_FLGS);
+    if (code == -1) {
+      if (ret != -1) {
+***************
+*** 169,177 ****
+  	    "connect_player: bad attribute reference on object #%d\n", player);
+      return (-1);
+    }
+!   if (!realpwd || !*realpwd)
+      return (player);
+!   if (pwd && *pwd && comp_password(realpwd, pwd))
+      return (player);
+    return (-1);
+  }
+--- 169,180 ----
+  	    "connect_player: bad attribute reference on object #%d\n", player);
+      return (-1);
+    }
+! 
+!   if (((realpwd == (char *)NULL) || (realpwd[0] == '\0'))
+!       && (pwd == (char *)NULL))
+      return (player);
+!   if ((realpwd != (char *)NULL) && (realpwd[0] != '\0')
+!       && (pwd != (char *)NULL) && comp_password(realpwd, pwd))
+      return (player);
+    return (-1);
+  }
+***************
+*** 254,261 ****
+      /* assume the first word is name, all other is pword */
+      for (p = nbuf; *str && !isspace(*str) && (p - nbuf) < sizeof(nbuf);
+  	 *p++ = *str++);
+-     if (*str == '\0')
+-       return (-1);
+      *p = '\0';
+  
+      while (isspace(*str) && *str)
+--- 257,262 ----
+***************
+*** 274,281 ****
+        str++;
+      while (*str && isspace(*str))
+        str++;
+-     if (*str == '\0')
+-       return (-1);
+      p = nbuf;
+      *name = nbuf;
+      while (*str && *str != '\"' && (p - nbuf) < sizeof(nbuf)) {
+--- 275,280 ----
+*** patch04/wiz.c	Fri Oct  6 16:36:08 1995
+--- wiz.c	Thu Nov  9 13:30:37 1995
+***************
+*** 272,282 ****
+        		    NOT_QUIET);
+      return;
+    }
+!   if ((argtwo == (char *)NULL) || (argtwo[0] == '\0')) {
+      if(!(switches & CMD_QUIET))
+!       notify_player(player, cause, player, "Change their password to what?",
+!       		    NOT_QUIET);
+!     return;
+    }
+  
+    /* make sure we can get their names before we try to modify them. */
+--- 272,280 ----
+        		    NOT_QUIET);
+      return;
+    }
+!   if (((argtwo == (char *)NULL) || (argtwo[0] == '\0')) && !isGOD(player)) {
+      if(!(switches & CMD_QUIET))
+!       notify_player(player, cause, player, "You can't do that.", NOT_QUIET);
+    }
+  
+    /* make sure we can get their names before we try to modify them. */
+***************
+*** 286,300 ****
+      return;
+    }
+  
+!   if (attr_add(victim, PASSWORD, cryptpwd(argtwo), PASSWORD_FLGS) == -1) {
+!     notify_bad(player);
+!     return;
+!   }
+!   if ((argtwo != (char *)NULL) && argtwo[0] && (player != victim)) {
+!     snprintf(buf, sizeof(buf),
+! 	     "Your password has been changed to \"%s\".", argtwo);
+!     notify_player(victim, player, cause, buf, 0);
+    }
+    logfile(LOG_STATUS,
+  	  "NEW PASSWORD: %s(#%d) changed the password of %s(#%d).\n", pname,
+  	  player, vname, victim);
+--- 284,306 ----
+      return;
+    }
+  
+!   if ((argtwo == (char *)NULL) || (argtwo[0] == '\0')) {
+!     if (attr_delete(victim, PASSWORD) == -1) {
+!       notify_bad(player);
+!       return;
+!     }
+!   } else {
+!     if (attr_add(victim, PASSWORD, cryptpwd(argtwo), PASSWORD_FLGS) == -1) {
+!       notify_bad(player);
+!       return;
+!     }
+!     if (player != victim) {
+!       snprintf(buf, sizeof(buf),
+! 	       "Your password has been changed to \"%s\".", argtwo);
+!       notify_player(victim, player, cause, buf, 0);
+!     }
+    }
++ 
+    logfile(LOG_STATUS,
+  	  "NEW PASSWORD: %s(#%d) changed the password of %s(#%d).\n", pname,
+  	  player, vname, victim);
+***************
+*** 441,451 ****
+    char buf[MEDBUFFSIZ];
+    char *newname, *pname;
+  
+!   if ((argone == (char *)NULL) || (argone[0] == '\0')
+!       || (argtwo == (char *)NULL) || (argtwo[0] == '\0')) {
+      if(!(switches & CMD_QUIET))
+        notify_player(player, cause, player,
+! 		    "Usage: @pcreate <name> = <password>", NOT_QUIET);
+      return;
+    }
+  
+--- 447,456 ----
+    char buf[MEDBUFFSIZ];
+    char *newname, *pname;
+  
+!   if ((argone == (char *)NULL) || (argone[0] == '\0')) {
+      if(!(switches & CMD_QUIET))
+        notify_player(player, cause, player,
+! 		    "Usage: @pcreate <name> [= <password>]", NOT_QUIET);
+      return;
+    }
+  
+***************
+*** 478,486 ****
+      		    "That's not a reasonable name for a player.", NOT_QUIET);
+      return;
+    }
+!   for (pwd = pbuf; *argtwo && isspace(*argtwo); argtwo++);
+!   for (; *argtwo && (pwd - pbuf) < sizeof(pbuf); *pwd++ = *argtwo++);
+!   *pwd = '\0';
+  
+    if(!mudconf.registration) {
+      if ((get_int_elt(player, LOC, &loc) == -1) || !exists_object(loc)) {
+--- 483,495 ----
+      		    "That's not a reasonable name for a player.", NOT_QUIET);
+      return;
+    }
+! 
+!   if((argtwo != (char *)NULL) && (argtwo[0] != '\0')) {
+!     for (pwd = pbuf; *argtwo && isspace(*argtwo); argtwo++);
+!     for (; *argtwo && (pwd - pbuf) < sizeof(pbuf); *pwd++ = *argtwo++);
+!     *pwd = '\0';
+!   } else
+!     pwd = (char *)NULL;
+  
+    if(!mudconf.registration) {
+      if ((get_int_elt(player, LOC, &loc) == -1) || !exists_object(loc)) {
+***************
+*** 489,497 ****
+  		      "You have no location!", NOT_QUIET);
+        return;
+      }
+!     newplayer = create_player(nbuf, pbuf, loc);
+    } else
+!     newplayer = create_player(nbuf, pbuf, mudconf.starting_loc);
+  
+    if(newplayer == -1) {
+      if(!(switches & CMD_QUIET))
+--- 498,507 ----
+  		      "You have no location!", NOT_QUIET);
+        return;
+      }
+!     newplayer = create_player(nbuf, ((pwd == (char *)NULL) ? pwd : pbuf), loc);
+    } else
+!     newplayer = create_player(nbuf, ((pwd == (char *)NULL) ? pwd : pbuf),
+! 			      mudconf.starting_loc);
+  
+    if(newplayer == -1) {
+      if(!(switches & CMD_QUIET))
+*** doc/patch04/help.txt	Fri Sep 22 15:17:25 1995
+--- doc/help.txt	Thu Nov  9 13:28:37 1995
+***************
+*** 225,231 ****
+  the HALT flag on the object, which must be unset with the @SET command
+  before the object can execute commands again.
+  
+! This command excepts the following switches:
+    /all          Deletes the entire process queue (but sets no flags).
+    /quiet        Doesn't send a broadcast when "/all" is used.
+  @@@@
+--- 225,231 ----
+  the HALT flag on the object, which must be unset with the @SET command
+  before the object can execute commands again.
+  
+! This command accepts the following switches:
+    /all          Deletes the entire process queue (but sets no flags).
+    /quiet        Doesn't send a broadcast when "/all" is used.
+  @@@@
+***************
+*** 249,255 ****
+  may be done than there are pending semaphores, in which case future
+  semaphore waits will take place immediately.
+  
+! This command excepts the following switches:
+    /all          All waiting semaphores are triggered.
+    /drain        All waiting semaphores are deleted.
+  
+--- 249,255 ----
+  may be done than there are pending semaphores, in which case future
+  semaphore waits will take place immediately.
+  
+! This command accepts the following switches:
+    /all          All waiting semaphores are triggered.
+    /drain        All waiting semaphores are deleted.
+  
+***************
+*** 794,800 ****
+  is used and the no_space switch is given, no space will be printed following
+  the name.
+  
+! The full name version of this command excepts the following switches:
+    /no_space      Don't place a space between the name and message.
+  @@@@
+  & @emit
+--- 794,800 ----
+  is used and the no_space switch is given, no space will be printed following
+  the name.
+  
+! The full name version of this command accepts the following switches:
+    /no_space      Don't place a space between the name and message.
+  @@@@
+  & @emit
+***************
+*** 915,924 ****
+  Only Wizards may use this command.
+  @@@@
+  & @newpassword
+! @newpassword <player> = <password>
+  
+  Sets the password of the specified player.  Only Wizards may use this
+! command.
+  @@@@
+  & @toad
+  @toad <player> [= <owner>]
+--- 915,925 ----
+  Only Wizards may use this command.
+  @@@@
+  & @newpassword
+! @newpassword <player> [= <password>]
+  
+  Sets the password of the specified player.  Only Wizards may use this
+! command.  A God may omit the password argument, in which the player's
+! password is removed.
+  @@@@
+  & @toad
+  @toad <player> [= <owner>]
+***************
+*** 935,948 ****
+  Shuts down the server.  Only Wizards may use this command.
+  @@@@
+  & @pcreate
+! @pcreate <name> = <password>
+  
+! Creates a new player, with the specified name and password.  This is
+  primarily useful on systems where it is not possible to create new
+  players from the greetings screen.  The new player is usually created
+! in your current location.
+  
+! Only Wizards may use this command.
+  @@@@
+  & @purge
+  @purge <player>
+--- 936,951 ----
+  Shuts down the server.  Only Wizards may use this command.
+  @@@@
+  & @pcreate
+! @pcreate <name> [= <password>]
+  
+! Creates a new player, with the specified name and password.  If no
+! password is specified, the player is created without one.  This command
+  primarily useful on systems where it is not possible to create new
+  players from the greetings screen.  The new player is usually created
+! in your current location, unless registration is in effect, in which
+! case the player is created in the default starting location.
+  
+! Only a God may use this command.
+  @@@@
+  & @purge
+  @purge <player>
+***************
+*** 1069,1084 ****
+  a time value.
+  
+  mudname [S*]            hostnames [B]           registration [B]
+! logcommands [B]         enable_quota [B]        enable_money [B]
+! enable_groups [B]       enable_autotoad [B]     wizwhoall [B]
+! dark_sleep [B]          file_access [B*]        file_exec [B*]
+! enable_rwho [B*]        hfile_autoload[B]       default_port [N*]
+! rwho_port [N*]          starting_loc [N*]       root_location [N]
+! player_god [N*]         parent_depth [N]        exit_depth [N]
+! room_depth [N]          growth_increment [N*]   slack [N*]
+! starting_quota [N]      starting_money [N]      daily_paycheck [N]
+! queue_commands [N]      queue_cost [N]          find_cost [N]
+! limfind_cost [N]
+  
+  See CONFIGURATION OPTIONS2 for more information.
+  @@@@
+--- 1072,1087 ----
+  a time value.
+  
+  mudname [S*]            hostnames [B]           registration [B]
+! registername [B]        logcommands [B]         enable_quota [B]
+! enable_money [B]        enable_groups [B]       enable_autotoad [B]
+! wizwhoall [B]           dark_sleep [B]          file_access [B*]
+! file_exec [B*]          enable_rwho [B*]        hfile_autoload[B]
+! default_port [N*]       rwho_port [N*]          starting_loc [N*]
+! root_location [N]       player_god [N*]         parent_depth [N]
+! exit_depth [N]          room_depth [N]          growth_increment [N*]
+! slack [N*]              starting_quota [N]      starting_money [N]
+! daily_paycheck [N]      queue_commands [N]      queue_cost [N]
+! find_cost [N]           limfind_cost [N]
+  
+  See CONFIGURATION OPTIONS2 for more information.
+  @@@@
+***************
+*** 1113,1118 ****
+--- 1116,1122 ----
+  @@@@
+  & hostnames configuration
+  & registration configuration
++ & registername configuration
+  & logcommands configuration
+  & wizwhoall configuration
+  CONFIGURATION OPTIONS
+***************
+*** 1122,1127 ****
+--- 1126,1135 ----
+  
+  registration.  If true, no player creation from the greet screen is allowed
+  at all.
++ 
++ registername.  If true, and registration is also true, players will not be
++ allowed to change their names.  This defaults to true, while registration
++ defaults to false.
+  
+  logcommands.  If true, all commands (instead of just sensitive ones) are
+  logged to the commands log file.

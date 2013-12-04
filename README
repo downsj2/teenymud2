@@ -1,0 +1,309 @@
+RELEASE NOTES (BETA)
+------- ----- ------
+
+This is release 2.0 of TeenyMUD, also known as TeenyMUD II.  This release
+has been drastically rewritten, and redesigned.  It is meant as an example of
+how a TinyMUD-like system should be implemented, from the ground up; it also
+reflects many of the features found in MUCK and MUSH-like servers.
+
+Version 2.0.4beta is a much bug-fixed and expanded version of the initial
+2.0 release; the changes are many and some times very major, so there are
+no diffs.  See the file `NEWS' for details.
+
+This is a BETA release.  It does not include all of the documentation, but
+is otherwise a complete release.  Most bugs should be gone.
+
+**************************************************************************
+** The documentation has been converted to raw ASCII, and is nearly     **
+** finished.  It will be included in a future full release.             **
+**                                                                      **
+** NOTE:                                                                **
+** `help.txt' has been moved into the `doc/' subdirectory, and a        **
+** version of `database.txt' (a portion of the technical documentation) **
+** has been included.                                                   **
+**************************************************************************
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! IMPORTANT NOTE:  A bug in the initial 2.0 release (which was         !!
+!! addressed in a released patch) causes player passwords to fail       !!
+!! with the new code on BIG ENDIAN machines!  There is no (published)   !!
+!! fix for this.                                                        !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+PLATFORMS
+
+The primary development platforms for TeenyMUD II (in sequential order) have
+been:
+
+	SunOS 4.1.3 w/ GNU cc (2.4.5 and 2.5.8), sun4
+	SunOS 4.1.3 w/ GNU cc (2.5.8) and the GNU C library, sun4
+	NetBSD 1.0 w/ GNU cc (2.4.5, 2.5.8 and 2.6.2), hp300
+	AIX 2.2.1 w/ GNU cc (2.5.8, 2.6.3) and AIX cc, IBM PC/RT
+	Linux 1.2.x w/ GNU cc (2.6.3, 2.7.0), i386
+
+It has also been known to compile under, at various times:
+
++	SunOS 4.1.1 w/ GNU cc (2.5.8) and Sun cc, sun3
+	SunOS 4.1.3 w/ Sun cc, sun4
+	Solaris 2.3 (SunOS 5.3) w/ GNU cc (2.6.3), sun4
++	HP-UX 9.03 w/ GNU cc (2.4.5), and HP-UX professional cc, hp9000/735
++	Sequent DYNIX/ptx 3.2.0 w/ GNU cc (2.4.5), symmetry
++	Sequent DYNIX 3.1.2 w/ GNU cc (2.4.5), balance
+	AIX(1) 3.2.5 w/ xlc, powerpc
+	Ultrix(2) 4.3 w/ GNU cc (2.5.7), pmax
+	4.2BSD UNIX w/ pcc, mc68k
+	SCO SysVR3.2 version 4.2 w/ Open Desktop, i486
+
+(+) Not recently tried by the author.
+($) Contributed port.
+(1) GDBM does not work properly when used on NFS filesystems under AIX3,
+    or, rather, AIX3 does not work properly.  Additionaly, TeenyMUD must
+    be compiled with the `cc' alias for `xlc'.
+(2) The strftime(3) routine found by autoconf is broken; the compat lib
+    knows this if `ultrix' is defined.
+
+
+REQUIREMENTS
+
+	* Any C compiler that supports basic `void' declarations, and basic
+	  `enum' types.  Full ANSI support is not required.  void pointer
+	  support is also not required.  GNU cc is recommended.
+	  Most C++ compilers will NOT work.
+	* BSD-style TCP/IP and UDP networking(3).
+	* GNU dbm (GDBM), version 1.7.1 or later, or the Berkeley 4.4BSD db
+	  library.  GDBM 1.7.3 is recommended.
+	* GNU make or another modern make package.  GNU make is recommended,
+	  but many others makes will work ok.
+	* At least 1meg of free memory.
+	* At least 5megs of disk space. (Less if source if removed/compressed
+	  after compilation.)
+
+(3) Please drop me a line if you'd like to work on modules for other
+    networking systems.  (I have a `sort of working' TLI/STREAMS driver
+    hanging around in my attic.)
+
+
+LICENSE
+
+	Most of TeenyMUD 2.0 is Copyright(C) 1993 - 1995 by Jason Downs, and
+licensed under the GNU General Public License, version 2 (`GPL').  Please see
+the file `COPYING' for more information.
+	A couple of other files and libraries distributed within this
+release are not under the GPL.  These include the boolexp module, the
+Sprite Hash Library, and much of the compat library.  Please see the relevant
+source code for details on its license.
+
+
+COMPILATION
+
+	This release of TeenyMUD uses GNU Autoconf.  The configure script
+will detect most aspects of the target system needed to compile the package.
+To configure it in the source directory, simply type `./configure'.  To
+configure and build in another directory, run the `configure' script from
+that directory; this will create all the needed subdirectories and files.
+	If you're using GDBM, you should give `configure' the `--with-gdbm'
+option.  If you're using the 4.4BSD db library, use `--with-bsddbm'.  The
+package will then try to find the specified database library, using
+reasonable defaults if it can't.  If it fails to find the library you wish
+to use (due to it being installed in a non-standard place, etc.), you need
+to edit the top level `Makefile' and fix the DBM* definations, after the
+configuration has finished.
+	`configure' will try to find gcc and use that, if not it will use
+cc.  If the compiler you wish to use is named something else, you should
+set the environmental variable `CC' to the name of the compiler, before you
+run `configure'.
+	After `configure' is done, you may want to take a look at the top
+level Makefile, and make changes by hand.  Especially make sure `configure'
+found the correct libraries for your system; sometimes it misses them,
+and other times it finds ones you don't really want to use.
+	You can now type `make' (or the name of the make program you wish
+to use) in order to build the base programs.  The Makefile may have other
+targets that are not supported in this release (such as `teenydbm'); these
+will not be built automatically.  If you are using GNU make, feel free to
+use the `--jobs' argument; `--jobs=5' works well on a machine that can
+handle it.
+
+
+CREDITS
+
+	* `boolexp.c' is based upon the original TinyMUD code.
+	* `wild.c' is based upon the original TinyMUSH 2.0 code.
+	* Kudos to the Sprite Project for the Hash and List libraries.
+	* Much of the `compat' library is taken from the 4.4BSD/NetBSD
+	  C library.
+	* Kudos to the BASH folks for the `readline' library.
+
+	Over the years this code has been developed on machines at the
+University of Arizona Economics Department, Portland State University 
+Computer Science Department, and Oregon State University Department of
+Computer Science.  Much of the later support came from Computer Science
+Outreach Services, Oregon State University.
+
+	TeenyMUD is, however, independent from any of the above.
+
+
+E-MAIL
+
+	There is a mailing-list for general discussion of things regarding
+TeenyMUD; send email to <majordomo@teeny.org> in order to join.  The
+list name is <teeny-list>.
+
+	There is also a list for only announcements, on the same server.
+It's name is <teeny-announce>.
+
+
+FTP
+
+	The latest release of TeenyMUD, as well as anything of related
+interest my be retrieved via FTP from: ftp.teleport.com:/pub/vendors/downsj.
+GNU dbm can be retrieved from any GNU archive/mirror site, such as
+gatekeeper.dec.com:/pub/GNU or prep.ai.mit.edu:/pub/gnu.
+
+
+LEGAL STUFF
+
+	* This software is provided "AS IS", and without warranty of any
+	  kind.  If this software causes your machine to fall into a
+	  cosmic time warp, or anything else for that matter, it is noone's
+	  fault but your own.  See the appropriate license agreements for
+	  specific details.
+
+
+THE FUTURE
+--- ------
+
+	The future has not yet been written, but I think it involves C++.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+BETA
+----
+
+	This is a BETA release.  It is nearly complete.
+
+	If you use this software, please be sure to drop me a line, at
+<downsj@teeny.org>.
+
+	You are *strongly* encouraged to subscribe to the teeny-list
+mailing list, as that is the best way to get patches and announcements
+of new releases (of which there will be many).
+
+
+RUNNING THE SERVER
+------- --- ------
+
+	Since this release does NOT include any of the documentation,
+I will go over the basic aspects of running the system.  For starters, you
+really should have had prior experience running either an old version of
+TeenyMUD, or another TinyM* derivative.  (That will change when the
+documentation is released.)  You should also expect to be bitten by
+a bug that has not yet been found.
+	Assuming that you've successfully built the `teenymud' and
+`convertdb' binaries, you should pick a directory from which the server
+is going to run.  You should copy the binaries into that directory,
+along with the file `sample.conf', which is a sample server configuration
+file.
+	The configuration directives contained in the file are fairly
+self explanatory, and you should either experiment with them, read the
+source code to find out exactly what they do, or simply use the defaults
+in the sample.  You should, however, rename the file to the name of your
+MUD (with the `.conf' extension), and change the name setting in the file.
+	The default directory layout uses the following directories, which
+you should create:
+		database        -- Where the running database is kept.
+		text            -- Where the text files and messages are
+				   kept.
+		logs            -- Where the server logs are kept.
+		files           -- Where server accessible files are kept.
+	The only directory you need to worry about initially is the
+`text' directory.  The files in here determine what the server sends
+to new connections, when it goes down, etc.  The default files are:
+		help.txt        -- The help file.  The one distributed
+				   in the source directory should be used.
+		news.txt        -- The news file.  This is a per-server
+				   file for keeping local notices and the
+				   like; it is in the same format as the
+				   help file.
+		motd.txt        -- Displayed to players after logging in.
+		wiznews.txt     -- Displayed to wizards after logging in.
+		greet.txt       -- Displayed to all new network connections.
+		welcome.txt     -- Displayed to new players.
+		register.txt    -- Displayed when a player creation from
+				   the greet screen is rejected because
+				   `registration' is required.
+		goodbye.txt     -- Displayed as a player disconnects.
+		shutdown.txt    -- Displayed as the server shuts down.
+		guest.txt       -- Displayed when GUESTs log in.
+		timeout.txt     -- Displayed when a player idles out.
+		badconnect.txt  -- Displayed when a login attempt fails.
+		badcreate.txt   -- Displayed when a creation attempt fails.
+	A new database is created by giving `convertdb' the `--initialize-db'
+argument.  Since both `teenymud' and `convertdb' always require a
+configuration file, the command would be:
+		"convertdb --initialize-db --configuration mudname.conf"
+	It should complete in a few seconds, and you should be able to
+then start up the server.  The most common way of doing that is:
+		"teenymud --configuration mudconf.conf --detach"
+That causes the server to read your configuration file, and then detach
+from the tty as it starts up.
+	The initial player name is "Wizard", with a password of
+"potrzebie".  YOU SHOULD CHANGE THAT PASSWORD.  The initial room is
+"Limbo", which is the root room in the default configuration.  If you're
+using the sample configuration, room #2 is the starting location of all
+new players, and should be the first object you create (using @dig).
+
+	From here on out, you're on your own.  Read the help file for
+more information, or post to teeny-list.
+
+
+UPGRADING AND OTHER USES OF CONVERTDB
+--------- --- ----- ---- -- ---------
+
+	If you're upgrading from a previous release of TeenyMUD, you must
+dump your database out in plain text format using the old software.
+Then you should have a file that `convertdb' will parse.  For loading
+in a text database, you should use the `--input-file' command line
+argument, following by the name of the text file.  So, an example command
+line would be:
+	"convertdb --input-file textdb.file --configuration mudname.conf"
+It will then automatically attempt to determine the format of the database,
+read it in, and make any needed changes in order to get it to work with
+TeenyMUD II.  There are couple of special exceptions, though.
+
+	For TeenyMUD 1.3, you should either give the `--xibo-compat'
+command line option, or answer the question the program asks.  If, for
+some odd reason, you have a TeenyMUD 1.1-C database file, use the
+`--nonstandard' command line option.
+
+	Special note: if you're upgrading from a pre-1.4 database format,
+the `convertdb' program will ask if you'd like for it to create a Root
+Room.  Answering yes will cause it to create one, and then use it when
+it sets the Room Location while upgrading the database.  If you answer
+no, it will use whatever the root room setting in the configuration is.
+
+	With some exceptions, this release can read any text database
+produced by any version of TeenyMUD ever done by Jason Downs.  If the
+database uses UNIX-style crypt(3) for passwords, though, your passwords
+won't work.  (Compile with UNIX_CRYPT defined in order to invisibly
+support old fashioned passwords.)
+
+	Post 1.4 databases should load in fine, except perhaps for some
+flags.  (I no longer have source code for database format version 201,
+and I know 300 reused some of its flag values.)
+
+	Version 2.0.4 includes minimal support for reading in _vanilla_
+TinyMUD databases directly with the `convertdb' program.  It can _not_
+read in TinyMUSH, MUSE, MUCK, or any other sundry non-TeenyMUD format.
+
+	To dump a TeenyMUD II database into a text file, use the
+`--output-file' command line option, instead of `--input-file'.  The
+text database will then be written to the specified file.
+
+	Do note that if you're moving between different machines that are of
+different architectures, you should always write your database out to text,
+and then read it back in on the new machine.  Working database files will
+usually not work between different architectures and operating systems.
+It's also a good idea to simply back your database up to text periodically,
+in case the database files get corrupted somehow.

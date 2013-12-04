@@ -1,0 +1,106 @@
+*** patch03/NEWS	Wed Oct 25 09:04:39 1995
+--- NEWS	Wed Nov  8 12:55:43 1995
+***************
+*** 116,118 ****
+--- 116,124 ----
+  	* Fixed free_help to not free FMODTIME.		[PL#2]
+  	* Fixed set_str_elt() for player names.		[PL#3]
+  	* Fixed some text db conversion bugs.		[PL#3]
++ 	* Fixed division by zero in rand primitive.	[PL#4]
++ 	* Fixed WHO commands to not match twilight zone [PL#4]
++ 	  connections.
++ 	* Fixed bug so that iqueue entries actually	[PL#4]
++ 	  run, allowing things like @foreach to actually
++ 	  work again.
+*** patch03/globals.c	Wed Oct 25 01:04:54 1995
+--- globals.c	Wed Nov  8 11:12:23 1995
+***************
+*** 191,198 ****
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#3 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#3";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+--- 191,198 ----
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#4 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#4";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+*** patch03/interface.c	Sat Oct  7 16:13:29 1995
+--- interface.c	Wed Nov  8 11:06:40 1995
+***************
+*** 552,558 ****
+  	strcpy(namebuf, whonm);
+        else
+  	strcpy(namebuf, "???");
+!       if (strlen(arg) && !stringprefix(namebuf, arg))
+  	return;
+        if (wizard) {
+  	snprintf(&namebuf[strlen(namebuf)], sizeof(namebuf) - strlen(namebuf),
+--- 552,559 ----
+  	strcpy(namebuf, whonm);
+        else
+  	strcpy(namebuf, "???");
+!       if ((arg != (char *)NULL) && (arg[0] != '\0')
+! 	  && !stringprefix(namebuf, arg))
+  	return;
+        if (wizard) {
+  	snprintf(&namebuf[strlen(namebuf)], sizeof(namebuf) - strlen(namebuf),
+***************
+*** 564,569 ****
+--- 565,574 ----
+        }
+      } else {
+        (*utotal)++;
++ 
++       if ((arg != (char *)NULL) && (arg[0] != '\0'))	/* They don't match. */
++ 	return;
++ 
+        strcpy(namebuf, "***");
+      }
+  
+*** patch03/prims.c	Sun Jul  2 23:04:09 1995
+--- prims.c	Wed Nov  8 11:00:25 1995
+***************
+*** 763,769 ****
+    if(ptr == argv[1]) {
+      strcpy(buffer, ERR_NUM);
+    } else {
+!     if(num < 0)
+        strcpy(buffer, "0");
+      else
+        sprintf(buffer, "%ld", random() % num);
+--- 763,769 ----
+    if(ptr == argv[1]) {
+      strcpy(buffer, ERR_NUM);
+    } else {
+!     if(num <= 0)
+        strcpy(buffer, "0");
+      else
+        sprintf(buffer, "%ld", random() % num);
+*** patch03/queue.c	Fri Oct  6 16:51:36 1995
+--- queue.c	Wed Nov  8 12:51:20 1995
+***************
+*** 273,279 ****
+    icurr = iqueue;
+    while(count && (icurr != (struct ique *)NULL)) {
+      /* if it's went HALT, or no longer exists, just drain it. */
+!     if(!isHALT(icurr->player) && !exists_object(icurr->player)) {
+        /* set the variable. */
+        if(icurr->var != (char *)NULL) {
+  	if(get_int_elt(icurr->player, OWNER, &owner) == -1) {
+--- 273,279 ----
+    icurr = iqueue;
+    while(count && (icurr != (struct ique *)NULL)) {
+      /* if it's went HALT, or no longer exists, just drain it. */
+!     if(!isHALT(icurr->player) && exists_object(icurr->player)) {
+        /* set the variable. */
+        if(icurr->var != (char *)NULL) {
+  	if(get_int_elt(icurr->player, OWNER, &owner) == -1) {

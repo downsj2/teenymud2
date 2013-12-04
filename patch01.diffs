@@ -1,0 +1,58 @@
+*** patch00/boolexp.c	Mon Mar 20 03:58:41 1995
+--- boolexp.c	Sun Oct  1 01:53:15 1995
+***************
+*** 386,391 ****
+--- 386,394 ----
+      int player, cause;
+      char *buf;
+  {
++   if ((buf == (char *)NULL) || (buf[0] == '\0'))
++     return((struct boolexp *)NULL);
++ 
+    parsebuf = buf;
+    parse_player = player;
+    parse_cause = cause;
+*** patch00/globals.c	Sat Sep 23 15:07:38 1995
+--- globals.c	Sun Oct  1 01:40:53 1995
+***************
+*** 191,198 ****
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+--- 191,198 ----
+  
+  /* version string, make it look like an ID. */
+  #if defined(__STDC__) && defined(__DATE__)
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#1 (Built " __DATE__ ")";
+  #else
+! const char teenymud_id[] = "@(#)TeenyMUD v2.0.4beta PL#1";
+  #endif
+  const char teenymud_version[] = "2.0.4beta";
+*** patch00/teeny.h	Sun Oct  1 02:35:04 1995
+--- teeny.h	Sun Oct  1 02:34:08 1995
+***************
+*** 183,191 ****
+  #define BUILDER		0x00000400	/* for players */
+  #define BUILDING_OK	0x00000400	/* for things and rooms */
+  #define AUDIBLE		0x00000800	/* everything, cept rooms */
+- #define OPAQUE		0x00000800	/* for players and things */
+  #define LIGHT		0x00001000	/* everything, cept rooms */
+  #define ELOQUENT	0x00002000	/* for players and things */
+  
+  /* Non-type specific flags are in the second word */
+  
+--- 183,191 ----
+  #define BUILDER		0x00000400	/* for players */
+  #define BUILDING_OK	0x00000400	/* for things and rooms */
+  #define AUDIBLE		0x00000800	/* everything, cept rooms */
+  #define LIGHT		0x00001000	/* everything, cept rooms */
+  #define ELOQUENT	0x00002000	/* for players and things */
++ #define OPAQUE		0x00004000	/* for players and things */
+  
+  /* Non-type specific flags are in the second word */
+  
