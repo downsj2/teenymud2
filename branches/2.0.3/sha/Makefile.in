@@ -1,0 +1,38 @@
+# sha library of routines used in TeenyMUD II.
+#
+# NOTE: This code is good at breaking optimizing compilers.
+
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+SHELL = /bin/sh
+
+CC=	@CC@
+RANLIB=	@RANLIB@
+CFLAGS=	${COPTS} -I.. -I${srcdir}/.. -I${srcdir}
+
+OBJ=	sha.o sha_wrap.o
+
+SRCS=	sha.c sha_wrap.c
+
+HDRS=	${srcdir}/sha.h ${srcdir}/sha_wrap.h ../autoconf.h \
+	${srcdir}/../config.h
+
+all:	sha.a
+
+clean:
+	-rm -f *.o sha.a
+
+real-clean:
+	-rm -r *.o sha.a Makefile
+
+sha.a:	${P} ${OBJ}
+	rm -f sha.a
+	ar q sha.a `lorder ${OBJ} | tsort`
+#	ar q sha.a ${OBJ}
+	${RANLIB} sha.a
+
+sha.o: ${srcdir}/../config.h ${srcdir}/sha.h
+sha_wrap.o: ${srcdir}/../config.h ${srcdir}/sha.h ${srcdir}/sha_wrap.h
+${srcdir}/sha_wrap.h: ${srcdir}/../config.h
+${srcdir}/../config.h: ../autoconf.h

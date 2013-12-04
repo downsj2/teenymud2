@@ -1,0 +1,44 @@
+Changes since TeenyMUD 2.0beta1:
+	* Added `--with-gdbm' and `--with-bsddbm' configuration options,
+	  and cleaned up the Makefiles.  Still needs more work, though.
+	* Added INHERIT flag.  Objects can now only force their owner if
+	  they (the object) is set INHERIT.  INHERIT objects also have
+	  Wizard privs if their owner does.  INHERIT can only be set by
+	  Players who own themselves.
+	* Added TIME specification to configuration system.  Allows interval
+	  settings and the like to be specified in seconds, minutes, hours,
+	  or days.
+	* Dump newp_file to players that've never logged in before.
+	* Add the endian check back to configure.
+	* Fix EXTERNAL exit (command) matching.
+	* Added /all, /no_space switches to @EDIT, added $ and ^ tokens.
+	* Changed signal initializations.
+	* Converted variable argument functions over to ANSI.
+	* Added an snprintf() implementation to the compat library, and
+	  switched many calls to sprintf() in the server over to it.
+	* Don't try to run queued commands for objects that don't exist.
+	* If a player is set INHERIT, then it's the same as if all of their
+	  objects were set INHERIT.
+	* Added <> forced excution command parsing.
+	* Added the %@ substitution, and lots of support goo.
+	* Added ARG_FEXEC special switch.
+	* Added format primitive.
+	* Fixed {} quoting bug.
+	* Fixed massive security hole in controls().
+	* Players can login using their object number.
+	* Added LIGHT and OPAQUE flags.
+	* Fixed some rather nasty db and memory bugs.
+	* Added support for reading vanilla TinyMUD databases.
+	* Added support for filtering garbage objects.
+	* Fixed a bunch more recycle bugs.
+	* More Makefile changes, especially the switch to lorder/tsort.
+	  (readline was toast under ranlib-less SysV without lorder/tsort.)
+	* `Ported' to Ultrix 4.3 (broken strftime(3) in libc).
+
+Changes since TeenyMUD 2.0.2beta:
+	* Fixed `give' again.
+	* Finished `porting' to AIX 3.2.5 using XLC.
+	* Changed @group/disolve to @group/delete.
+	* Expanded upgrade support for databases that don't have root rooms.
+	  `convertdb' will now ask if you wish to create a new root room.
+	* Fixed a small bug in `examine'.
