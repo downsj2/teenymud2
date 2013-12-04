@@ -1,0 +1,352 @@
+
+
+			     TeenyMUD II - Database
+
+
+	DESCRIPTION
+
+	    TeenyMUD version 2.0 features a cached, disk oriented, 
+	database scheme.  The database system currently allows four
+	specific (although internally alike) object types: the room,
+	the generic thing, the player, and the exit.  In addition to
+	any data stored within the database itself, each object may
+	also have files associated with it.  Each object may contain
+	any number of attributes, both those used internally by the
+	server, and those used by users.
+
+	    Each attribute generally consists of two strings, the
+	attribute name, the attribute data, and an integer - the
+	attribute flags.  Name and data should be obvious; the flags
+	integer is used for per-attribute flags governing whether or
+	not a particular attribute may be inherited normally, is
+	visible to everyone, etc.  This is described in more depth
+	below.
+
+	    Within the database itself, each object may have a single
+	parent, which, when set, will cause the object to inherit the
+	attributes of it's parent.  Parents may be nested; if an
+	attribute is not found on the source object, the parent will
+	be searched, then the parent of that, and so on, until a
+	matching attribute is found, or the database runs out of
+	parents to search.  The routines used to lookup attribute
+	data are described in further depth below.
+
+	    The TeenyMUD cache has a fixed size, and is locked
+	(meaning modified data will not be removed from the cache)
+	during many operations of the server, including database file
+	backup.  When an object is referenced, the cache is first
+	searched for the appropriate data, failing which the object
+	is loaded off of disk via whichever database library the
+	server is linked with.  The cache is internally implemented
+	as a hash table, producing exceptional lookup speed.
+
+	    In addition to the cached attributes, there are also
+	several integers associated with each object, reflecting such
+	things as the the objects location, contents, exits, quota,
+	flags, owner, home, rooms, and the next object within a
+	linked list (the linked lists are contents, exits, and rooms).
+	Most of these integers are subject to being paged in out of
+	the cache along with the object's attributes, but some special
+	ones are kept in memory at all times: flags, owner,
+	home/destination, next, and parent.  This allows for quick
+	referencing of those elements.
+
+	    There are also integer arrays stored within the database,
+	which usually contain exit destinations.  The first element of
+	this array is the total number of elements that follow, or
+	typically -1 if the array is empty.
+
+	    The final element of each object are the non-attribute
+	strings. There is currently only one of these, the object name.
+
+
+	ATTRIBUTES
+
+	    Attributes are managed within the database as a hashed list.
+	When the server requests an attribute, the object (if necessary)
+	is loaded off of disk, and placed in the cache.  Then, the
+	hashed list is traversed, searching for the proper attribute.
+	This scheme may be slower than some others, but uses very little
+	memory, since there is no record of what attributes are
+	associated with each object, except for the list itself.  All
+	internal attribute name matching is case-insensitive.
+
+	    There are at least two distinct types of attributes:
+	regular strings, and locks (b-trees).  Each is managed
+	differently within the attribute layer, though they are kept in
+	the same list.
+
+	    The server restricts the length of attribute names to
+	around 60 characters, although the database itself can handle
+	any length.  The size of the data associated with each (string)
+	attribute is restricted to 4k bytes, for the sake of sanity.
+	Attribute flags are handled by the server, and thus not
+	discussed here.
+
+	The following routines are defined for attribute manipulation:
+
+	#include "teeny.h"
+	#include "externs.h"
+
+	int attr_set(int obj, char *name, int flags)
+		Resets the flags element of the attribute to the value
+		specified.  Checking of the value for sanity must be 
+		performed by the caller.  Returns -1 upon database
+		error (no such object, or disk error), -2 if no
+		matching attribute could be found, or 0 on success.
+
+	int attr_addlock(int obj, char *name, struct boolexp *data,
+		         int flags)
+		Adds the specified lock attribute to the object,
+		replacing any matching attribute that may already
+		exist.  Sanity checking of the data and flags must be
+		performed by the caller.  Returns -1 upon database
+		error, or 0 upon success.
+
+	int attr_add(int obj, char *name, char *data, int flags)
+		Adds the specified attribute to the object, replacing
+		any matching attribute that may already exist.  Data
+		must be a string, and the sanity of the flags element
+		must be checked by the caller.  Returns -1 upon
+		database error, or 0 upon success.
+
+	int attr_delete(int obj, char *name)
+		Deletes the specified attribute from the object.
+		Returns -1 upon database error, or 0 upon success
+		(if the attribute didn't exist, 0 is returned).
+
+	int attr_source(int obj, char *name)
+		Returns the object number of the object on which the
+		named attribute can actually be found, using
+		inheritance.  Returns -1 upon database error or if no
+		matching attribute could be found.
+
+	int attr_getlock_parent(int obj, char *name,
+			        struct boolexp **ret, int *flags,
+				int *source)
+		Retrieves the specified lock attribute, using
+		inheritance.  ret and flags will be filled in with
+		the data, and source will contain the object number
+		of the object actually containing the attribute.
+		Returns -1 upon database error, or 0 upon success.
+		If no matching attribute was found, 0 is returned, ret
+		will be set to NULL, and the flags and source
+		variables will both be set to -1.
+
+	int attr_get_parent(int obj, char *name, char **ret, int *flags,
+			    int *source)
+		Retrieves the specified attribute, using inheritance.
+		ret and flags will be filled in with the data, and
+		source will contain the object number of the object
+		actually containing the attribute.  Returns -1 upon
+		database error, or 0 upon success.  If no matching
+		attribute was found, 0 is returned, ret will be set
+		to NULL, and the flags and source variables will both
+		be set to -1.
+
+	int attr_getlock(int obj, char *name, struct boolexp **ret,
+			 int *flags)
+		Retrieves the specified lock attribute from the
+		specified object.  ret and flags will be filled in with
+		the data.  Returns -1 upon database error, or 0 upon
+		success.  If no matching attribute was found, 0 is
+		returned, ret will be set to NULL, and the flags
+		variable will contain -1.
+
+	int attr_get(int obj, char *name, char **ret, int *flags)
+		Retrieves the specified attribute from the specified
+		object.  ret and flags will be filled in with the data.
+		Returns -1 upon database error, or 0 upon success.
+		If no matching attribute was found, 0 is returned, ret
+		will be set to NULL, and the flags variable will be set
+		to -1.
+
+	    The following routines implement attribute iteration.  Note
+	that the order of attributes has no particular meaning, it is
+	simply based upon the hash value of their names.  The following
+	routines will visit each attribute exactly once, though if
+	attributes are added or deleted during iteration the unexpected
+	will result.
+
+	#include "attrs.h"
+
+	struct attr *attr_first(int obj, struct asearch *search)
+		Returns the ``first'' attribute on the specified object,
+		or NULL if there are none or in the case of database
+		error.  search will be filled in with internal data used
+		to implement attribute iteration.
+
+	struct attr *attr_next(int obj, struct asearch *search)
+		Returns the ``next'' attribute on the specified object,
+		or NULL if there are none left.  search should be a
+		pointer as previously setup by attr_first().
+
+	    Attributes used internally by the server (such as Description,
+	Success, Fail, etc.), have their names stored within the global
+	Atable.  When referencing them with the above routines, the
+	programmer should use the #defines in teeny.h, such as DESC,
+	SUC, FAIL, etc.  If more of this type of attribute must be added,
+	be sure that the #defines in teeny.h properly reflect the
+	position within the Atable.  Note that new attributes should be
+	added to the end of this table.
+
+
+	OBJECTS
+
+	    Each object has certain elements by default.  These range
+	from integer, through integer array, and regular strings.  Use
+	only the #defines in teeny.h with the following routines.
+
+	    Data returned by these routines should not be directly
+	modified, unless the programmer really wants to destroy his
+	database, since the cache is not write-through.
+
+	#include "teeny.h"
+	#include "externs.h"
+
+	int get_str_elt(int obj, int elt, char **ret)
+		Sets ret to the value of the specified string element.
+		NAME is the only legal string element.  Returns -1 upon
+		database error, or 0 upon success.
+
+	int get_int_elt(int obj, int elt, int *ret)
+		Sets ret to the value of the specified integer element.
+		Returns -1 upon database error, or 0 upon success.
+
+	int get_array_elt(int obj, int elt, int **ret)
+		Sets ret to the value of the specified array pointer.
+		DESTS is the only legal array element.  Returns -1 upon
+		database error, or 0 upon success.
+
+	int set_str_elt(int obj, int elt, char *value)
+		Sets the value of the specified string element.
+		Allocation of storage for the new value is handled
+		internally.  NAME is the only legal string element.
+		Returns -1 upon database error, or 0 upon success.
+
+	int set_lock_elt(int obj, int elt, int *value)
+		Sets the value of the array pointer.  Allocation of
+		storage for the new value is handled internally.  DESTS
+		is the only legal array element.  Returns -1 upon
+		database error, or 0 upon success.
+
+	void destroy_obj(int obj)
+		Destroys the specified object, freeing it's number for
+		later use.  This frees all resources associated with
+		the object.  There are higher level routines which are
+		usually better to use than this one!
+
+	int create_obj(int type)
+		Creates a new object, of the specified type.
+		Returns the object number.
+
+	int exists_object(int num)
+		Returns true if the specified object exits, false
+		otherwise.  Garbage objects do not exist.
+
+	int Typeof(int obj)
+		Returns the type of the object.
+	
+	    There are also isFLAG() macros defined in teeny.h, where
+	FLAG is the name of an object flag (in all caps).
+
+	    If the programmer wishes to add more standard elements, they
+	must add them to either the dsc (descriptor) struct in teenydb.h,
+	or the obj (object) struct.  dsc (descriptor) data is kept in
+	memory, obj (object) data is paged in and out of the cache as
+	needed.  Since the goal of TeenyMUD is to be disk based, data
+	should not be added to the descriptor without careful
+	consideration.  After adding the struct elements, #defines for
+	the new elements must be added to teeny.h, and the proper
+	get_*_elt() and set_*_elt() routines must be taught how to
+	access them, and all other routines in db.c that reference object
+	data must be modified.  Lastly, the database library interfaces,
+	if appropriate, must be modified to save and load the element
+	from disk.  These types of elements should only be added by
+	experienced TeenyMUD coders; use generic attributes, that's what
+	they're there for.
+
+
+	DBM
+
+	    TeenyMUD II requires either the GNU Database Manager library,
+	or the Berkeley DB library in order to function.  GDBM is
+	preferred.  The GDBM interface is in the file gdbm.c, and the
+	Berkeley interface is in bsddbm.c; both interfaces are very
+	similar.  GDBM is an advanced database manager, allowing flexible
+	record management of unlimited size.  It can generally be thought
+	of by the programmer as a black box: the suite of routines in the
+	file gdbm.c do nothing except reformat the internal structures of
+	the database into the format GDBM uses - a simple, sized, series
+	of bytes.  (The GDBM record may be thought of as a string, but
+	it's not a C string.  It may freely contain zero terminations
+	anywhere in the field.)  Please see the GDBM documentation for
+	more information.
+
+
+	CACHE
+
+	    As stated above, the TeenyMUD cache has a fixed size, and is
+	not write-through.  Internally, it is organized as a hash table
+	of object structures, with the most recently used object at the
+	head of it's list.  The size limitation of the cache is based
+	upon the size of the object struct, plus the space used by the
+	attributes.
+
+	    When an object is loaded from disk, it is immediately placed
+	at the head of the appropriate list, and the IN_MEMORY flag is
+	set on it.  This allows the database to quickly check if an
+	object needs to be loaded, or if it should traverse the cache
+	list.
+
+	    The other cache related descriptor flag, DIRTY, is set on an
+	object when it's data has been modified.  When this flag is set,
+	the cache will pass the object data on to the dbm layer whenever
+	it comes time to purge the object from the cache.  Objects are
+	purged from the cache at two times: the oldest objects are
+	purged when the cache has reached it's size limit, and must load
+	another object.  The only other time an object is saved is
+	during a cache flush, when it has every DIRTY object in the cache
+	written to disk, and frees everything else, resetting the cache.
+	If a write fails for the object during the first of those two
+	occurances, it will be kept in the cache, instead of purged.
+
+	    Whenever the cache is reset, it checks to make sure that the
+	hashing scheme is running at optimal performance, and will
+	automatically grow in width if needed.
+
+
+	NAMES
+
+	    As mentioned above, object names are the only non-attribute
+	strings.  In older versions, these were kept in memory at all
+	times, but in this version they are paged in and out of the cache
+	as needed.  This reduces the amount of memory used by the server,
+	and is an all around good thing, with the only drawback being
+	slowness of routines that search through the names of every
+	object in the database.
+
+	    One special case are the names of players.  At boot time,
+	these are all loaded in from disk, and placed in a hash table
+	within the database layer.  Invisibly to the rest of the server,
+	these are kept in memory at all times, since they are referenced
+	so much more often than any other object names.  Since players
+	names are restricted in length to 16 characters or less, the
+	overall memory hit is rather minimal when compared to the
+	performance hit of not keeping them in memory.
+
+
+	CREDITS
+
+	    Much of the general layout and design of the database system
+	is based upon (in an evolutionary way) that which was developed
+	for TeenyMUD 1.x by Andrew Molitor.
+
+	This document is Copyright(C) 1993, 1995 by Jason Downs.
+	All rights reserved.  This material may be freely distributed in
+	any means, either electronic or printed, so long as this statement
+	of rights remains intact.  This material may be freely translated
+	into other languages or otherwise modified and distributed, so
+	long as no additional distribution limitations are imposed, and
+	the translation of this statement of rights has been pre-approved
+	by Jason Downs.
