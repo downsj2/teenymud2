@@ -1,0 +1,135 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+gcc -E
+gcc -E
+gcc -E
+configure:722: minix/config.h: No such file or directory
+gcc -o conftest -g -O conftest.c
+gcc -E
+gcc -E
+configure:931: termio.h: No such file or directory
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+configure: In function `t':
+configure:1093: syntax error before `big'
+gcc -c -g -O conftest.c
+gcc -E
+gcc -E
+gcc -E
+gcc -E
+gcc -E
+In file included from configure:1204:
+/usr/include/malloc.h:4: warning: #warning "<malloc.h> is obsolete, use <stdlib.h>"
+gcc -E
+gcc -E
+gcc -E
+gcc -E
+configure:1204: sys/params.h: No such file or directory
+gcc -E
+gcc -E
+gcc -E
+configure:1204: sys/ptem.h: No such file or directory
+gcc -E
+configure:1204: sys/pte.h: No such file or directory
+gcc -E
+configure:1204: sys/stream.h: No such file or directory
+gcc -E
+configure:1204: termcap.h: No such file or directory
+gcc -E
+configure:1204: termio.h: No such file or directory
+gcc -E
+gcc -E
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+gcc -E
+gcc -E
+gcc -E
+gcc -o conftest -g -O conftest.c
+gcc -E
+gcc -E
+gcc -c -g -O conftest.c
+gcc -o conftest -g -O conftest.c
+gcc -o conftest -g -O conftest.c
+gcc -o conftest -g -O conftest.c
+gcc -o conftest -g -O conftest.c
+gcc -o conftest -g -O conftest.c -lm
+gcc -o conftest -g -O conftest.c -lnet -lm
+ld: -lnet: no match
+gcc -o conftest -g -O conftest.c -lseq -lm
+ld: -lseq: no match
+gcc -o conftest -g -O conftest.c -lsocket -linet -lnsl -lc -lm
+ld: -lsocket: no match
+gcc -o conftest -g -O conftest.c -lsocket -lnsl -lc -lm
+ld: -lsocket: no match
+gcc -o conftest -g -O conftest.c -lmalloc -lm
+ld: -lmalloc: no match
+gcc -o conftest -g -O conftest.c -lsocket -lc -lm
+ld: -lsocket: no match
+gcc -o conftest -g -O conftest.c -lnsl_s -lm
+ld: -lnsl_s: no match
+gcc -o conftest -g -O conftest.c -lbsd -lm
+ld: -lbsd: no match
+gcc -o conftest -g -O conftest.c -lresolv -lc -lm
+gcc -o conftest -g -O conftest.c -ltermcap
+gcc -o conftest -g -O conftest.c -lintl -lresolv -lm
+ld: -lintl: no match
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+configure:2450: alloca.h: No such file or directory
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+configure:2840: Undefined symbol `_ftime' referenced from text segment
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+configure:2840: Undefined symbol `_on_exit' referenced from text segment
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+configure:2840: Undefined symbol `_sighold' referenced from text segment
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+configure:2840: Undefined symbol `_mallopt' referenced from text segment
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+gcc -c -g -O conftest.c
+configure: In function `t':
+configure:3033: warning: passing arg 1 of `wait' from incompatible pointer type
+configure:3042: warning: passing arg 2 of `waitpid' from incompatible pointer type
+gcc -c -g -O conftest.c
+configure: In function `t':
+configure:3067: storage size of `ll' isn't known
+gcc -c -g -O conftest.c
+configure: In function `t':
+configure:3091: structure has no member named `S_un'
+gcc -o conftest -g -O conftest.c -lresolv -lm
+gcc -o conftest -g -O conftest.c -lc -lresolv -lm
