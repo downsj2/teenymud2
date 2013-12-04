@@ -1,0 +1,3427 @@
+#                      This file is part of TeenyMUD II.
+#                 Copyright(C) 1993, 1994, 1995 by Jason Downs.
+#                       Copyright(C) 1992, Sean Coates.
+# 
+# TeenyMUD II is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# TeenyMUD II is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program (see the file 'COPYING'); if not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+# VERSION: 2.0.5
+@@@@
+& summary
+SUMMARY
+
+Welcome to the TeenyMUD II help system!  This system is divided into
+a series of cross-referenced topic entries.
+
+Please see either COMMANDS or TOPICS for the major entries available.
+(Type 'help commands' or 'help topics'.)
+@@@@
+& commands
+COMMANDS
+
+Help is available for the following built in commands:
+
+"               &               :               @ATTACH
+@BOOT           @CASE           @CHARGE         @CHILDREN
+@CHOWN          @CHOWNALL       @CLONE          @CONFIG
+@COPY           @COST           @CREATE         @DIG
+@DUMP           @EDIT           @EMIT           @ENTRANCES
+@FIND           @FORCE          @FOREACH        @GROUP
+@HALT           @LINK           @LOCK           @LOCKOUT
+@MOTD           @NAME           @NEWPASSWORD    @NOTIFY
+@OPEN           @OWNED          @PALIAS         @PARENT
+@PASSWORD       @PCREATE        @PEMIT          @POOR
+@PS             @PURGE          @QUOTA          @RECYCLE
+@SAVESTTY       @SEMAPHORE      @SET            @SHUTDOWN
+@STATS          @SWEEP          @TELEPORT       @TOAD
+@TRACE          @TRIGGER        @UNLINK         @UNLOCK
+@VERSION        @WAIT           @WALL           @WIPE
+
+See COMMANDS2 for the rest of the list.
+@@@@
+& commands2
+COMMANDS
+
+DROP            EMOTE           ENTER           EXAMINE
+GIVE            GO              GRIPE           HAND
+HELP            HOME            INVENTORY       KILL
+LEAVE           LOOK            NEWS            PAGE
+POSE            QUIT            SAY             SCORE
+SESSION         STTY            TAKE            USE
+WHERE           WHISPER         WHO
+
+See COMMANDS3 for more information.
+@@@@
+& commands3
+COMMANDS
+
+The following built in attribute alias commands are also available:
+
+@ADESCRIBE      @ADROP          @AEFAIL         @AENTER
+@AFAIL          @AFILTER        @AKILL          @AKILLFAIL
+@ALEAVE         @APAY           @APREFIX        @ASUCCESS
+@ATELEPORT      @AUSE           @DESCRIBE       @DROP
+@EFAIL          @ENTER          @FAIL           @HTDESCRIBE
+@IDESCRIBE      @KILL           @KILLFAIL       @LEAVE
+@ODESCRIBE      @ODROP          @OEFAIL         @OENTER
+@OFAIL          @OKILL          @OKILLFAIL      @OLEAVE
+@OPAY           @OSUCCESS       @OTELEPORT      @OUSE
+@OXENTER        @OXLEAVE        @OXTELEPORT     @PAY
+@RUNOUT         @SEX            @STARTUP        @SUCCESS
+@USE            @VRML_URL
+@@@@
+& topics
+TOPICS
+
+Help is also available on these assorted topics:
+
+$-COMMANDS              ADVICE                  ATTRIBUTE FLAGS
+ATTRIBUTES              AUTO-TOAD               BEING KILLED
+CONFIGURATION           CONTROL                 DROP-TOS
+EXAMPLE                 EXITS                   FAILURE
+GENDER                  GUIDANCE                GLOBAL SWITCHES
+GROUPS                  HERE                    HOMES
+INHERITANCE             LICENSE                 LOCKS
+MATCHING                ME                      NEW
+OBJECT FLAGS            OBJECT TYPES            PLAYER ALIASES
+PRIMITIVES              REGULAR EXPRESSIONS     ROOM LOCATIONS
+ROOT ROOM               SUBSTITUTIONS           SUCCESS
+SWITCHES                VARIABLES
+@@@@
+& license
+LICENSE
+
+TeenyMUD II is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+TeenyMUD II is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program (see the file 'COPYING'); if not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+MA 02111-1307, USA.
+@@@@
+& advice
+ADVICE
+
+See GUIDANCE.
+@@@@
+& guidance
+GUIDANCE
+
+See ADVICE.
+@@@@
+& @case
+@case[/first] <string> = <match1>,<action1>,<matchN>,<actionN>[,<default>]
+
+For the instance of the specified string, the specified action is taken
+for every match.  There may be any number of match/action argument
+combinations, and the match argument should be a regular expression.
+The final argument is taken to be the default action, and is executed if
+there were no matches.
+
+If the "/first" switch is given, only the first matching action will be
+run, instead of all of them.
+@@@@
+& @config
+@config[/switches] <option> [= <newvalue>]
+
+Changes or displays current configuration settings.  Also adds and
+removes command aliases.  The default usage is useful for configuration
+settings, and should be adapted for other uses.
+
+This command accepts the following switches:
+  /set          Sets the specified option to the specified new value.
+  /alias        Adds the specified alias (new value) to the specifed
+                command (option).  Command may contain specified switches.
+  /unalias      Deletes the specified command alias.
+  /expand       Expands the named command alias.
+
+See also: CONFIGURATION, @LOCKOUT
+@@@@
+& @clone
+@clone <object> [= <name>]
+
+Creates an exact copy of the specified object.  The new object will have
+its name set to the name argument, if specified.
+
+You must either control an object, or it must be set VISUAL, in order for
+it to cloned.  Certain flags will not be copied over, but all attributes
+will.
+
+The object number of the newly created object will be stored in the
+CREATE-RESULT variable.  See VARIABLES.
+@@@@
+& @create
+@create <name>
+
+Creates a new object, with the specified name.  If you control your current
+location, or it is set ABODE, then that will be the home of the object.
+Otherwise, the home of the object will be set to your home.  The new
+object will be placed in your inventory.
+
+The object number of the newly created object will be stored in the
+CREATE-RESULT variable.  See VARIABLES.
+
+See also: HOMES
+@@@@
+& @force
+& !
+@force <object> = <command>
+!<object> <command>
+
+Forces the specified object to execute the specified command(s).  You
+must control the object.  In order for an object to force it's owner,
+it must be set INHERIT, and only a God may force another God.  (The
+exception being if the owner of the object is set INHERIT, in which case
+any of their objects can force them.)
+
+The '!' command is a shorter form version, without the command argument
+being evaluated.
+@@@@
+& @foreach
+@foreach <list>/<variable> = <command>
+
+For each element in the specified list, the specified variable is to set
+the value of the element, and specified command(s) are executed.
+
+See also: VARIABLES
+@@@@
+& @dig
+@dig <name> [= <location>]
+
+Creates a new room, with the specified name.  If location is specified,
+it will be the location of the new room.  You must either control the
+location, or it must be set ABODE, unless it is the configured "Root Room".
+If no location is given, it defaults to the configured "Root Room";
+location must be specified by number, or the word "root".
+
+The object number of the newly created room will be stored in the
+CREATE-RESULT variable.  See VARIABLES.
+
+See also: ROOM LOCATIONS
+@@@@
+& @halt
+@halt[/switches] <object>
+
+Halts the specified object, causing all queued commands to be deleted,
+and preventing the object from executing any additional commands.  Sets
+the HALT flag on the object, which must be unset with the @SET command
+before the object can execute commands again.
+
+This command accepts the following switches:
+  /all          Deletes the entire process queue (but sets no flags).
+  /quiet        Doesn't send a broadcast when "/all" is used.
+@@@@
+& @name
+@name <object> = <new name> [<password>]
+
+Changes the name of the specified object.  You must control the object,
+and the new name must pass a variety of legality checks in order to take
+effect.
+
+When changing the name of a player, the current password must also be
+given.  If the new name contains spaces, it must be enclosed in double
+quotes (").  Player names may not be changed, except by an act of God,
+if the game is running under total registration mode.
+@@@@
+& @notify
+@notify[/switches] <object> [= <count>]
+
+Causes a semaphore wait on the specified object to be triggered.  If
+count is specified, that many waits will be triggered.  More notifies
+may be done than there are pending semaphores, in which case future
+semaphore waits will take place immediately.
+
+This command accepts the following switches:
+  /all          All waiting semaphores are triggered.
+  /drain        All waiting semaphores are deleted.
+
+See also: @SEMAPHORE
+@@@@
+& @parent
+@parent <object> [= <parent>]
+
+Sets the parent of the specified object to the specified parent.  You
+must control the object, and the parent, unless the parent is set
+PARENT_OK.  If no parent is specified, the object will no longer have
+a parent.
+
+See also: INHERITANCE
+@@@@
+& @group
+@group[/switches] [<argument>]
+
+The group command drives the group system.  With no switches, it creates
+a new group, makes you the leader, and sets the description/name of the
+group to the specified argument.
+
+This command accepts the following switches:
+  /join         Join the group of the player specified by the argument.
+  /follow       Begin following your group leader around.
+  /delete       If you are a group leader, dissolve your group.
+  /close        If you are a group leader, prevent any others from
+                joining your group.
+  /open         Undo the "/close" operation.
+  /silence      Disable printing of group messages (prefaced by the string
+                "**] ".)
+  /noisy        Re-enable printing of group messages.
+  /say          Say the message specified by the argument to all group
+                members.
+  /emote        Emote the message specified by the argument to all group
+                members.
+  /display      Display a list of all your group members and the 
+                name/description.
+  /all          Used along with "/display"; displays all groups.
+@@@@
+& @open
+@open <name>[/<source>] [= <destinations>]
+
+Creates a new exit (sometimes referred to as "action" in other systems)
+with the specifed name.  If a source is specified, the exit will be
+created pre-attached the that object, otherwise the source defaults
+to your location.  If destination(s) are specified, the exit is linked
+after creation, otherwise it is created unlinked.
+
+A source object must either be controlled by you, or set BUILDING_OK.
+If it is not, the exit creation will fail.
+
+Destinations are listed as a string of object names or numbers,
+separated by semicolons (;).  Objects must either be controlled by
+you, or be set LINK_OK in order for that particular link to succeed.
+Also, exits may only be linked to one player or room at a time.
+
+Exit names may also contain semicolons, each one defining an alias
+for that exit.
+
+The object number of the newly created exit will be stored in the
+CREATE-RESULT variable.  See VARIABLES.
+
+Example:
+        @open north;n;no;nor;nort/here = #666
+
+See also: EXITS
+@@@@
+& @link
+@link[/no_chown] <object> = <destination(s)>
+
+Link 'links' the specified object to the specified destination(s).  The
+action that this takes is defined by the type of object being linked.
+
+When linking exits, Wizards may specify the "/no_chown" switch to prevent
+the exit from being chowned to them.
+
+For players and objects, this sets the home.  See HOMES.
+For rooms, this sets the drop-to.  See DROP-TOs.
+For exits, this changes the exit's destination(s).  See @OPEN and EXITS.
+
+You must control the object being linked, and if setting the home of
+something, the destination must either by controlled by you or be
+set ABODE.  If setting the destination(s) or drop-to, the destination
+must either be controlled by you or be set LINK_OK.
+@@@@
+& @unlink
+@unlink <object>
+
+Unlinks the specified object.  Object must be either a room or exit.
+For rooms, this removes a previously set drop-to.  For exits, this
+removes all destinations.  You must control the object in order to
+unlink it, unless it is an exit, and you control it's destination.
+@@@@
+& @unlock
+@unlock <object>[/<lock>]
+
+Unlocks the specified object.  If a lock is specified, that lock is
+removed instead of the default.
+
+See also: LOCKS
+@@@@
+& @lock
+@lock <object>[/<lock>] = <expression>
+
+Sets the lock on the specified object to the specified expression.  If
+a lock is specified, that lock is set, rather than the default.
+
+See also: LOCKS
+@@@@
+& @lockout
+@lockout[/switches] [<host>][:[<hour>-<hour>][:<limit>]] [= <message>]
+
+Allows Wizards to view and manipulate the host lockout lists and other
+methods of limiting the ability of players to login to the server.
+
+By default, it will add the specifed host to the lockout list, delivering
+the specified message to any matching hosts, and then disconnecting
+them.  Host may be suffixed by an hour range (hours are specifed 00-23)
+and/or a login limit; if either, or both, are specified, the entry only
+applies during the specified time frame or if the number of players
+logged in from the site exceeds the limit.
+
+The following switches change how this command behaves:
+  /all          Takes no arguments; disables all ability to login.
+  /enable       Opposite of all, re-enables normal lockout behaviour.
+  /dump         Takes no arguments; displays the lockout lists.
+  /register     Add the entry to the registration lists, instead of
+                the lockout lists.
+  /allow        Add the entry to the allow lists, instead of the
+                lockout lists.
+  /clear        Removes all entries from all the lockout lists.
+
+See also: CONFIGURATION, @CONFIG
+@@@@
+& @copy
+@copy[/move] <object>/<attribute> = <destination>/<attribute>
+
+Copies the data from the specified attribute on the specified object,
+into the specified attribute on the specified destination object.
+
+You must either control the source object, or it be set VISUAL, and
+you must control the destination object for this to succeed.
+
+If the "/move" switches is specified, the source attribute is removed
+after the copy completes.
+
+This command is retained for compatibility with TeenyMUD 1.4, only, and
+has been obsoleted.  It may be removed in a future major release.
+@@@@
+& @owned
+@owned [<owner>] [= [!]<type>/<flags>]
+
+Lists all objects owned by the specified object.  With an optional type
+and/or flags specification, the search is limited to those objects
+matching the specified type and/or flags.  If the second argument is
+prefixed with an exclamation point ('!'), the search is limited to
+everything but the specified type and/or flags.  If the first argument
+is omitted, the owner searched for defaults to the player running the
+command.
+
+This command is available only to Wizards or above.
+@@@@
+& @palias
+@palias <player> [= <alias>]
+
+Sets the alias for the specified player (typically `me').  You must
+control the player being operated on, meaning usually only Wizards
+may set someone elses alias.  Without the alias argument, it unsets
+the player alias.
+
+See also: PLAYER ALIASES
+@@@@
+& @entrances
+@entrances [<object>]
+
+Lists all objects that have been linked to the specified object.  If
+no object is specified, it defaults to your location.  You must control
+the object being searched for.
+@@@@
+& @find
+@find <string> [= [!]<type>/<flags>]
+
+Lists all objects owned by you, whose names match the specified string.
+The specified string may contain regular expressions.  With an optional
+type and/or flags specification, the search is limited to those objects
+matching the specified type and/or flags.  If the second argument is
+prefixed with an exclamation point ('!'), the search is limited to
+everything but the specified type and/or flags.
+
+See also: REGULAR EXPRESSIONS
+@@@@
+& @trace
+@trace [<object>] [= <depth>]
+
+Lists all objects (usually rooms) that will be searched for exit commands
+when looking for a match from within the object.  If object is not
+specified, it defaults to your location.
+
+If depth is specified, it limits the search to that number of objects.
+
+See also: EXITS, ROOM LOCATIONS
+@@@@
+& @trigger
+@trigger <object>/<attribute> [= <argument1>,<argument2>,<argumentN>]
+
+Causes the specified object to execute commands contained within the
+specified attribute.  Any arguments are passed on to the parser, and
+used in substitutions.
+
+See also: SUBSTITUTIONS
+@@@@
+& @stats
+@stats[/full] [<player>]
+
+Returns a short statistic reflecting objects owned by the specified
+player, or without a player specification, lists the total number of
+objects in the system.
+
+If the "/full" switch is given, it forces long output.  When used without
+a player argument, for instance, this gives a long statistic report for
+the entire system.  Wizards always get full output.
+@@@@
+& @semaphore
+@semaphore <object>[/<delay>] = <command>
+
+Queues the specified command(s) to be run by the specified object
+when it recieves a semaphore notify.  If delay is specified, it is
+taken to be a timeout value in seconds; if the timeout elapses without
+a notification being recieved, the command(s) is run, anyway.
+
+Note that notifies are accumlative, so if the object has already received
+extra notifications, the command(s) will be executed immediately.
+
+See also: @NOTIFY
+@@@@
+& @children
+@children <object>
+
+Lists the children of the specified object.  You must either control the
+object, or it must be set PARENT_OK.
+
+See also: INHERITANCE
+@@@@
+& @edit
+@edit[/switches] <object>/<attribute> = <string>,<new string>
+
+Changes the specified string to the specified new string within the
+specified attribute on the specified object.  The attribute specification
+may contain regular expressions, in which case all matching attributes
+have the substition applied.  Since the string arguments are parsed
+using commas (","), they must be escaped with a backslash ("\") if they
+are to appear in the strings.
+
+If the first string is a "$", then the new string is appended to the
+existing attribute, instead of doing the replacement.  As well, if the
+first string is a "^", then the new string is prepended to the existing
+attribute value.
+
+This command accepts the following switches:
+  /all          Automatically edit all matching attributes.
+  /no_space     Do not insert a space when prepending or appending.
+@@@@
+& @sweep
+@sweep [<object>]
+
+Lists everything that may be listening within your location, or the
+specified object.  You must control the object if you specify one.
+@@@@
+& help
+help[/switches] [<subject>]
+
+Displays the help entry for the specified subject.  If no subject is
+specified, the "summary" entry is displayed.
+
+This command accepts the following switches:
+  /reload       Reloads the location map for the help file.
+  /nohtml       Do not send URL string.
+@@@@
+& news
+news[/switches] [<subject>]
+
+Displays the news entry for the specified subject.  If no subject is
+specified, the "summary" entry is displayed.
+
+This command accepts the following switches:
+  /reload       Reloads the location map for the news file.
+  /nohtml       Do not send URL string.
+@@@@
+& look
+look [<object>]
+
+Look at the specified object.  If no object is given, look around your
+current location.
+
+Objects must normally be in your location or inventory, but may be
+looked at remotely if you control it.
+
+This command triggers the Description, ODescription, and ADescription
+attributes.  The IDescription attribute can override the Description
+when looking around from within objects.  From within rooms, both
+Description and IDescription are triggered.
+@@@@
+& examine
+examine[/switches] [<object>/<attributes>] [= <attributes>]
+
+Lists all available data about the specified object.  If no object is
+specified, it defaults to your current location.  You must either
+control the object, or it must be set VISUAL, in order to examine
+it.  You may also examine exits linked to your objects, whether or not
+you own the exit.
+
+If an attributes argument is given, in either form, attribute output
+is limited to those only matching the specified regular expression.
+
+Valid switches (may be abbreviated):
+  /parents      Includes inherited attributes in the attribute listing.
+  /rooms        When examining a room, will also list all rooms within
+                that one.
+  /attrs        Other than the name, only show the object's attributes.
+  /sort         Sort (alphabetically by name) the object's attributes.
+@@@@
+& inventory
+inventory
+
+Lists all objects you carry.  If money is enabled, also lists how many
+pennies you have.
+@@@@
+& score
+score
+
+If money is enabled, displays how many pennies you have.
+@@@@
+& use
+use <object>
+
+Attempt to use the specified object.  If you pass the use lock, the
+Use, Ouse, and Ause attributes will be triggered.
+@@@@
+& home
+home
+
+Go home.  Immediately go home, and do not pass go.  All your possessions
+go home, as well.  Nothing receives $200.
+@@@@
+& go
+go <direction>
+
+Attempt to move in the specified direction.  Specifying a direction of
+"home" will cause you to return to your home (See HOME).
+
+Successfully moving through an exit will trigger its Success, OSuccess,
+ASuccess, Drop, ODrop, and ADrop attributes.  Failure to do so will
+trigger the Fail, OFail, and AFail attributes.  You must pass the exit's
+lock in order to go through it or otherwise use it.
+@@@@
+& hand
+hand <object> = <destination object>
+
+Attempt to hand the specified object to the specified destination object.
+You must be carrying the first object, and must pass the Enter lock of the
+destination to successfully do so.
+
+Successfully handing something to an object triggers its Enter, OEnter,
+AEnter and OXEnter attributes.  Failure to do so will trigger the
+EnterFail, OEnterFail, and AEnterFail attributes.
+@@@@
+& enter
+enter <object>
+
+Attempt to enter the specified object.  You must pass the Enter lock of
+the object to successfully do so.
+
+Successfully entering an object triggers the Enter, OEnter, AEnter, and
+OXEnter attributes.  Failure to do so will trigger the EnterFail,
+OEnterFail, and AEnterFail attributes.
+@@@@
+& leave
+leave
+
+Leave the object you are inside of.  There is no way to prevent this from
+succeeding.
+
+This triggers the Leave, OLeave, ALeave, and OXLeave attributes.
+@@@@
+& @attach
+@attach <exit> = <object>
+
+Attach the specified exit to the specified object, in effect changing its
+location.  You must control the exit, and the object for this to succeed.
+@@@@
+& take
+take <object>
+
+Attempt to pick up the specified object.  This will succeed if you pass
+the object's lock.
+
+This command will trigger the Success, OSuccess, and ASuccess attributes
+upon success.  Upon failure, the Fail, OFail, and AFail attributes would
+be triggered.
+@@@@
+& drop
+drop <object>
+
+Drop the specified object.  This will remove it from your inventory and
+place it in your current location, unless the object is set STICKY
+(which will cause it to go home), or the room has a drop-to.
+
+See also: DROP-TOs
+@@@@
+& kill
+kill[/slay] <player> [= <cost>]
+
+Attempt to kill the specified player, sending them to their home.  If
+money is enabled, and a cost is specified, then the cost becomes the
+percentage chance of the kill succeeding; a cost of 100 will always work.
+The victim will be rewarded one half the amount it cost to kill them.
+
+People can not be killed in locations set HAVEN.
+
+Kill will trigger the Kill, OKill, and AKill attributes on the victim,
+if successfull.  If not successfull, it will trigger the KillFail,
+OKillFail, and AKillFail attributes on the victim, or the location
+if the kill failed due to the location being set HAVEN.
+
+Wizards may also give the "/slay" switch, which prevents the victim from
+receiving any money.
+
+See also: BEING KILLED
+@@@@
+& @teleport
+@teleport [<object> =] <location>
+
+Attempt to teleport the specified object (which may be a player, thing,
+or room) to the new specified location.  For players and things, you
+must either control both the object and location, or they must be both
+set JUMP_OK and you must pass the TelInLock or TelOutLock (whichever
+is applicable).  On rooms, this simply changes the room location, which
+you must either control or be set ABODE.
+
+On players and things, this will trigger the OTeleport, ATeleport, and
+OXTeleport attributes upon success.
+@@@@
+& @recycle
+@recycle[/override] <object>
+
+Recycles the specified object, freeing the space it was using in the
+database, and allowing its object number to be reused.  You must
+own the object, or it must be set DESTROY_OK; Wizards must specify
+the "/override" switch in order to recycle other peoples objects.
+
+The cost of creating the object will be returned to its owner, if money
+is enabled.
+
+Players can not (normally) be recycled, they must be toaded first.
+@@@@
+& @charge
+@charge <object> [= <charges>]
+
+Set the amount of charges the object has left.  You must control the
+object, and charges must be a number.  If charges is not specified,
+the object is no longer "charged."
+
+See also: CHARGES
+@@@@
+& @set
+& &
+@set <object> = [!]<flag>
+@set <object> = <attribute>[:<value>]
+@set <object> = <attribute>/<attribute flag>
+&<attribute> <object> [= <value>]
+
+Set (or unset) a flag on the specified object, or if using the expanded
+syntax, set (or unset) an attribute, or set (or unset) a flag on an attribute.
+
+To set a flag, simply give the name of the flag.  To unset the flag if it's
+already set, simply preface the name of the flag with an exclamation point
+('!').
+
+To set an attribute, simply specify the name of the attribute, followed
+immediately by a colon (':'), and the value for the attribute.  If no
+value is given, the attribute will be removed.
+
+See @SET2 for more information.
+@@@@
+& @set2
+@set <object> = [!]<flag>
+@set <object> = <attribute>[:<value>]
+@set <object> = <attribute>/<attribute flag>
+&<attribute> <object> [= <value>]
+
+To set a flag on an attribute, simply specify the name of the attribute,
+followed immediately by a slash ('/'), and the name of the attribute flag.
+If the attribute flag name is prefaced by an exclamation point ('!'), the
+attribute flag will be unset.
+
+The '&' form of the command is a shortcut, and is used by giving the
+attribute name immediately after the '&' sign, the object, and then
+the optional value.  If no value is given, the attribute is removed.
+
+See also: ATTRIBUTES, ATTRIBUTE FLAGS, OBJECT FLAGS
+@@@@
+& @password
+@password <old password> = <new password>
+
+This changes your password to the specified new password, if the specified
+old password matches your current password.
+@@@@
+& give
+give <object> = <amount>
+
+Give the specified amount of money to the specified object.  Object is
+usually a player, but can be anything that has a cost set.
+
+Wizards may give negative amounts of money to players, reducing the amount
+of money the player has.
+
+Give will trigger the Pay, OPay, and APay attributes.
+
+See also: @COST
+@@@@
+& @cost
+@cost <object> [= <amount>]
+
+Sets the cost of the specified object, i.e., how much money it has to be
+given before the Pay, OPay, and APay attributes are triggered.  Amounts
+smaller than the cost are rejected, when given.  If amount is not specified,
+or specified as zero, the cost is unset.
+
+Objects do not really hold money; any money given to them goes to their
+owner.
+
+See also: GIVE
+@@@@
+& pose
+& emote
+& :
+:<string>
+pose <string>
+
+Causes the specified string to be sent to everyone in the same location
+as the person running it, prepended with the person's (or object's) name.
+
+If the string begins with a single quote or comma, or the command name
+is used and the no_space switch is given, no space will be printed following
+the name.
+
+The full name version of this command accepts the following switches:
+  /no_space      Don't place a space between the name and message.
+@@@@
+& @emit
+@emit[/others] <string>
+
+Causes the specified string to be sent to everyone in the same location
+as the person running it.
+
+This command accepts the following switches:
+  /others       Send the string to everyone except the originating player.
+  /html         Send the string as intact HTML code to HTML-capable players.
+@@@@
+& @pemit
+@pemit <player> = <string>
+
+Causes the specified string to be sent to the specified player.  You
+must pass the player's PageLock for this to work, and they must pass
+yours.
+
+This command accepts the following switches:
+  /html         Send the string as intact HTML code to HTML-capable players.
+@@@@
+& page
+page <player> [= <message>]
+
+Sends a message to the specified player, if they're logged in.  If no message
+is specified, they will simply be told that they are being paged, and from
+where.
+
+You must pass the player's PageLock in order to page them, and the player
+must pass yours.  Only messages can be sent with page from HIDDEN locations.
+@@@@
+& say
+& "
+"<string>
+say <string>
+
+Sends the string, prepended with your name and a phrase stating that you
+said it, to everyone in your location.
+@@@@
+& whisper
+whisper <player> = <message>
+
+Sends the specified message to the specified player in a private manner.
+Noone else will receive the message.  Usually, the player must be in the
+same location, except for Wizards, which may preface the player name with
+a splat ('*') sign, and whisper to any logged in player.
+@@@@
+& @wall
+@wall <message>
+
+Sends the specified message to every logged in player.  Only wizards may
+use this command.
+
+This command accepts the following switches:
+  /no_space     Don't print a space between the preface and message.
+  /god         Only send the message to logged in Gods.
+  /wizard      Only send the message to logged in Wizards.
+  /pose        Treat the message as it were an emote.
+  /emit        Broadcast the message only, with no preface at all.
+@@@@
+& @wait
+@wait <delay>[/<object>] = <command>
+
+Causes the specified command(s) to be executed in the specified (delay)
+number of seconds.  If the delay value is suffixed by 'm', 'h', or 'd',
+the value is taken to represent that many minutes, hours, or days,
+instead of seconds.  If an object is given, the commands are executed
+by that object (See @FORCE).
+@@@@
+& @wipe
+@wipe <object>[/<regular expression>]
+
+Removes all matching attributes from the specified object, or all
+attributes if no regular expression is specified.  Only those
+attributes you have write access to are removed.
+@@@@
+& @ps
+@ps[/switches] [<object>]
+
+Displays the process (wait) queue; only the processes owned by the
+specified object are listed.  You must control the object.
+
+This command accepts the following switches:
+  /all          Displays all processes in the system.
+  /cause        Search by cause instead of owner.
+  /owned        Lists all processes running by objects of the same owner.
+@@@@
+& gripe
+gripe <message>
+
+Sends the specified message to the system maintainer, as well as all logged
+in Gods and Wizards.
+@@@@
+& @version
+@version
+
+Prints the version string of the currently running server.
+@@@@
+& @boot
+@boot[/nomesg] <player> [= <fd>]
+
+Disconnect the specified player from the game.  If an fd argument is given,
+only the login to that player from that specific fd will be disconnected.
+If the "/nomesg" switch is given, the player will be given no notification
+before they are disconnected.
+
+Only wizards may use this command.
+
+See also: SESSION
+@@@@
+& @chown
+@chown <object> = <owner>
+
+Changes the ownership of the specified object to the specified new owner.
+The object must either be CHOWN_OK, or the command run by a Wizard.
+@@@@
+& @dump
+@dump
+
+Flushes the database cache to disk, and backs up the database files.
+The name 'dump' is used for historic reasons.
+
+Only Wizards may use this command.
+@@@@
+& @newpassword
+@newpassword <player> [= <password>]
+
+Sets the password of the specified player.  Only Wizards may use this
+command.  A God may omit the password argument, in which the player's
+password is removed.
+@@@@
+& @toad
+@toad <player> [= <owner>]
+
+Turns the specified player into a smily toad.  If an owner is specified,
+all of the player's objects are chowned to it, otherwise all of the
+player's objects are recycled.
+
+Only Wizards may use this command.
+@@@@
+& @shutdown
+@shutdown
+
+Shuts down the server.  Only Wizards may use this command.
+@@@@
+& @pcreate
+@pcreate <name> [= <password>]
+
+Creates a new player, with the specified name and password.  If no
+password is specified, the player is created without one.  This command
+primarily useful on systems where it is not possible to create new
+players from the greetings screen.  The new player is usually created
+in your current location, unless registration is in effect, in which
+case the player is created in the default starting location.
+
+Only a God may use this command.
+@@@@
+& @purge
+@purge <player>
+
+Destroys all of the specified player's objects.  Only Wizards may use this
+command.
+@@@@
+& @chownall
+@chownall <player> = <owner>
+
+Chowns all of the specified player's objects to the specified owner.  Only
+Wizards may use this command.
+@@@@
+& @quota
+@quota [<player>] [=<value>]
+
+For normal players, this command displays their current object quota.
+For Wizards, this command will display the current object quota of the
+specified player, or if a value is given, set their object quota to that
+value.
+@@@@
+& @poor
+@poor <value>
+
+Sets the amount of money every player has to the specified value.  Useful
+when running an old database that didn't support money, on a server that
+does.
+@@@@
+& @motd
+@motd[/set] [<which>] [= <message>]
+
+If the "/set" switch is given, this sets the user-specified portion of the
+'motd' system to the specified message, or if no message is given, clears it.
+The first argument specifies which portion of the 'motd' system to set, and
+can be one of "wiz", for the Wizard motd, "motd", for the normal motd, or
+"new", for the new-player motd. Only wizards may do this.
+
+Otherwise, the current message of the day is printed.
+@@@@
+& quit
+QUIT
+
+Disconnects you from the system, and notifies everyone in your location
+that you've disconnected.
+@@@@
+& who
+WHO [<player>]
+
+Displays a tally of all logged in players, how long they've been on, their
+idle time, and the message that they've set with the @DOING command.
+Wizards also see a select set of flags.  If an argument is given, only
+players matching that string are listed.
+@@@@
+& where
+WHERE [<player>]
+
+Displays a tally of all logged in players, and possibly their location.
+Wizards see their location number, fd number, port number, and from where
+the connection originates.  If an argument is given, only players matching
+that string are listed.
+
+If a player is not set HIDDEN, and their location is not set HIDDEN, normal
+players will see their location name in the output from WHERE.  If the
+player running the WHERE controls the location, they will also see the
+location number.
+@@@@
+& session
+SESSION [<player>]
+
+Displays a tally of all logged in players, how many times they've blown
+their input quota, and how many bytes they've sent and received.  Only
+Wizards may use this command.
+@@@@
+& stty
+STTY [<mode> <option>]
+
+Displays your current connection's settings, or with the optional
+arguments changes those settings.  mode may be specified as either
+"wrap", "nlmode", or "html".
+
+The option argument to "wrap" should be a number; specifing a setting of
+0 turns off line wrap.
+
+The option argument to "nlmode" should be one of: "crnl", "nlcr", "cr",
+or "nl"; the newline termination will be set appropriately.  crnl is the
+default.
+
+The option argument to "html" should be either "pueblo" or "none".  none
+is the default.
+
+See also: @SAVESTTY
+@@@@
+& @savestty
+@savestty[/switches] [<player>]
+
+Saves the connection settings (set via STTY) for the specified player;
+if no player is specified, the player typing the command is assumed.
+The saved settings will be restored whenever the player connects to
+the server.
+
+NOTE: Due to the nature of this command's implementation, if the player
+      is connected to the server multiple times, results may not be as
+      expected.
+
+This command accepts the following switches:
+  /clear        The existing saved stty settings are removed.
+  /restore      The saved stty settings are restored to the current ones.
+
+See also: STTY
+@@@@
+& configuration
+CONFIGURATION
+
+The dynamic configuration system uses a set of key words to determine
+which of the internal options are changed.  There are also some that can
+only be set at initialization time, for security reasons.  These options
+can be set at initialization time from a configuration file, and/or set
+via the @CONFIG command.
+
+See CONFIGURATION OPTIONS for more information.
+@@@@
+& configuration options
+CONFIGURATION OPTIONS
+
+The following configuration options are supported.  An asterisk ('*')
+denotes an option that may only be set at initialization time, and the
+trailing letter denotes the type of value this option takes.  Help is
+available for each one, and asking for help on the configuration name
+suffixed by the word 'configuration'.  'S' denotes a string value, 'B'
+boolean (on/off or yes/no), 'F' object flags, 'N' a number, and 'T' for
+a time value.
+
+mudname [S*]            hostnames [B]           registration [B]
+registername [B]        logcommands [B]         enable_quota [B]
+enable_money [B]        enable_groups [B]       enable_autotoad [B]
+enable_autohome [B]     enable_pueblo [B]       wizwhoall [B]
+dark_sleep [B]          compact_contents [B]    file_access [B*]
+file_exec [B*]          enable_rwho [B*]        hfile_autoload[B]
+default_port [N*]       rwho_port [N*]          starting_loc [N*]
+root_location [N]       player_god [N*]         parent_depth [N]
+exit_depth [N]          room_depth [N]          growth_increment [N*]
+slack [N*]              starting_quota [N]      starting_money [N]
+daily_paycheck [N]      queue_commands [N]      queue_cost [N]
+find_cost [N]           limfind_cost [N]
+
+See CONFIGURATION OPTIONS2 for more information.
+@@@@
+& configuration options2
+CONFIGURATION OPTIONS
+
+stat_cost [N]           fullstat_cost [N]       room_cost [N]
+thing_cost [N]          exit_cost [N]           minkill_cost [N]
+maxkill_cost [N]        max_list [N]            max_commands [N]
+max_pennies [N]         cache_size [N*]         cache_width [N*]
+cache_depth [N*]        queue_slice [N]         build_flags [F]
+robot_flags [F]         wizard_flags [F*]       god_flags [F*]
+player_flags [F]        money_penny [S]         money_nickle [S]
+money_dime [S]          money_quarter [S]       money_dollar [S]
+money_pennies [S]       money_nickles [S]       money_dimes [S]
+money_quarters [S]      money_dollars [S]       dump_interval [T]
+login_timeout [T]       player_timeout [T]      rwho_interval [T]
+rwho_passwd [S*]        rwho_host [S*]          help_url [S]
+news_url [S]            dbm_file [S*]           db_file [S*]
+help_file [S]           news_file [S]           motd_file [S]
+wizn_file [S]           greet_file [S]          newp_file [S]
+register_file [S]       bye_file [S]            shtd_file [S]
+guest_file [S]          timeout_file [S]        badconn_file [S]
+badcrt_file [S]         status_file [S]         gripe_file [S]
+command_file [S]        error_file [S]          panic_file [S]
+chdir_path [S*]         files_path [S*]
+@@@@
+& mudname configuration
+CONFIGURATION OPTIONS
+
+mudname.  Specifies the name of the system, which is used in log files
+and as identification to RWHO servers.
+@@@@
+& hostnames configuration
+& registration configuration
+& registername configuration
+& logcommands configuration
+& wizwhoall configuration
+CONFIGURATION OPTIONS
+
+hostnames.  Specifies whether or not hostnames (versus IP numbers) will
+be looked up for incoming connections.
+
+registration.  If true, no player creation from the greet screen is allowed
+at all.
+
+registername.  If true, and registration is also true, players will not be
+allowed to change their names.  This defaults to true, while registration
+defaults to false.
+
+logcommands.  If true, all commands (instead of just sensitive ones) are
+logged to the commands log file.
+
+wizwhoall.  Specifies whether or not all players see the information
+normally reserved for Wizards in the WHO, WHERE and SESSION commands.
+@@@@
+& enable_quota configuration
+& enable_money configuration
+& enable_groups configuration
+& enable_autotoad configuration
+& enable_autohome configuration
+& enable_rwho configuration
+& enable_pueblo configuration
+CONFIGURATION OPTIONS
+
+enable_quota.  Specifies whether or not object quotas will be used.
+
+enable_money.  Specifies whether or not money (pennies) will be used.
+
+enable_groups.  Specifies whether or not the GROUPS system is active.
+
+enable_autotoad.  Specifies whether or not AUTO-TOAD is active.
+
+enable_autohome.  Specifies whether or not players will go home upon
+disconnection.
+
+enable_rwho.  Specifies whether or not RWHO support is active.
+
+enable_pueblo.  Specifies whether or not the server will send and accept
+the Pueblo handshake.
+
+See also: AUTO-TOAD, GROUPS
+@@@@
+& dark_sleep configuration
+& compact_contents configuration
+& file_access configuration
+& file_exec configuration
+& hfile_autoload configuration
+CONFIGURATION OPTIONS
+
+dark_sleep.  Specifies whether or not disconnected players are normally
+visible.
+
+compact_contents.  Specifies whether or not contents list (except for
+EXAMINE) will be displayed in a more compact form.
+
+file_access.  Specifies whether or not the server can access (read)
+certain files.
+
+file_exec.  Specifies whether or not the server can execute certain files.
+
+hfile_autoload.  Specifies whether or not the server will `autoload' the
+location maps for the help and news files each time their timestamps
+change.
+@@@@
+& default_port configuration
+& rwho_port configuration
+CONFIGURATION OPTIONS
+
+default_port.  Specifies the TCP/IP port number that the server will
+listen for connections on.
+
+rwho_port.  Specifies the UDP port number that the server will attempt
+to communication with the RWHO server on.
+@@@@
+& starting_loc configuration
+& root_location configuration
+& player_god configuration
+CONFIGURATION OPTIONS
+
+starting_loc.  Specifies the starting location of newly created players.
+
+root_location.  Specifies the object number of the Root Room.
+
+player_god.  Specifies the object number of the default God player.
+@@@@
+& parent_depth configuration
+& exit_depth configuration
+& room_depth configuration
+CONFIGURATION OPTIONS
+
+parent_depth.  Specifies the maximum number of parents an object may
+have.
+
+exit_depth.  Specifies the maximum recursion depth within exit links.
+
+room_depth.  Specifies the maximum depth of room locations.
+@@@@
+& growth_increment configuration
+& slack configuration
+CONFIGURATION OPTIONS
+
+growth_increment.  Specifies how many extra slots are created when the
+internal database array is extended.  Generally should be larger on a
+system that has a lot of building going on.
+
+slack.  Specifies how many extra internal object structures are kept
+around.  Generally should be larger the more building is going on.
+@@@@
+& starting_quota configuration
+& starting_money configuration
+& daily_paycheck configuration
+CONFIGURATION OPTIONS
+
+starting_quota.  Specifies the initial object quota value for new players.
+
+starting_money.  Specifies the initial money value for new players.
+
+daily_paycheck.  Specifies the amount of money that players receive each
+day that they connect to the server.
+@@@@
+& money_penny configuration
+& money_nickle configuration
+& money_dime configuration
+& money_quarter configuration
+& money_dollar configuration
+& money_pennies configuration
+& money_nickles configuration
+& money_dimes configuration
+& money_quarters configuration
+& money_dollars configuration
+CONFIGURATION OPTIONS
+
+money_penny.  Specifies the name for one piece of money.
+
+money_nickle.  Specifies the name for five pieces of money.
+
+money_dime.  Specifies the name for ten pieces of money.
+
+money_quarter.  Specifies the name for twenty-five pieces of money.
+
+money_dollar.  Specifies the name for one-hundred pieces of money.
+
+money_pennies, money_nickles, money_dimes, money_quarters,
+money_dollars.  Species the plural names for the above.
+@@@@
+& queue_commands configuration
+& queue_cost configuration
+CONFIGURATION OPTIONS
+
+queue_commands.  Specifies the number of commands that may be queued up
+by a player's objects before they are charged anything.
+
+queue_cost.  Specifies the amount of money that a player is charged when
+they've queued up the number of commands specified by queue_commands.
+@@@@
+& find_cost configuration
+& limfind_cost configuration
+& stat_cost configuration
+& fullstat_cost configuration
+CONFIGURATION OPTIONS
+
+find_cost.  Specifies the amount of money a full @FIND command costs.
+
+limfind_cost.  Specifies the amount of money a limited @FIND command
+costs (i.e., has a second argument of some sort).
+
+stat_cost.  Specifies the amount of money the @STAT command costs.
+
+fullstat_cost.  Specifies the amount of money a full @STAT command costs.
+@@@@
+& room_cost configuration
+& thing_cost configuration
+& exit_cost configuration
+& minkill_cost configuration
+& maxkill_cost configuration
+CONFIGURATION OPTIONS
+
+room_cost.  Specifies the amount of money it costs to @DIG a room.
+
+thing_cost.  Specifies the amount of money it costs to @CREATE something.
+
+exit_cost.  Specifies the amount of money it costs to @OPEN an exit.
+
+minkill_cost.  Specifies the minimum amount of money the KILL command
+costs.
+
+maxkill_cost.  Specifies the maximum amount of money the KILL command
+costs.
+@@@@
+& max_list configuration
+& max_commands configuration
+& max_pennies configuration
+CONFIGURATION OPTIONS
+
+max_list.  Specifies the maximum (displayed) length of an object
+list (such as contents).
+
+max_commands.  Specifies the maximum number of commands the server
+will respond to from a network connection, during one second.
+
+max_pennies.  Specifies the maximum amount of money a player may
+normally possess.
+@@@@
+& cache_size configuration
+& cache_width configuration
+& cache_depth configuration
+& queue_slice configuration
+CONFIGURATION OPTIONS
+
+cache_size.  Specifies the maximum size (in bytes) of the object cache.
+
+cache_width.  Specifies the initial width (in objects) of the cache.
+
+cache_depth.  Specifies the maximum depth (in objects) of the cache.
+
+queue_slice.  Specifies how many commands are run off of the top of
+the queue at once.  The higher the setting, the slower interactive
+response time gets.
+@@@@
+& build_flags configuration
+& robot_flags configuration
+& wizard_flags configuration
+CONFIGURATION OPTIONS
+
+build_flags.  Specifies the object flags required in order to create
+things (i.e., build).  This may be set to `no flags' by using the number
+0 or word "none" in place of flag letters.
+
+robot_flags.  Specifies the object flags required to be considered a
+robot.  Usuaully this entails special input/output processing features.
+This may be set to `no flags' by using the number 0 or word "none" in
+place of flag letters.
+
+wizard_flags.  Specifies the flags required to be a Wizard.  This may be
+set to `no flags' by using the number 0 or word "none" in place of
+flag letters.
+@@@@
+& god_flags configuration
+& guest_flags configuration
+& player_flags configuration
+CONFIGURATION OPTIONS
+
+god_flags.  Specifies the flags required to be a God.  This may be set
+to `no flags' by using the number 0 or word "none" in place of flag letters.
+
+guest_flags.  Specifies the flags needed in order to be considered a
+guest.  This may be set to `no flags' by using the number 0 or word
+"none" in place of flag letters.
+
+player_flags.  Specifies the initial flags for newly created players.
+This may be set to `no flags' by using the number 0 or word "none" in
+place of flag letters.
+@@@@
+& dump_interval configuration
+& login_timeout configuration
+& player_timeout configuration
+CONFIGURATION OPTIONS
+
+dump_interval.  Specifies how often the object cache is flushed to disk,
+and the database backed up, in seconds.
+
+login_timeout.  Specifies the idle timeout, in seconds, for connections that
+haven't logged into a player, yet.
+
+player_timeout.  Specifies the idle timeout, in seconds, for logged in
+players.
+@@@@
+& rwho_interval configuration
+& rwho_passwd configuration
+& rwho_host configuration
+CONFIGURATION OPTIONS
+
+rwho_interval.  Specifies the period, in seconds, between updates sent
+to the RWHO server.
+
+rwho_passwd.  Specifies the password used in talking to the RWHO server.
+
+rwho_host.  Specifies the hostname of the RWHO server to use.
+@@@@
+& help_url configuration
+& news_url configuration
+CONFIGURATION OPTIONS
+
+help_url.  Specifies the URL string sent to HTML-capable players when they
+run the help command.
+
+news_url.  Specifies the URL string sent to HTML-capable players when they
+run the news command.
+@@@@
+& dbm_file configuration
+& db_file configuration
+& help_file configuration
+& news_file configuration
+& greet_file configuration
+& motd_file configuration
+& wizn_file configuration
+CONFIGURATION OPTIONS
+
+dbm_file.  Specifies the name of the file passed to the DBM library,
+including extension.
+
+db_file.  Specifies the name of the in-core database when saved to disk.
+
+help_file.  Specifies the name of the help text file.
+
+news_file.  Specifies the name of the news text file.
+
+greet_file.  Specifies the name of the file that is sent to all network
+connections.
+
+motd_file.  Specifies the name of the file that is sent to all players
+as they log in.
+
+wizn_file.  Specifies the name of the file that is sent to all Wizards
+as they log in.
+@@@@
+& newp_file configuration
+& register_file configuration
+& bye_file configuration
+& shtd_file configuration
+& guest_file configuration
+& timeout_file configuration
+& badconn_file configuration
+& badcrt_file configuration
+CONFIGURATION OPTIONS
+
+newp_file.   Specifies the name of the file sent to all newly created
+players.
+
+register_file.  Specifies the name of the file sent to all player
+creation attempts which fail due to registration being in effect.
+
+bye_file.  Specifies the name of the file sent when a player disconnects.
+
+shtd_file.  Specifies the name of the file sent when the server shuts down.
+
+guest_file.  Specifies the name of the file sent to Guests when they
+connect.
+
+timeout_file.  Specifies the name of the file sent to players when they
+idle too long and are timed out.
+
+badconn_file.  Specifies the name of the file sent to a network
+connection when a player login fails.
+
+badcrt_file.  Specifies the name of the file sent to a network connection
+when a player creation attempt fails for some reason other than
+registration.
+@@@@
+& status_file configuration
+& gripe_file configuration
+& command_file configuration
+& error_file configuration
+& panic_file configuration
+CONFIGURATION OPTIONS
+
+status_file.  Specifies the name of the `status' log file.  If specified
+as a dash ('-'), the log is sent to stderr.
+
+gripe_file.  Specifies the name of the `gripe' log file.  If specified as
+a dash ('-'), the log is sent to stderr.
+
+command_file.  Specifies the name of the `command' log file.  If
+specified as a dash ('-'), the log is sent to stderr.
+
+error_file.  Specifies the name of the `errors' log file.  If specified
+as a dash ('-'), the log is sent to stderr.
+
+panic_file.  Specifies the name of `panic' log file.  If specified as a
+dash ('-'), the log is sent to stderr.
+@@@@
+& chdir_path configuration
+& files_path configuration
+CONFIGURATION OPTIONS
+
+chdir_path.  Specifies the directory name that the server (and other
+utilities) change their working directory to directly after reading the
+configuration file.  Useful primarily for debugging purposes.
+
+files_path.  Specifies the directory name that the server can find the
+files referenced by objects in.  See FILES and FILE_OK.
+@@@@
+& auto-toad
+AUTO-TOAD
+
+If `auto-toad' is active, the server will automatically recycle any
+players that A.) Do not have a Description set, and B.) Do not own
+any objects.  This is meant to cut down on database bloat.  The
+name is retained for historic reasons.
+@@@@
+& groups
+GROUPS
+
+Groups are a facility by which players (as a group or channel) may
+communicate across large distances, as well as follow each other around
+the database.  Messages sent to all group members are prefaced with the
+string `**] '.  When a group leader disconnects, the group is automatically
+dissolved.
+@@@@
+& homes
+HOMES
+
+The concept of a 'home', or 'homes', is quite simple, really.  A player's
+home is where they go when they type 'home', or are killed.  An object's
+home is where it goes when the player carrying it goes home, or when it's
+dropped and is set STICKY.  As well, if an exit's destination is set to
+HOME, then anything going through it will end up in their home.
+@@@@
+& room locations
+ROOM LOCATIONS
+
+All rooms have a location, of a sort.  This defaults to the "Root Room", and
+is set with the @TELEPORT command.  Room locations are useful because they
+define a chain of rooms that are searched for matching exits, whenever
+something tries to use an exit.  This search begins with the current
+location, and then searches backwards through each location, until it
+reaches the "root" room.  This allows "global exits" and "zones" to be
+created with ease.
+
+See also: ROOT ROOM
+@@@@
+& root room
+ROOT ROOM
+
+The Root Room is, quite literally, the center of the universe, as far as
+TeenyMUD is concerned.  It is the default location of all rooms on the
+system, and it is always checked for matching exists. It (and its contents)
+are always checked for matching $-commands, allowing global commands to be
+defined by the database.
+
+As such, non-Wizard players (and their objects) should NEVER be allowed in
+the Root Room, since they could also define global $-commands.
+
+See also: EXITS, ROOM LOCATIONS, $-COMMANDS
+@@@@
+& flags
+& object flags
+OBJECT FLAGS
+
+TeenyMUD supports a vast number of 'object flags', settings that change
+how an object behaves or interacts with others.  Help is available on
+each individual flag.
+
+ABODE           ACTION          AUDIBLE         BUILDER
+BUILDING_OK     CHOWN_OK        DARK            DESTROY_OK
+ENTER_OK        ELOQUENT        EXTERNAL        FILE_OK
+GOD             GUEST           HALT            HAVEN
+HIDDEN          INHERIT         JUMP_OK         LIGHT
+LINK_OK         LISTENER        NOSPOOF         NOCHECK
+OBVIOUS         OPAQUE          PARENT_OK       PICKY
+PUPPET          QUIET           RETENTIVE       REVERSED_WHO
+ROBOT           STICKY          TRANSPARENT     VISUAL
+WIZARD
+
+See also: TYPES, ATTRIBUTE FLAGS
+@@@@
+& abode
+ABODE (A)
+
+The ABODE flag allows anyone to set the HOME of an object that they own,
+to the ABODE object.
+
+When this flag is set, it makes the object number visible.
+@@@@
+& action
+ACTION (a)
+
+The ACTION flag specifies that an exit is to be treated as an action,
+that is, it will behave differently than a normal exit.  Examples of
+this include, if the exit is linked to an object, the object can be
+brought to the location of the object that triggered the exit, rather
+than the object that triggered the exit being moved to inside of the
+destination.
+
+See also: EXITS
+@@@@
+& audible
+AUDIBLE (v)
+
+If an exit is set AUDIBLE, all noises in its source location will be
+echoed to its destination.  If a player or thing are set AUDIBLE,
+all noises that take place outside of the object will be echoed to
+the inside of the object.  This flag can not be set on rooms.
+@@@@
+& builder
+BUILDER (B)
+
+If a player is set BUILDER, they generally have permission to create
+objects, and otherwise expand the database.
+@@@@
+& building_ok
+BUILDING_OK (B)
+
+If a thing or a room is set BUILDING_OK, then anyone may open exits in
+that location.
+
+When this flag is set, it makes the object number visible.
+
+See also: @OPEN
+@@@@
+& chown_ok
+CHOWN_OK (C)
+
+If a thing, exit, or room is set CHOWN_OK, then anyone may change the
+owner of the object to themselves.
+
+When this flag is set, it makes the object number visible.
+
+See also: @CHOWN
+@@@@
+& dark
+DARK (D)
+
+If something is set DARK, then it doesn't show up to the normal 'look'
+type operations.  If a room is set DARK, then it's contents don't show
+up.
+
+DARK objects may only be dropped in locations in you own.
+@@@@
+& destroy_ok
+DESTROY_OK (d)
+
+If something is set DESTROY_OK, then anyone may @recycle it.
+
+When this flag is set, it makes the object number visible.
+
+See also: @RECYCLE
+@@@@
+& enter_ok
+ENTER_OK (e)
+
+Setting the ENTER_OK flag on an object makes it 'enterable', and anything
+may enter it if the EnterLock is not set.
+
+See also: ENTER
+@@@@
+& external
+EXTERNAL (x)
+
+If an exit is set EXTERNAL, it is matched from 'outside' it's location.
+I.e., an EXTERNAL exit on an object can only be triggered from that object's
+location, rather than from inside the object.
+
+See also: EXITS
+@@@@
+& file_ok
+FILE_OK (F)
+
+If something is set FILE_OK, it has the ability to reference any of the
+server's files, including those owned by other objects.  This flag may
+only be set a by a GOD.
+@@@@
+& god
+GOD (G)
+
+If something is set GOD, they are all-powerful, and capable of many
+extraordinary feats.  They also have unusually large egos.  Only another
+GOD may set this flag.
+@@@@
+& guest
+GUEST (g)
+
+The GUEST flag usually denotes a player with the least privileges
+possible.  It is often set upon players that are considered 'guests',
+with public passwords.
+@@@@
+& halt
+HALT (h)
+
+If something is set HALT, no further commands will be run by it from
+the @wait queue.  This flag is normally only set (and unset) internally.
+
+See also: @WAIT, @PS, @HALT
+@@@@
+& startup
+STARTUP (s)
+
+This flag denotes something that has a 'Startup' attribute.  This flag
+is set (and unset) only internally.
+
+See also: ATTRIBUTES
+@@@@
+& haven
+HAVEN (H)
+
+If something is set HAVEN, then things may not be killed from within it.
+
+See also: KILL
+@@@@
+& hidden
+HIDDEN (i)
+
+If something is set HIDDEN, then it's location is no longer public, and
+will not displayed by such commands as WHERE.
+
+See also: WHERE
+@@@@
+& inherit
+INHERIT (I)
+
+If something is set INHERIT, it inherits the powers of it's owner, to
+a limited extent:  if the owner is a Wizard, then the object gains Wizard
+powers, and the object may force it's owner.  If a player is set INHERIT,
+then it has the same effect as if all of their objects were set INHERIT.
+@@@@
+& jump_ok
+JUMP_OK (J)
+
+If something is set JUMP_OK, then anyone may @teleport to or from that
+object.  As well, anyone may @teleport a JUMP_OK player or thing at
+will, as long as they have @teleport permission on the location and
+destination.
+
+When this flag is set, it makes the object number visible.
+
+See also: @TELEPORT
+@@@@
+& light
+LIGHT (t)
+
+The LIGHT flag reverses some of the affects of the DARK flag.  If the
+LIGHT flag is set on a thing or player, they will show up in the
+contents of a DARK location; if an exit is set LIGHT, it's messages
+will still be sent to DARK locations.
+@@@@
+& link_ok
+LINK_OK (L)
+
+If something is set LINK_OK, then anyone may link exits to it.
+
+When this flag is set, it makes the object number visible.
+
+See also: @LINK
+@@@@
+& listener
+LISTENER (l)
+
+If something is set LISTENER, it 'listens' for strings that match its
+attributes, and runs commands when they do.
+
+For instance, if an object were set LISTENER, and had the following
+attribute set
+       Foo: ^*foo*::heard the f word!
+the object would run ':heard the f word!' everytime it heard anything
+which contains 'foo'.  The "^" character denotes listening attributes.
+
+The "^" attributes only listen for strings caused by other objects,
+and won't match against anything produced by the object itself.  To
+listen for strings set off by the same object, use "+", instead.
+@@@@
+& nospoof
+NOSPOOF (n)
+
+If a player is set NOSPOOF, the object number of the original cause of all
+messages is prefaced to any that the player hears.
+@@@@
+& nocheck
+NOCHECK (N)
+
+If something is set NOCHECK, it will simply not be checked for any
+$-commands.  This flag is especially recommended for the Root Room and
+any of its contents, if they don't have any $-commands.
+
+See also: $-COMMANDS
+@@@@
+& obvious
+OBVIOUS (O)
+
+If an exit is set OBVIOUS, it will be listed whenever something looks around,
+from inside of it's location.
+@@@@
+& opaque
+OPAQUE (o)
+
+If a thing or player is set OPAQUE, their contents can not be seen from
+outside.
+@@@@
+& parent_ok
+PARENT_OK (X)
+
+If something is set PARENT_OK, anyone may @parent their objects to it,
+allowing those objects to inherit attributes off of the parent.
+
+When this flag is set, it makes the object number visible.
+
+See also: INHERITANCE
+@@@@
+& picky
+PICKY (y/P)
+
+If something is set PICKY, only objects of the same type may inherit
+attributes from it.  If an attribute is set PICKY, then only objects of
+the same type as its source object may inherit it.
+
+See also: INHERITANCE
+@@@@
+& puppet
+PUPPET (p)
+
+If an object is set PUPPET, everything it hears is relayed back to its
+owner, with its name prefaced.
+
+For example
+      puppet> Xibo asks the puppet why it can't be a Penguin, instead.
+@@@@
+& quiet
+QUIET (Q)
+
+If an something is set QUIET, it will neither generate nor hear `noisy'
+messages.  These include failure messages from commands.  This flag
+is more useful for objects that perform complex actions.
+
+See also: GLOBAL SWITCHES, SWITCHES
+@@@@
+& eloquent
+ELOQUENT (q)
+
+If a player or thing is set ELOQUENT, the arguments to `speech' commands
+will not be evaluated.  These commands include: say, pose, page, whisper,
+and a few others.
+@@@@
+& retentive
+RETENTIVE (w)
+
+If a player is set RETENTIVE, they are alerted all connects and disconnects
+to the server.  Only a Wizard can set this flag.
+@@@@
+& reversed_who
+REVERSED_WHO (b)
+
+If a player is set REVERSED_WHO, the 'WHO' style commands list their
+output in reversed order (most recent first).
+
+By default, TeenyMUD II uses the list order from the early 1.x versions.
+
+See also: WHO, WHERE, SESSION
+@@@@
+& robot
+ROBOT (r)
+
+If a player is set ROBOT, they are denoted as a remote 'robot'.
+@@@@
+& sticky
+STICKY (S)
+
+If a something is set STICKY, it customarily goes 'home' when dropped.
+As well, the STICKY flag decides how objects react to ACTIONS that are
+linked to them.  On rooms, the STICKY flag causes the 'Drop to' to be
+delayed until all the players have left the room.
+
+See also: HOMES, DROP-TOS
+@@@@
+& transparent
+TRANSPARENT (p)
+
+If an exit is set TRANSPARENT, it will cause anything looking at it to
+see it's destination, with some limitations.  The exit and destination
+must be owned by the same person, or the destination must be set
+VISUAL.
+
+As for picking which desintation to look at, the first destination
+that's not an exit and satisfies the permissions check is chosen.
+If there is no satisfactory destination, the TRANSPARENT flag
+has no effect.
+@@@@
+& visual
+VISUAL (V)
+
+If the VISUAL flag is set on something, the 'examine' command may be used
+by anyone to get detailed information on that object.
+
+When this flag is set, it makes the object number visible.
+
+See also: EXAMINE
+@@@@
+& wizard
+WIZARD (W)
+
+If something is set WIZARD, they have a remarkable number of special powers,
+such as control over every object in the database, and the ability to see
+expanded information about the universe.  This flag may only be set by a GOD.
+@@@@
+& types
+& object types
+OBJECT TYPES
+
+In TeenyMUD, there are four basic object types: Players (denoted by a 'P'),
+Rooms (denoted by a 'R'), Exits (denoted by an 'E'), and Things.  Generally,
+Players are objects that can connect to the server, Rooms are locations,
+Exits connect two locations together, and Things are everything else.
+Most often, though, the use of a particular object type is more general;
+for instance, a Thing makes almost as good of a location as a Room, and
+it's very difficult to tell Players and Things apart.
+@@@@
+& attribute flags
+ATTRIBUTE FLAGS
+
+Attributes can have flags, setable (and unsetable) using the '@set' command.
+Help is available for each individual flag.
+
+IMMUTABLE  INTERNAL  PICKY  PRIVATE  VISIBLE
+@@@@
+& private
+PRIVATE (P)
+
+When an attribute is set PRIVATE, it can not be inherited by anything, and
+is only available to the object it is local to.
+@@@@
+& visible
+VISIBLE (V)
+
+When an attribute is set VISIBLE, it is publically visible, overriding all
+other permissions for accessing that particular attribute.
+@@@@
+& immutable
+IMMUTABLE (i)
+
+When an attribute is set IMMUTABLE, it is visible to the object's owner,
+but not changeable.  This flag is only settable by Wizards.
+@@@@
+& internal
+INTERNAL (I)
+
+When an attribute is set INTERNAL, it is not available (or even typically
+visible) to a normal user.  These attributes are set only internally
+(as the name would imply) by the system.
+@@@@
+& attributes
+ATTRIBUTES
+
+An object can have any number of user-defined attributes, set using the
+'@set' and '&' commands.  The following attributes are also used specially,
+in order to define how the system behaves in various ways.  Help is
+available for each one, if you suffix the name with the word 'attribute'.
+(For example, 'help kill attribute'.)
+
+
+Here is a general list:
+
+Adescription    Adrop           Aenter          AenterFail
+Afail           Akill           Aleave          Apay
+Asuccess        Ateleport       AudibleFilter   AudiblePrefix
+Ause            Description     Drop            Enter
+EnterFail       Fail            Htdescription   Idescription
+Kill            Leave           Odescription    Odrop
+Oenter          OenterFail      Ofail           Okill
+Oleave          Opay            Osuccess        Oteleport
+Ouse            Oxenter         Oxleave         Oxteleport
+Pay             Runout          Sex             Startup
+Success         Use             Vrml_Url
+
+See ATTRIBUTES2 for more information.
+@@@@
+& attributes2
+ATTRIBUTES
+
+Most of the standard attributes whose names begin with the letter 'A'
+are ``action attributes''.  These attributes are assumed to contain
+commands, which are run by an object whenever applicable.
+
+For example, when something is dropped, it's Drop, ODrop, and ADrop
+attributes can be triggered.  The Drop attribute is ``triggered''
+simply by being printed to the person doing the dropping; the ODrop
+is sent to everyone else in the same location, and the ADrop would
+be executed by the object being dropped.
+@@@@
+& adescription attribute
+& idescription attribute
+& odescription attribute
+& description attribute
+& htdescription attribute
+DESCRIPTION ATTRIBUTES
+
+The description set of attributes consist of the following: Description,
+ODescription, ADescription, as well as the specials IDescription and
+HtDescription.
+
+The Description attribute is displayed whenever something is looked at,
+which causes the ODescription to be triggered and seen by everyone in
+the same location.  The ADescription will also be run by the object
+being looked at.  The special IDescription works as Description, except
+that it is only visible from within an object; if an object doesn't
+have an IDescription, the Description will be used instead.  In addition,
+since Rooms can not be looked at from ``outside'', their IDescription will
+always be displayed, just following their Description.  The special
+HtDescription is sent to HTML capable users just before the normal
+Description. 
+@@@@
+& adrop attribute
+& odrop attribute
+& drop attribute
+DROP ATTRIBUTES
+
+The drop set of attributes consist of the following: Drop, ODrop, and
+ADrop.  These attributes are triggered whenever an object is dropped.
+
+The Drop attribute will be displayed to the person dropping the object,
+the ODrop is sent to everyone in the same location (prefaced by the player's
+name), and the ADrop consists of a set of commands that will be executed
+directly by the object being dropped.
+@@@@
+& enter attribute
+& aenter attribute
+& oenter attribute
+& oxenter attribute
+ENTER ATTRIBUTES
+
+The enter attributes consist of the following: Enter, OEnter, OXEnter, and
+AEnter.  These attributes are triggered whenever an object is
+entered (using the enter command).
+
+The Enter attribute will be displayed to the person entering the
+object, the OEnter is sent to everyone in the same location (prefaced by
+the player's name), and the AEnter consists of a set of commands which will
+be executed directly by the object being entered.  The OXEnter attribute
+is special in that its sent to everyone in the players new location.
+@@@@
+& enterfail attribute
+& oenterfail attribute
+& aenterfail attribute
+ENTERFAIL ATTRIBUTES
+
+The enterfail attributes consist of the following: EnterFail, OEnterFail,
+AEnterFail.  These attributes are triggered whenever something fails
+to enter an object (fails the EnterLock).
+
+The EnterFail attribute is displayed to the person that attempted to
+enter the object, OEnterFail is sent to everyone in the same location
+(prefaced by the player's name), and the AEnterFail consists of a set of
+commands which will be executed directly by the object that was failed to
+be entered.
+@@@@
+& leave attribute
+& oleave attribute
+& aleave attribute
+& oxleave attribute
+LEAVE ATTRIBUTES
+
+The leave attributes consist of the following: Leave, OLeave, OXLeave,
+and ALeave.  They are triggered whenever something leaves another object.
+
+The Leave attribute is displayed to the person that leaves an object,
+the OLeave is sent to everyone in the same location as the player
+(prefaced by the player's name), and the ALeave consists of a set of
+commands which will be executed directly by the object that is being left.
+The OXLeave attribute is displayed (prefaced by the player's name) to everyone
+in the player's new location.
+@@@@
+& fail attribute
+& ofail attribute
+& afail attribute
+FAIL ATTRIBUTES
+
+The fail attributes consist of the following: Fail, OFail, and AFail.
+They are triggered whenever something fails to take an object, go through
+an exit, or otherwise do not pass an object's Lock.
+
+The Fail attribute is displayed to the person that fails the Lock,
+the OFail is sent to everyone in the same location (prefaced by
+the player's name), and the AFail consists of a list of commands that
+will be executed by the object itself.
+@@@@
+& success attribute
+& osuccess attribute
+& asuccess attribute
+SUCCESS ATTRIBUTE
+
+The success attributes consist of the following: Success, OSuccess,
+and ASuccess.  They are triggered whenever something successfully
+takes an object, goes through an exit, or otherwise passes an object's
+Lock.
+
+The Success attribute is displayed to the person succeeding, the
+OSuccess attribute is sent to everyone in the same location (prefaced
+by the player's name), and the ASuccess consists of a list of commands
+that will be executed by the object itself.
+@@@@
+& kill attribute
+& okill attribute
+& akill attribute
+& killfail attribute
+& okillfail attribute
+& akillfail attribute
+KILL ATTRIBUTES
+
+The kill attributes consist of the following: Kill, OKill, AKill,
+KillFail, OKillFail and AKillFail.
+
+They are triggered whenever something is (or is not) killed.
+
+The Kill attribute is displayed to the person doing the killing, the
+OKill is sent to everyone in the same location (prefaced by the player's
+name), and the AKill consists of a list of commands that will be
+executed by the object itself.
+
+The KillFail attributes are displayed/activated if the kill attempt
+fails.  If the kill fails due to the location being HAVEN, the
+attributes on the location are triggered.
+@@@@
+& teleport attribute
+& oteleport attribute
+& ateleport attribute
+& oxteleport attribute
+TELEPORT ATTRIBUTES
+
+The teleport attributes consist of the following: Teleport, OTeleport,
+ATeleport, and OXTeleport.  They are triggered whenever an object
+is teleported (with the @teleport command).
+
+Unlike most other attributes, the Teleport attribute is sent to the
+object being teleported, the OTeleport attribute is sent to everyone
+in the object's previous location (prefaced by its name), and the OXTeleport
+is sent to everyone in the object's new location.  The ATeleport attribute
+is assumed to contain a list of commands, which will be executed.
+@@@@
+& use attribute
+& ouse attribute
+& ause attribute
+USE ATTRIBUTES
+
+The use attributes consist of the following: Use, OUse, AUse.
+They are triggered whenever an object is used (with the use command).
+
+The Use attribute will be displayed to the person using the object, the
+OUse will be sent to everyone in the same location (prefaced by the
+player's name), and AUse is assumed to contain a list of commands, which
+will be executed by the object.
+@@@@
+& pay attribute
+& opay attribute
+& apay attribute
+& cost attribute
+PAY ATTRIBUTES
+
+The pay attributes consist of the following: Pay, OPay, APay, and Cost.
+They are triggered whenever an object is given at least Cost amount of
+money.
+
+The Pay attribute will be displayed to the person paying the object,
+the OPay will be sent to everyone in the same location (prefaced by the
+player's name), and the APay is assumed to contain a list of commands
+that will be executed by the object.  The Cost attribute contains a
+number, determining how much money that an object must be given
+(with the give command), before the Pay attributes will be triggered.
+@@@@
+& runout attribute
+RUNOUT ATTRIBUTE
+
+The Runout attribute is assumed to contain a list of commands that
+will be executed when an object's charges have been all used up.
+
+See also: CHARGES, @CHARGE
+@@@@
+& sex attribute
+SEX ATTRIBUTE
+
+The Sex attribute is used to determine a player's (or other object's)
+gender, which is used for pronoun substitution and the like.
+
+See also: SUBSTITUTIONS.
+@@@@
+& vrml_url attribute
+VRML_URL ATTRIBUTE
+
+The Vrml_url attribute contains a VRML hypertext link, and is sent to
+HTML-capable clients when a player enters a location. 
+@@@@
+& variables
+VARIABLES
+
+Variables are global state, maintained on a per-player basis.  They
+are not attributes, and are thus not preserved between server boots.
+They are normally set and retrieved using the SETVAR and GETVAR
+primitives, but some user commands also manipulate them.
+
+The value of a variable can also be retrieved using the $(variable)
+substitution, where the name of the variable is enclosed within the
+parans.
+@@@@
+& inheritance
+INHERITANCE
+
+Inheritance is the notion by which multiple objects can share the same
+attributes.  By setting an object to be the child of another, the child
+then inherits any attributes from the parent that it does not have locally.
+Parents can be chained, allowing complex objects to be built from the
+attributes of several others; each time an attribute is needed on the
+child object, the chain of parents are searched, in order, until a matching
+attribute is found.
+
+Using inheritance wisely can save vast amounts of space in the system
+database, and is generally a good thing.
+
+Attributes (and objects) can limit what types of objects can inherit them
+using the object or attribute PICKY flag.
+
+See also: @CHILDREN, @PARENT, PICKY
+@@@@
+& control
+CONTROL
+
+The notion of 'control' determins whether or not you can make changes
+to an object, destroy it, and otherwise manipulate it in various ways.
+You always control everything you own, and Wizards always control
+everything, including you.
+@@@@
+& exits
+EXITS
+
+Exits are the objects that link other objects together; they are used by
+moving through them.  They are also the most complex type of object in
+the system.
+
+Exits can be used to implement commands (since they're parsed just like
+them), and can be used to implement a form of command inheritance using
+room locations.
+
+Exits also have the notion of being either "external" or "internal," in
+that they can be used either from within or outside of the object they're
+attached to.
+
+As well, exits have a notion of being "actions," which means that instead
+of moving an object from point to another point, they can cause a variety
+of things to happen, including moving objects to the location of whatever
+triggered them.
+
+See also: EXIT MATCHING, EXTERNAL, ACTION, @OPEN
+@@@@
+& locks
+LOCKS
+
+Locks allow how an object reacts to another to be decided based upon
+a complex boolean expression.  The symbol '&' means 'and', '|' means
+'or', and '!' means 'not', with the parentheses grouping expressions.
+Object names, numbers, or player names prefaced with the splat (*)
+mark are 'constants'.  Constants can also be made up of attribute
+references, consisting of 'attribute_name:value', and flag references,
+consisting of 'flag:flag_name'.
+
+For example, to make sure that only someone with their Sex attribute
+set to FEMALE, except Xibeth, or yourself could pick you up, this command
+would do the trick:
+
+        @lock me = (me | sex:FEMALE) &! *Xibeth
+@@@@
+& @describe
+@describe <object> [= <string>]
+
+Sets the Description attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @idescribe
+@idescribe <object> [= <string>]
+
+Sets the IDescription attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @odescribe
+@odescribe <object> [= <string>]
+
+Sets the ODescription attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @adescribe
+@adescribe <object> [= <string>]
+
+Sets the ADescription attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @htdescribe
+@htdescribe <object> [= <string>]
+
+Sets the HtDescription attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+
+The HtDescription string is sent to HTML-capable players just before the
+normal Description.
+@@@@
+& @vrml_url
+@vrml_url <object> [= <string>]
+
+Sets the Vrml_Url attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+
+The Vrml_Url string is formated and sent to HTML-capable players whenever
+they enter a location.  It should be a VRML URL.
+@@@@
+& @success
+@success <object> [= <string>]
+
+Sets the Success attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @osuccess
+@osuccess <object> [= <string>]
+
+Sets the OSuccess attribute on the specified object.  If no string argument
+in given, the attribute is removed.
+@@@@
+& @asuccess
+@asuccess <object> [= <string>]
+
+Sets the ASuccess attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @fail
+@fail <object> [= <string>]
+
+Sets the Fail attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @ofail
+@ofail <object> [= <string>]
+
+Sets the OFail attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @afail
+@afail <object> [= <string>]
+
+Sets the AFail attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @drop
+@drop <object> [= <string>]
+
+Sets the Drop attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @odrop
+@odrop <object> [= <string>]
+
+Sets the ODrop attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @adrop
+@adrop <object> [= <string>]
+
+Sets the ADrop attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @enter
+@enter <object> [= <string>]
+
+Sets the Enter attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @oenter
+@oenter <object> [= <string>]
+
+Sets the OEnter attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @aenter
+@aenter <object> [= <string>]
+
+Sets the AEnter attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @oxenter
+@oxenter <object> [= <string>]
+
+Sets the OXEnter attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @leave
+@leave <object> [= <string>]
+
+Sets the Leave attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @oleave
+@oleave <object> [= <string>]
+
+Sets the OLeave attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @aleave
+@aleave <object> [= <string>]
+
+Sets the ALeave attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @oxleave
+@oxleave <object> [= <string>]
+
+Sets the OXLeave attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @kill
+@kill <object> [= <string>]
+
+Sets the Kill attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @okill
+@okill <object> [= <string>]
+
+Sets the OKill attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @akill
+@akill <object> [= <string>]
+
+Sets the AKill attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @killfail
+@killfail <object> [= <string>]
+
+Sets the KillFail attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @okillfail
+@okillfail <object> [= <string>]
+
+Sets the OKillFail attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @akillfail
+@akillfail <object> [= <string>]
+
+Sets the AKillFail attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @oteleport
+@oteleport <object> [= <string>]
+
+Sets the OTeleport attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @oxteleport
+@oxteleport <object> [= <string>]
+
+Sets the OXTeleport attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @ateleport
+@ateleport <object> [= <string>]
+
+Sets the ATeleport attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @sex
+@sex <object> [= <string>]
+
+Sets the Sex attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @efail
+@efail <object> [= <string>]
+
+Sets the EnterFail attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @oefail
+@oefail <object> [= <string>]
+
+Sets the OEnterFail attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @aefail
+@aefail <object> [= <string>]
+
+Sets the AEnterFail attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @aprefix
+@aprefix <object> [= <string>]
+
+Sets the AudiblePrefix attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @afilter
+@afilter <object> [= <string>]
+
+Sets the AudibleFilter attribute on the specified object.  If no string
+argument is given, the attribute is removed.
+@@@@
+& @use
+@use <object> [= <string>]
+
+Sets the Use attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @ouse
+@ouse <object> [= <string>]
+
+Sets the OUse attrubute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @ause
+@ause <object> [= <string>]
+
+Sets the AUse attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @runout
+@runout <object> [= <string>]
+
+Sets the Runout attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& @pay
+@pay <object> [= <string>]
+
+Sets the Pay attribute on the specified object.  If no string argument is
+given, the attribute is removed.
+@@@@
+& @opay
+@opay <object> [= <string>]
+
+Sets the OPay attribute on the specified object.  If no string argument is
+given, the attribute is removed.
+@@@@
+& @apay
+@apay <object> [= <string>]
+
+Sets the APay attribute on the specified object.  If no string argument is
+given, the attribute is removed.
+@@@@
+& @startup
+@startup <object> [= <string>]
+
+Sets the Startup attribute on the specified object.  If no string argument
+is given, the attribute is removed.
+@@@@
+& exit matching
+EXIT MATCHING
+
+Where a player types something, and it's not an '@' command, exits are
+checked to see if they match what the player typed.  Exits don't have to
+be in the same room as the player any longer.
+
+Order of exit matching:
+        a.  EXTERNAL exits carried by the player.
+        b.  EXTERNAL exits on objects carried by the player.
+        c.  Exits attached to the player's location.  If the location is a
+            room, any exit is matched, otherwise only non-EXTERNAL exits are
+            matched.
+        d.  EXTERNAL exits attached to objects (not players) in the player's
+            location.
+        e.  If the player's location isn't a room, the root parent room
+            (usually #0) is checked for matching exits.  If they are in a
+            room, its location is checked, and then the location of that,
+            etc., all the way back to the root room.  Only non-EXTERNAL
+            exits are matched by this method.
+
+Note that any exits that are matched in a group will override any (potential)
+matches in the next group(s).
+@@@@
+& matching
+MATCHING
+
+Exits are matched in the following order within most commands:
+        a.  Exits carried by the player.
+        b.  EXTERNAL exits on objects (not players) carried by the player.
+        c.  Exits attached to the player's location, which aren't EXTERNAL.
+        d.  EXTERNAL exits attached to objects (not players) in the
+            player's location.
+
+Objects are matched in the following order within most commands:
+        a.  Objects carried by the player.
+        b.  Objects in the player's location.
+        c.  Players in the player's location.
+
+Some commands will go ahead and try to match an exit using the exit matching
+rules, in the case of no matching object.
+
+See MATCHING2 for more information.
+@@@@
+& matching2
+MATCHING
+
+Many commands will also allow objects to be specified as "me" (referring
+to the executing player or object), "here" (referring to the player's
+location), and sometimes "home", referring to the player's home.
+
+Objects can always be specified as "#<number>", in the case of an ambiguous
+name match that won't resolve.  Wizards can also use "*<player>" to match
+any player, even abbreviating <player> if they're currently logged in,
+or nearby.  The later form can be used by anyone when locking things.
+@@@@
+& being killed
+BEING KILLED
+
+If you are killed, you return to your home, and all of your objects return
+to their homes.  You may also receive a small amount of money as
+compensation.
+@@@@
+& drop-tos
+DROP-TOs
+
+A `drop to' is set when the @LINK command is used on a room; the object
+the room is linked to becomes the location of anything dropped in that
+room.  If the room is also set STICKY, all of its contents will be
+sent to its drop to location when the last player leaves.
+
+If an object is dropped in a room, but it won't immediately end up
+in that room because of a drop to, the room's Drop, ODrop, and ADrop
+attributes are triggered.
+@@@@
+& failure
+FAILURE
+
+You fail do something whenever you don't pass an object's lock.  For
+instance, you fail to use a thing when you can't pick it up, you fail
+to use an exit when you can't go through it, and you fail to use a room
+when you can't look around.  All of these instances trigger the Fail,
+OFail, and AFail attributes.
+
+Failing to pass other locks can trigger other attributes, for example
+failing to enter an object triggers it's EnterFail, OEnterFail, and
+AEnterFail attributes.
+@@@@
+& success
+SUCCESS
+
+You successfully do something whenever you pass an object's lock.  For
+instance, you successfully use a thing when you pick it up, you
+successfully use an exit when you go through it, and you successfully
+use a room when you look around.  All of these instances trigger the
+Success, OSuccess, and ASuccess attributes.
+
+Successfully passing other locks can trigger other attributes, for example
+successfully entering an object triggers it's Enter, OEnter, and AEnter
+attributes.
+@@@@
+& gender
+GENDER
+
+This is set with the Sex attribute, using the @SEX or @SET commands,
+defaulting to unassigned.  If a player's gender is set, pronoun
+substitutions will use the appropiate pronoun for the object or player.
+
+See also: SUBSTITUTIONS.
+@@@@
+& global switches
+GLOBAL SWITCHES
+
+In addition to the command switches available with each command, there
+is also a set of global switches.  These switches are available for
+every command (though a few commands may not be affected by a
+particular global switch).
+
+The current global switches are:
+  /quiet        Prevents the sending of many `noisy' messages.
+                This doesn't neccessarily work as it does in other systems.
+                See QUIET.
+@@@@
+& switches
+SWITCHES
+
+In the help entry for various commands, a set of `switches' will often
+be listed.  If specified, these will cause the command to act in a
+variety ways, usually different from how it acts by default.
+
+Switches are specified directly after the command name, seperated by
+forward-slash ('/').
+
+For example:
+        @create/quiet Some object
+
+The example would (or perhaps wouldn't) create "Some object" without
+displaying any messages.
+
+See also: GLOBAL SWITCHES
+@@@@
+& here
+HERE
+
+The word `here' can be used to refer to your location.  This is used
+within most commands that match objects.  For instance, to set the
+Description of the room you are in, if you control it, you could use:
+
+        @describe here = This is a nice little room.
+@@@@
+& me
+ME
+
+The word `me' can be used to refer to yourself.  This is used within
+most commands that match objects.  For instance, to set your Description,
+you could use:
+
+        @describe me = A little green man from Mars.
+
+If you're new, see NEW (type "help new").
+@@@@
+& new
+NEW
+
+As a new player, there are a few things you should do:
+
+First, be sure to @LOCK yourself so that other people can't carry you away.
+You should then set your Description with the @describe command, so that
+other players will know what you look like.  Lastly, you should set your
+gender with @SEX or @SET, so that the proper pronouns are used for you.
+
+For example, type:
+
+        @lock me = me
+This locks yourself to yourself.
+
+        @describe me = <what you look like>
+This will set your Description.
+
+        @sex me = MALE
+This will set your gender.  FEMALE and NEUTER are also common choices.
+@@@@
+& substitutions
+SUBSTITUTIONS
+
+Attributes and other strings may contain %-subsitutions, some of which
+evaluate to gender specific pronouns if the player's gender is set.
+They are:
+  %s    (subjective):           Name, he, she, it.
+  %o    (objective):            Name, him, her, it.
+  %p    (possessive):           Name's, his, her, its.
+  %n    (player name):          Name.
+  %a    (absolute possessive):  Name's, his, hers, its.
+  %r    (reflexive):            Name, himself, herself, itself.
+
+  %l    (new line):             Inserts a newline.
+  %t    (tab):                  Inserts a tab character.
+
+  %!    (player number):        Inserts the number of the object executing.
+  %#    (cause number):         Inserts the number of the object causing
+                                this to be executed.
+
+See SUBSTITUTIONS2 for more information.
+@@@@
+& substitutions2
+SUBSTITUTIONS
+
+  %<num>:                       Inserts the specified argument number.
+                                (Arguments can be given to @TRIGGER calls,
+                                 and user-defined $-commands.)
+
+If you need a '%', use '%%'.  If you wish the substitution to be capitalized,
+use a capital letter for the substitution, like %S, %P, and so on.
+
+Note that all substitutions may be overridden by attributes on the
+player that have the same name, causing the text of the attribute to be
+substituted in, rather than the standard value for the substitution.
+
+See also: @TRIGGER, $-COMMANDS
+@@@@
+& $-commands
+& $commands
+$-COMMANDS
+
+`$-commands' are a type of user-defined command, using attributes.  These
+can be defined by an attribute formatted like this:
+        $<string>:<action>
+Whenever something matching the specified string is typed, the specified
+action (as in, commands) is executed by the object which contains the
+attribute.  These commands are only used when no built-in commands or
+exits can be matched with what has been typed.
+
+See $-COMMANDS2 for more information.
+@@@@
+& $-commands2
+& $commands2
+$-COMMANDS
+
+The matching order for `$-commands' is similar to the matching order for
+exits.  First the player is checked, then their contents.  Next, their
+location is checked (if it's a room), and then the location's contents.
+Failing those, enclosing room is checked, then its contents, following the
+room's location all the way back to the Root Room.  Only the first matched
+command will be run, and no others.
+
+In order to use a `$-command' on an object, it must not be set either HALT
+or NOCHECK, and you must pass it's UseLock.
+
+See also: NOCHECK
+@@@@
+& regular expressions
+REGULAR EXPRESSIONS
+
+Several commands in TeenyMUD allow arguments to contain regular expressions.
+These are standard splat ('*') sign expressions; for instance, the
+expression "A*Z" will match any string beginning with the letter 'A', and
+ending with the letter 'Z'.
+@@@@
+& player aliases
+PLAYER ALIASES
+
+Players (and only players) may have an optional "alias".  This is
+equivalent to having a second name, which is matched exactly like the
+player's real name.
+
+For exaple, if player `VivaVoce' has an alias of `VV', either of the
+commands
+        look VivaVoce
+
+or
+        look VV
+
+would look at the same player, `VivaVoce'.
+@@@@
+& example
+EXAMPLE
+
+Bishop_III is a new player.  He initializes his character by typing:
+        @desc me=Bishop III at first glance looks normal, perhaps a bit pale.
+        @sex me=male
+
+Bishop_III desires to carry his program with him.  He does:
+        @create A floppy disk
+        @desc disk=The 3 1/2" floppy contains an AutoCAD program.
+        @lock disk=me
+        @succ disk=You pick up the disk carefully.
+        @osucc disk=picks up the floppy disk.
+        @fail disk=You're not allowed to steal Bishop_III's floppy disk.
+        @ofail disk=tries to steal Bishop_III's floppy disk.
+        @drop disk=You carefully set the disk down.
+        @odrop disk=tosses the disk aside.
+
+Bishop_III has dropped his disk and can't find it.  He locates it by:
+        @find floppy disk
+or list all his objects and rooms by:
+        @find
+
+See EXAMPLE2 for more information.
+@@@@
+& example2
+Bishop_III has acquired a free link in a LINK_OK room.  He sees an unlinked
+exit called "404" in Hallway(#700RL).  He can make a home by creating
+a room and linking the free exit to it:
+        @dig The Bishop's Room
+        > Room The Bishop's Room dug with number #738.
+        @link 404=#738
+        @desc 404=This door leads to Bishop_III's room.
+        @osucc 404=enters Bishop_III's room, number 404.
+        @odrop 404=enters from the Hallway.
+Then he enters the new room and creates the backlink, very important:
+        go 404
+        > The Bishop's Room(#738R)
+        @open out;exit;leave;w;west=#700
+        @desc out=This exit leads out to the Hallway.
+        @osucc out=leaves the room.
+        @odrop out=steps out of Bishop_III's room.
+        @desc here=This is a spartan chamber with a minicomputer running CAD.
+He makes the exit 'out' visible by setting the OBVIOUS flag:
+        @set out=OBVIOUS
+He sets his home here by doing:
+        @link me=here
+
+See EXAMPLE3 for more information.
+@@@@
+& example3
+EXAMPLE
+
+Bishop_III wants to create a fake exit in his room to simulate a command:
+        @open type;type on computer;computer;use computer=here
+        @lock type=me&!me
+        @desc type=You see a battered Sun 3/60.
+        @fail type=You hit a few keys on the keyboard and the display flickers.
+        @ofail type=does incredible things with AutoCAD.  You are amazed.
+
+Later, he creates a better computer:
+        @create A shiny new RS/6000
+        @desc shiny=It's made by IBM out of plastic and silicon.
+He decides only he, Xibo, or someone holding the floppy disk can take it:
+        @lock shiny=me|*xibo|floppy disk
+        @fail shiny=You are denied access.
+        @ofail shiny=growls at the computer.
+        @succ shiny=You heft the computer onto your back.
+        @osucc shiny=lifts up the computer.
+        @drop shiny=tud!
+        @odrop shiny=drops the computer onto the ground with a *tud!*
+
+Then he learns it requires AIX to run, and destroys it:
+        @rec shiny new RS/6000
+
+See EXAMPLE4 for more information.
+@@@@
+& example4
+EXAMPLE
+
+Bishop_III wishes to extend his place, adding a bedroom to his main room.
+        @dig Bedroom
+        > Room Bedroom dug with number #742.
+Bishop_III's main room is #738.  Starting in his main room, he does the
+following commands to make the Bedroom appear to the north:
+        @open north;n=#742
+        @desc north=You see the bedroom.
+        @succ north=You enter the bedroom.
+        @osucc north=enters B3's bedroom.
+        @odrop north=arrives from the main room to the south.
+        @set north=OBVIOUS  (this makes the exit visible)
+        go north
+        > Bedroom(#742R)
+        @desc here=This is Bishop_III's bedroom.  It is littered with blankets.
+        @open south;s=#738
+        @desc south=This door leads back to the main room.
+        @succ south=You stumble out of the bedroom.
+        @osucc south=leaves the room, heading southward.
+        @odrop south=arrives from the bedroom to the north.
+        @set south=OBVIOUS
+
+Bishop_III now has two well-described exits linking the bedroom in.  He then
+creates a more vivid description of the bedroom itself.
+@@@@
+& primitives
+PRIMITIVES
+
+The following primitives are available.  Help is available for each one,
+if the primitive name is suffixed by the word 'primitive'.
+
+ABS             ACOS            ADD             ASIN
+ATAN            CEIL            CNVTIME         CONTENTS
+CONTROLS        COS             CREATESTAMP     CRYPT
+CTIME           DESTS           DIV             DROPTO
+E               EXITS           EXP             EXPR
+FIRST           FLAGS           FLOOR           FORMAT
+GETATTR         GETLOCK         GETVAR          HOME
+IF              LAST            LN              LOC
+LOG             LOWCASE         MATCH           MAX
+MID             MIN             MOD             MUL
+NAME            OWNER           PARENT          PENNIES
+PI              PMATCH          POWER           QUOTA
+RAND            REST            RLOC            ROOMS
+ROUND           SETVAR          SIN             SQRT
+
+For more information, see PRIMITIVES2.
+@@@@
+& primitives2
+PRIMITIVES
+
+STRCAT          STRDCAT         STRCMP          STRLEN
+STRMATCH        STRNCMP         STRPREFIX       SUB
+SWAPCASE        TAN             TIME            TIMESTAMP
+TRUNC           TYPE            UPCASE          USES
+WHOLIST         WORDS           WRDMATCH
+
+Primitives are only accessable from within square bracket ("[]") style
+substitutions.
+@@@@
+& getattr primitive
+GETATTR <object> <attribute>
+
+Retrieves the value of the specified attribute from the specified object.
+The executing player must either control the object, or the object must be
+set VISUAL.  Object must be specified by number.
+@@@@
+& getlock primitive
+GETLOCK <object> <attribute>
+
+Retrieves the value of the specified lock attribute from the specified
+object.  The executing player must either control the object, or the object
+must be set VISUAL.  Object must be specified by number.
+@@@@
+& contents primitive
+CONTENTS <object>
+
+Returns a list of the contents of the specified object.  The executing
+player must either control the object, it be set VISUAL, or be nearby.
+Object must be specified by number.
+@@@@
+& exits primitive
+EXITS <object>
+
+Returns a list of the exits on the specified object.  The executing
+player must either control the object, it be set VISUAL, or be nearby.
+Object must be specified by number.  Only exits that the player controls,
+or set OBVIOUS are listed.
+@@@@
+& rooms primitive
+ROOMS <room>
+
+Returns a list of rooms contained by the specified room.  The executing
+player must either control the room, or it be set ABODE.  Room must be
+specified by number.  Only rooms that the player controls, or set ABODE
+are listed.
+@@@@
+& owner primitive
+OWNER <object>
+
+Returns the owner of the specified object.  Object must be specified by
+number.
+@@@@
+& quota primitive
+QUOTA <object>
+
+Returns the quota of the specified object.  The executing player must
+either control the object, or it be set VISUAL.  Object must be specified by
+number.
+@@@@
+& pennies primitive
+PENNIES <object>
+
+Returns the pennies of the specified object.  The executing player must
+either control the object, or it be set VISUAL.  Object must be specified by
+number.
+@@@@
+& loc primitive
+LOC <object>
+
+Returns the location of the specified object.  If the object is set HIDDEN,
+the executing player must either control the object, or it be nearby.
+Object must be specified by number.
+@@@@
+& rloc primitive
+RLOC <object>
+
+Returns the real (as determined by room) location of the specified object.
+If the object is set HIDDEN, the executing player must either control the
+object, or it be nearby.  Object must be specified by number.
+@@@@
+& controls primitive
+CONTROLS <object1> <object2>
+
+Returns 1 if object1 controls object2, 0 otherwise.
+@@@@
+& dropto primitive
+DROPTO <room>
+
+Returns the drop-to destination of the specified room.  The executing
+player must either control the room, or it be set VISUAL.  Room must
+be specified by number.
+@@@@
+& home primitive
+HOME <object>
+
+Returns the home of the specified object.  The executing player must either
+control the object, or it be set VISUAL.  Object must be specified by
+number.
+@@@@
+& dests primitive
+DESTS <exit>
+
+Returns a list of the destinations of the specified exit.  The executing
+player must either control the object, or it be set VISUAL.  Exit must
+be specified by number.
+@@@@
+& timestamp primitive
+TIMESTAMP <object>
+
+Returns the timestamp of the specified object.  The executing player must
+either control the object, or it be set VISUAL.  Object must be specified
+by number.
+@@@@
+& createstamp primitive
+CREATESTAMP <object>
+
+Returns the createstamp of the specified object.  The executing player
+must either control the object, or it be set VISUAL.  Object must be
+specified by number.
+@@@@
+& parent primitive
+PARENT <object>
+
+Returns the parent of the specified object.  The executing player must
+either control the object, or it be set VISUAL.  Object must be specified
+by number.
+@@@@
+& uses primitive
+USES <object>
+
+Returns the number of uses remaining for the specified object.  The
+executing player must either control the object, or it be set VISUAL.
+Object must be specified by number.
+@@@@
+& name primitive
+NAME <object>
+
+Returns the name of the specified object.
+@@@@
+& flags primitive
+FLAGS <object>
+
+Returns a string containing the set flags of the specified object,
+following normal flag viewing permissions.
+@@@@
+& type primitive
+TYPE <object>
+
+Returns a string reflecting the type of the specified object.
+@@@@
+& rand primitive
+RAND <limit>
+
+Returns a pseudo-random number between 0 and the specified limit.
+@@@@
+& abs primitive
+ABS <number>
+
+Returns the absolute value of the specified (floating point) number.
+@@@@
+& sgrt primitive
+SQRT <number>
+
+Returns the square root of the specified (floating point) number.
+@@@@
+& add primitive
+ADD <number1> <number2> [<number3> <numberN>]
+
+Returns the sum off all its specified (floating point) arguments.
+@@@@
+& sub primitive
+SUB <number1> <number2>
+
+Returns the difference of the specified (floating point) arguments.
+@@@@
+& mul primitive
+MUL <number1> <number2> [<number3> <numberN>]
+
+Returns the product of the specified (floating point) arguments.
+@@@@
+& floor primitive
+FLOOR <number>
+
+Returns the floor of the specified (floating point) number.
+@@@@
+& format primitive
+FORMAT <format> [<argument1> <argument2> <argumentN>]
+
+Performs formatting similar to that done by the C standard library
+routine ``printf''.  The format string contains formatting directives,
+consisting of special % codes (all standard ``printf'' % codes are
+supported), which define how the specified argument(s) will be formatted
+in the return string.
+
+See also: The C Programming Language
+@@@@
+& ceil primitive
+CEIL <number>
+
+Returns the ceiling of the specified (floating point) number.
+@@@@
+& round primitive
+ROUND <number> <places>
+
+Rounds the specified floating point number off at the specified
+number of decimal places.
+@@@@
+& trunc primitive
+TRUNC <number>
+
+Truncates the specified floating point number to an integer.
+@@@@
+& div primitive
+DIV <number1> <number2>
+
+Returns the divisor of the two specified (floating point) numbers.
+@@@@
+& mod primitive
+MOD <number1> <number2>
+
+Returns the modulous of the two specified (floating point) numbers.
+@@@@
+& pi primitive
+PI
+
+Returns pi to 9 decimal places.
+@@@@
+& e primitive
+E
+
+Returns E to 9 decimal places.
+@@@@
+& sin primitive
+SIN <number>
+
+Returns the sine of the specified (floating point) number.
+@@@@
+& cos primitive
+COS <number>
+
+Returns the cosine of the specified (floating point) number.
+@@@@
+& tan primitive
+TAN <number>
+
+Returns the tangent of the specified (floating point) number.
+@@@@
+& exp primitive
+EXP <number>
+
+Returns the exponential function e to the specified (floating point)
+number.
+@@@@
+& power primitive
+POWER <number1> <number2>
+
+Returns the value of the specified (floating point) number to the power
+of the second specified (floating point) number.
+@@@@
+& ln primitive
+LN <number>
+
+Returns the natural logarithm of the specified (floating point) number.
+@@@@
+& log primitive
+LOG <number>
+
+Returns the natural logarithm of the specified (floating point) number
+to base 10.
+@@@@
+& asin primitive
+ASIN <number>
+
+Returns the arc sine of the specified (floating point) number.
+@@@@
+& acos primitive
+ACOS <number>
+
+Returns the arc cosine of the specified (floating point) number.
+@@@@
+& atan primitive
+ATAN <number>
+
+Returns the arc tangent of the specified (floating point) number.
+@@@@
+& min primitive
+MIN <number1> <number2> [<number3> <numberN>]
+
+Returns the smallest of all its (integer) arguments.
+@@@@
+& max primitive
+MAX <number1> <number2> [<number3> <numberN>]
+
+Returns the largest of all it's (integer) arguments.
+@@@@
+& expr primitive
+EXPR <string>
+
+Returns the (integer) value of the specified expression.  The expression
+can not contain floating point numbers, but does otherwise support
+everything the C Programming Language does.
+
+A future release will support floating point expressions.
+@@@@
+& if primitive
+IF <value> [then] <return1> [else] <return2>
+
+If the specified value is true (positive), then the return1 argument is
+returned, else the return2 argument is returned.
+@@@@
+& setvar primitive
+SETVAR <variable> <value>
+
+Sets the specified variable to the specified value.  Returns the value
+assigned.
+@@@@
+& getvar primitive
+GETVAR <variable>
+
+Returns the value assigned to the specified variable.
+@@@@
+& time primitive
+TIME
+
+Returns the current time, in seconds.
+@@@@
+& ctime primitive
+CTIME <time>
+
+Returns the ASCII form of the specified time value.
+@@@@
+& cnvtime primitive
+CNVTIME <string>
+
+Returns the time value, in seconds, of the specified ASCII string.
+@@@@
+& mid primitive
+MID <string> <position> <length>
+
+Returns the length of specified number of characters at the specified
+position, within the specified string.
+@@@@
+& first primitive
+FIRST <string> [<separator>]
+
+Returns the first word in the specified string, using spaces to delimit
+words.  If a separator is specified, it is used instead of spaces.
+@@@@
+& rest primitive
+REST <string> [<separator>]
+
+Returns everything after the first word in the specified string, using
+spaces to delimit words.  If a separator is specified, it is used instead
+of spaces.
+@@@@
+& last primitive
+LAST <string> [<separator>]
+
+Returns the last word of the specified string, using spaces to delimit
+words.  If a separator is specified, it is used instead of spaces.
+@@@@
+& words primitive
+WORDS <string> [<separator>]
+
+Returns a count of the words within the specified string, using spaces
+to delimit words.  If a separator is specified, it is used instead of
+spaces.
+@@@@
+& strlen primitive
+STRLEN <string>
+
+Returns the length, in characters, of the specified string.
+@@@@
+& strcmp primitive
+STRCMP <string1> <string2>
+
+Returns positive if the strings match, zero or negative if they do not.
+Strings are not case sensitive.
+@@@@
+& strmatch primitive
+STRMATCH <regexp> <string>
+
+Returns positive if the specified string matches the specified regular
+expression.
+@@@@
+& strprefix primitive
+STRPREFIX <string1> <string2>
+
+Returns positive if the first specified string is a prefix of the second.
+@@@@
+& strncmp primitive
+STRNCMP <string1> <string2> <length>
+
+Returns positive if the strings match up to the specified length, zero
+or negative if they do not.  Strings are not case sensitive.
+@@@@
+& wrdmatch primitive
+WRDMATCH <regexp> <string> [<separator>]
+
+Returns true if a word within the specified string matches the specified
+regular expression.  If a separator is specified, it is used to delimit
+words, otherwise spaces are used.
+@@@@
+& strcat primitive
+STRCAT <string1> <string2> [<string3> <stringN>]
+
+Returns all of its arguments, concatenated together, with a space between
+each one.
+@@@@
+& strdcat primitive
+STRDCAT <string1> <string2> [<string3> <stringN>]
+
+Returns all of its arguemtns, concatenated together.  Unlike STRCAT, no
+extra spaces are inserted.
+@@@@
+& lowcase primitive
+LOWCASE <string1> [<string2> <stringN>]
+
+Returns all of it's arguments, concatenated together as per STRCAT, with
+the case of all letters converted to lower.
+@@@@
+& swapcase primitive
+SWAPCASE <string1> [<string2> <stringN>]
+
+Returns all of it's arguments, concatenated together as per STRCAT, with
+the case of all letters swapped around.
+@@@@
+& upcase primitive
+UPCASE <string1> [<string2> <stringN>]
+
+Returns all of it's arguments, concatenated together as per STRCAT, with
+the case of all letters converted to upper.
+@@@@
+& crypt primitive
+CRYPT <string>
+
+Returns an encrypted version of the specified string.
+@@@@
+& match primitive
+MATCH <string>
+
+Attempts to match the specified string with an object name.
+@@@@
+& pmatch primitive
+PMATCH <string>
+
+Attempts to match the specified string with a player name.
+@@@@
+& wholist primitive
+WHOLIST
+
+Returns a list of all visibly connected players.
+@@@@
