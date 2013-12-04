@@ -1,0 +1,129 @@
+make[1]: Entering directory `/media/psf/Home/threadway/downsj/teeny/2.0.6/2.0.6/compat'
+gcc -g -Wall -I.. -I./.. -I.   -c -o compat.o compat.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o random.o random.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strerror.o strerror.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strcasecmp.o strcasecmp.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strftime.o strftime.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o vprintf.o vprintf.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o bcopy.o bcopy.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strtol.o strtol.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strtod.o strtod.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o waitpid.o waitpid.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strstr.o strstr.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strtok.o strtok.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strchr.o strchr.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o alloca.o alloca.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o strtoul.o strtoul.c
+rm -f compat.a
+ar q compat.a compat.o random.o strerror.o strcasecmp.o strftime.o vprintf.o bcopy.o strtol.o strtod.o waitpid.o strstr.o strtok.o strchr.o alloca.o strtoul.o
+ar: creating compat.a
+ranlib compat.a
+make[1]: Leaving directory `/media/psf/Home/threadway/downsj/teeny/2.0.6/2.0.6/compat'
+make[1]: Entering directory `/media/psf/Home/threadway/downsj/teeny/2.0.6/2.0.6/hash'
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash.o Hash.c
+Hash.c: In function ‘Hash’:
+Hash.c:83:10: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+gcc -g -Wall -I.. -I./.. -I.   -c -o HashCSrch.o HashCSrch.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash_CEntry.o Hash_CEntry.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash_DEntry.o Hash_DEntry.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash_DTable.o Hash_DTable.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash_EFirst.o Hash_EFirst.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash_ENext.o Hash_ENext.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash_FEntry.o Hash_FEntry.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash_InitTab.o Hash_InitTab.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o Hash_PStat.o Hash_PStat.c
+Hash_PStat.c: In function ‘Hash_PrintStats’:
+Hash_PStat.c:62:18: warning: variable ‘hashEntryPtr’ set but not used [-Wunused-but-set-variable]
+gcc -g -Wall -I.. -I./.. -I.   -c -o List_Init.o List_Init.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o List_Insert.o List_Insert.c
+List_Insert.c: In function ‘List_Insert’:
+List_Insert.c:49:5: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+List_Insert.c:49:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+gcc -g -Wall -I.. -I./.. -I.   -c -o List_LInst.o List_LInst.c
+List_LInst.c: In function ‘List_ListInsert’:
+List_LInst.c:49:5: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+List_LInst.c:49:31: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+gcc -g -Wall -I.. -I./.. -I.   -c -o List_Move.o List_Move.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o List_Remove.o List_Remove.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o List_Verify.o List_Verify.c
+rm -f hash.a
+ar q hash.a `lorder Hash.o HashCSrch.o Hash_CEntry.o Hash_DEntry.o Hash_DTable.o Hash_EFirst.o Hash_ENext.o Hash_FEntry.o Hash_InitTab.o Hash_PStat.o List_Init.o List_Insert.o List_LInst.o List_Move.o List_Remove.o List_Verify.o | tsort`
+ar: creating hash.a
+ranlib hash.a
+make[1]: Leaving directory `/media/psf/Home/threadway/downsj/teeny/2.0.6/2.0.6/hash'
+make[1]: Entering directory `/media/psf/Home/threadway/downsj/teeny/2.0.6/2.0.6/sha'
+gcc -g -Wall -I.. -I./.. -I.   -c -o sha.o sha.c
+gcc -g -Wall -I.. -I./.. -I.   -c -o sha_wrap.o sha_wrap.c
+rm -f sha.a
+ar q sha.a `lorder sha.o sha_wrap.o | tsort`
+ar: creating sha.a
+ranlib sha.a
+make[1]: Leaving directory `/media/psf/Home/threadway/downsj/teeny/2.0.6/2.0.6/sha'
+make[1]: Entering directory `/media/psf/Home/threadway/downsj/teeny/2.0.6/2.0.6/gnu'
+gcc -g -Wall -I.. -I./.. -I. -DHAVE_CONFIG_H   -c -o getopt.o getopt.c
+gcc -g -Wall -I.. -I./.. -I. -DHAVE_CONFIG_H   -c -o getopt1.o getopt1.c
+rm -f gnu.a
+ar q gnu.a `lorder getopt.o getopt1.o | tsort`
+ar: creating gnu.a
+ranlib gnu.a
+make[1]: Leaving directory `/media/psf/Home/threadway/downsj/teeny/2.0.6/2.0.6/gnu'
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o act.o act.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o attrutils.o attrutils.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o boolexp.o boolexp.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o buildcmds.o buildcmds.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o commands.o commands.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o conf.o conf.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o dbcmds.o dbcmds.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o dbutils.o dbutils.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o display.o display.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o fcache.o fcache.c
+Expect 10 shift/reduce conflicts.
+bison -y ./getdate.y
+conflicts: 10 shift/reduce
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o getdate.o getdate.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o group.o group.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o help.o help.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o interface.o interface.c
+interface.c: In function ‘log_disconnect’:
+interface.c:878:41: warning: trigraph ??( ignored, use -trigraphs to enable [-Wtrigraphs]
+interface.c: In function ‘log_connect’:
+interface.c:894:40: warning: trigraph ??( ignored, use -trigraphs to enable [-Wtrigraphs]
+interface.c: In function ‘log_create’:
+interface.c:918:36: warning: trigraph ??( ignored, use -trigraphs to enable [-Wtrigraphs]
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o lockout.o lockout.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o look.o look.c
+look.c: In function ‘do_examine’:
+look.c:220:3: warning: passing argument 3 of ‘get_int_elt’ from incompatible pointer type [enabled by default]
+In file included from look.c:46:0:
+externs.h:51:12: note: expected ‘int *’ but argument is of type ‘time_t *’
+look.c:230:3: warning: passing argument 3 of ‘get_int_elt’ from incompatible pointer type [enabled by default]
+In file included from look.c:46:0:
+externs.h:51:12: note: expected ‘int *’ but argument is of type ‘time_t *’
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o main.o main.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o match.o match.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o money.o money.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o move.o move.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o notify.o notify.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o parse.o parse.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o prims.o prims.c
+prims.c: In function ‘prim_timestamp’:
+prims.c:611:3: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘time_t’ [-Wformat]
+prims.c: In function ‘prim_createstamp’:
+prims.c:641:3: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘time_t’ [-Wformat]
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o queue.o queue.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o recycle.o recycle.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o set.o set.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o speech.o speech.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o tcpip.o tcpip.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o utils.o utils.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o vars.o vars.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o wild.o wild.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o wiz.o wiz.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o version.o version.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o globals.o globals.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o cache.o cache.c
+gcc -g -Wall -I. -I. -DUSE_GDBM   -c -o db.o db.c
+db.c: In function ‘get_time_elt’:
+db.c:218:6: error: ‘ret’ undeclared (first use in this function)
+db.c:218:6: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [db.o] Error 1
