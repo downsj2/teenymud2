@@ -9,7 +9,7 @@ originally written on.
 The Berkeley Database layer is deprecated and not functional; you must use
 GDBM.
 
-You will *not* be able to read in GDBM databases from an acient system or
+You will *not* be able to read in GDBM databases from an ancient system or
 version 2.0.5; you *must* load your database from a text dump.  Failure to
 do so will result in a non-functioning database.
 
