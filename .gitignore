@@ -1,0 +1,13 @@
+*~
+*.o
+Makefile
+**/Makefile
+**/*.o
+**/*.a
+autom4te.cache
+autoconf.h
+config.log
+config.status
+convertdb
+getdate.c
+teenymud
