@@ -169,13 +169,12 @@
 	  get_time_elt() and set_time_elt().
 	- Updated various parts of the code to run on modern systems.
 	- Disabled --with-bsddb configuration option.
+
+### Changes since TeenyMUD 2.0.6:
 	- The old hash library is no more; uthash is now used in it's place,
 	  where appropriate.  Some uses of hashing are simply gone.
 	- ty_strncpy and strncat have been replaced with strlcpy and strlcat.
 	- Many bugs have been fixed, most dealing with memory management.
-
-### Changes since TeenyMUD 2.0.6:
-	- There was no TeenyMUD 2.0.6.
 
 ### Changes since TeenyMUD 2.0.7:
 	- More updates to time_t support.
