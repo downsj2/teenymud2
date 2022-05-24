@@ -244,7 +244,6 @@ boolutils.o: config.h conf.h teeny.h externs.h
 log.o: config.h conf.h teeny.h externs.h
 misc.o: config.h conf.h flaglist.h teeny.h externs.h
 gdbm.o: config.h conf.h teeny.h teenydb.h externs.h
-bsddbm.o: config.h conf.h teeny.h teenydb.h externs.h
 attrs.h: config.h
 commands.h: config.h
 conf.h: config.h
