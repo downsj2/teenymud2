@@ -50,7 +50,7 @@ VOID do_version(player, cause, switches)
   snprintf(buf, sizeof(buf), "This is %s.", &teenymud_id[4]);
   notify_player(player, cause, player, buf, 0);
   notify_player(player, cause, player,
-	"Copyright(C) 1993-2013, Jason Downs.  All rights reserved.", 0);
+	"Copyright(C) 1993-2022, Jason Downs.  All rights reserved.", 0);
 
   if(switches & VERSION_FULL) {
     notify_player(player, cause, player, "Compile time options:", 0);
