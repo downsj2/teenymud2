@@ -35,3 +35,4 @@ You will need to have the appropriate development package for `libgdbm`
 installed in order to build the software.  For instance, you should run
 `sudo apt install libgdbm-dev` on Ubuntu.
 
+For information about running the software, please see the file `HOWTO.md`.
