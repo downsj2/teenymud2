@@ -209,9 +209,11 @@ void text_dump(out, write_version, write_flags)
 		gfilter(theobj->exits));
         fprintf(out, "%d\n%d\n", gfilter(theobj->rooms),
 		gfilter(DSC_NEXT(main_index[obj])));
-#if SIZEOF_TIME_T > 4
+#if SIZEOF_TIME_T > SIZEOF_LONG
         fprintf(out, "%lld\n%lld\n", theobj->timestamp, theobj->created);
-#else
+#elif SIZEOF_TIME_T == SIZEOF_LONG
+        fprintf(out, "%ld\n%ld\n", theobj->timestamp, theobj->created);
+#else	/* Good luck */
         fprintf(out, "%d\n%d\n", theobj->timestamp, theobj->created);
 #endif
         fprintf(out, "%d\n%d\n", theobj->usecnt,

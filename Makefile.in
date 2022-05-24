@@ -45,18 +45,6 @@ LDFLAGS= @LDFLAGS@
 P=
 
 # Choose your database library.
-#
-# GNU dbm
-GDBMSRC= gdbm.c
-GDBMOBJ= gdbm.o
-GDBMDEF= -DUSE_GDBM
-GDBMLIB= -lgdbm
-# 4.4BSD db library
-BDBMSRC= bsddbm.c
-BDBMOBJ= bsddbm.o
-BDBMDEF= -DUSE_BSDDBM
-BDBMLIB= -ldb
-
 DBMSRC=	@dbm_src@
 DBMOBJ=	@dbm_obj@
 DBMDEF=	@dbm_def@

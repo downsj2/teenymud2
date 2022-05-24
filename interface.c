@@ -875,7 +875,8 @@ void log_disconnect(cp)
       logfile(LOG_STATUS, "DISCONNECT: %s(#%d) on fd %d.\n", name, cp->player,
 	      cp->fd);
     } else
-      logfile(LOG_STATUS, "DISCONNECT: ???(#%d) on fd %d.\n", cp->player,
+      /* Just make the compiler shut up. */
+      logfile(LOG_STATUS, "DISCONNECT: *?*(#%d) on fd %d.\n", cp->player,
 	      cp->fd);
   } else
     logfile(LOG_STATUS, "DISCONNECT: fd %d never connected.\n", cp->fd);
@@ -891,7 +892,8 @@ void log_connect(cp)
       logfile(LOG_STATUS, "CONNECTED: %s(#%d) on fd %d.\n", name, cp->player,
 	      cp->fd);
     } else
-      logfile(LOG_STATUS, "CONNECTED: ???(#%d) on fd %d.\n", cp->player,
+      /* Just make the compiler shut up. */
+      logfile(LOG_STATUS, "CONNECTED: *?*(#%d) on fd %d.\n", cp->player,
 	      cp->fd);
   } else {
     if(cp->user != (char *)NULL) {
@@ -915,7 +917,8 @@ static void log_create(cp)
     logfile(LOG_STATUS, "CREATED: %s(#%d) on fd %d.\n", name, cp->player,
 	    cp->fd);
   } else
-    logfile(LOG_STATUS, "CREATED: ???(#%d) on fd %d.\n", cp->player, cp->fd);
+    /* Just make the compiler shut up. */
+    logfile(LOG_STATUS, "CREATED: *?*(#%d) on fd %d.\n", cp->player, cp->fd);
 }
 
 static void log_badconnect(cp, s)

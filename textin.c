@@ -113,7 +113,7 @@ static int getnumber(in, obj, code, read_version, read_flags)
   if((code != TIMESTAMP) && (code != CREATESTAMP))
     num = (int)strtol(txt_buffer, &ptr, 10);
   else {
-#if SIZEOF_TIME_T > 4
+#if SIZEOF_TIME_T > SIZEOF_LONG
     tval = (time_t)strtoll(txt_buffer, &ptr, 10);
 #else
     tval = (time_t)strtol(txt_buffer, &ptr, 10);

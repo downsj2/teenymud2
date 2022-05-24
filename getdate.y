@@ -25,16 +25,10 @@
    tricks are need, but defaults to using the gettimeofday system call.
    Include <sys/time.h> if that will be used.  */
 
-#ifdef TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
-#else
+#endif
 #include <time.h>
-#endif
-#endif
 
 #ifdef timezone
 #undef timezone /* needed for sgi */

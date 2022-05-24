@@ -86,7 +86,7 @@ static struct stat sbuf;
 
 static void init_table _ANSI_ARGS_((FILE *, struct file_index **));
 static void free_help _ANSI_ARGS_((struct file_index **));
-static void display_topic _ANSI_ARGS_((int, int, const char *, const char *, struct file_index **, time_t *, const char *, bool));
+static void display_topic _ANSI_ARGS_((int, int, const char *, const char *, struct file_index **, time_t *, const char *, int));
 
 static void init_table(fd, tp)
     FILE *fd;
@@ -172,7 +172,7 @@ static void free_help(tp)
 
 /* Display a topic from either of the indexes. */
 #ifdef __STDC__
-static void display_topic(int player, int cause, const char *utopic, const char *filename, struct file_index **index, time_t *index_mod, const char *index_type, bool quiet)
+static void display_topic(int player, int cause, const char *utopic, const char *filename, struct file_index **index, time_t *index_mod, const char *index_type, int quiet)
 #else
 static void display_topic(player, cause, utopic, filename, index, index_mod, index_type, quiet)
     int player, cause;
@@ -180,7 +180,7 @@ static void display_topic(player, cause, utopic, filename, index, index_mod, ind
     struct file_index **index;
     time_t *index_mod;
     const char *index_type;
-    bool quiet;
+    int quiet;
 #endif
 {
   FILE *fd;
@@ -282,7 +282,7 @@ VOID do_help(player, cause, switches, argone)
   if (!(switches & HELP_NOHTML) && has_html(player))
     notify_player(player, cause, player, mudconf.help_url, NOT_RAW);
 
-  display_topic(player, cause, argone, mudconf.help_file, &file_index_help, &file_mod_help, "help", switches & CMD_QUIET);
+  display_topic(player, cause, argone, mudconf.help_file, &file_index_help, &file_mod_help, "help", (switches & CMD_QUIET));
 }
 
 VOID do_news(player, cause, switches, argone)
@@ -301,7 +301,7 @@ VOID do_news(player, cause, switches, argone)
   if (!(switches & NEWS_NOHTML) && has_html(player))
     notify_player(player, cause, player, mudconf.news_url, NOT_RAW);
 
-  display_topic(player, cause, argone, mudconf.news_file, &file_index_news, &file_mod_news, "news", switches & CMD_QUIET);
+  display_topic(player, cause, argone, mudconf.news_file, &file_index_news, &file_mod_news, "news", (switches & CMD_QUIET));
 }
 
 /*

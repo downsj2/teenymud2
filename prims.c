@@ -605,9 +605,11 @@ static PRIM(prim_timestamp)
     strcpy(buffer, ERR_DB);
     return;
   }
-#if SIZEOF_TIME_T > 4
+#if SIZEOF_TIME_T > SIZEOF_LONG
   sprintf(buffer, "%lld", dat);
-#else
+#elif SIZEOF_TIME_T == SIZEOF_LONG
+  sprintf(buffer, "%ld", dat);
+#else	/* Good luck */
   sprintf(buffer, "%d", dat);
 #endif
 }
@@ -635,9 +637,11 @@ static PRIM(prim_createstamp)
     strcpy(buffer, ERR_DB);
     return;
   }
-#if SIZEOF_TIME_T > 4
+#if SIZEOF_TIME_T > SIZEOF_LONG
   sprintf(buffer, "%lld", dat);
-#else
+#elif SIZEOF_TIME_T == SIZEOF_LONG
+  sprintf(buffer, "%ld", dat);
+#else	/* Good luck */
   sprintf(buffer, "%d", dat);
 #endif
 }

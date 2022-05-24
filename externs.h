@@ -325,5 +325,13 @@ extern int compressed _ANSI_ARGS_((char *));
 extern char *compress _ANSI_ARGS_((char *));
 extern char *uncompress _ANSI_ARGS_((char *));
 
+/* from compat library */
+#ifndef HAVE_STRLCAT
+extern size_t strlcat _ANSI_ARGS_((char *, const char *, size_t));
+#endif
+#ifndef HAVE_STRLCPY
+extern size_t strlcpy _ANSI_ARGS_((char *, const char *, size_t));
+#endif
+
 #define __EXTERNS_H
 #endif				/* __EXTERNS_H */

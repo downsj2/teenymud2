@@ -1,32 +1,20 @@
-AC_INIT(conf.c)
-AC_CONFIG_HEADER(autoconf.h)
+AC_INIT
+AC_CONFIG_SRCDIR([conf.c])
+AC_CONFIG_HEADERS([autoconf.h])
 AC_REVISION(: Configure for TeenyMUD 2.x)
-AC_PREREQ(2.1)
-dnl Packages
-dbm_lib="${GDBMLIB}"
-dbm_def="${GDBMDEF}"
-dbm_src="${GDBMSRC}"
-dbm_obj="${GDBMOBJ}"
-AC_ARG_WITH(gdbm, [  --with-gdbm             compile to use GNU dbm],
-	    [
-	     dbm_def=-DUSE_GDBM
-	     dbm_src=gdbm.c
-	     dbm_obj=gdbm.o])
-dnl AC_ARG_WITH(bsddbm, [  --with-bsddbm           compile to use BSD dbm],
-dnl	    [
-dnl	     dbm_def=-DUSE_BSDDBM
-dnl	     dbm_src=bsddbm.c
-dnl	     dbm_obj=bsddbm.o])
+AC_PREREQ([2.71])
+dbm_def=-DUSE_GDBM
+dbm_src=gdbm.c
+dbm_obj=gdbm.o
+dnl System stuff
+AC_USE_SYSTEM_EXTENSIONS
 dnl Specials
-AC_ISC_POSIX
+AC_SEARCH_LIBS([strerror],[cposix])
 dnl Compiler
 AC_PROG_CC
 AC_PROG_CPP
-dnl System stuff
-AC_AIX
-AC_MINIX
 dnl Cross Compiling
-AC_C_CROSS
+
 if test $cross_compiling = yes; then
 	echo "Cross compiling is NOT supported by this package.  Sorry."
 	exit 0
@@ -37,13 +25,12 @@ AC_PROG_YACC
 AC_PROG_RANLIB
 AC_PROG_MAKE_SET
 dnl Compiler stuff
-AC_GCC_TRADITIONAL
+AC_PROG_GCC_TRADITIONAL
 AC_C_CONST
 AC_C_INLINE
-AC_WORDS_BIGENDIAN
+AC_C_BIGENDIAN
 AC_MSG_CHECKING(for void pointer support)
-AC_TRY_COMPILE(
-[#include <stdio.h>
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
 void test_func1() { /* innocent whistle */ }
 void test_func2() { /* innocent whistle */ }
 
@@ -53,8 +40,7 @@ struct table {
 
 struct table Table[] = {
   test_func1, test_func2, NULL
-};],
-[
+};]], [[
   register void *ptr;	/* register pointer. */
   char buf[80];
 
@@ -67,7 +53,7 @@ struct table Table[] = {
   /* void function pointers. */
   (Table[0].function)();
   (Table[1].function)();
-], AC_DEFINE(HAVE_VOID_PTR) AC_MSG_RESULT(sure), AC_MSG_RESULT(nada))
+]])],[AC_DEFINE(HAVE_VOID_PTR) AC_MSG_RESULT(sure)],[AC_MSG_RESULT(nada)])
 dnl Headers
 AC_CHECK_HEADERS(stdlib.h string.h unistd.h sys/select.h malloc.h \
 		sys/wait.h limits.h sys/time.h sys/params.h varargs.h \
@@ -75,41 +61,19 @@ AC_CHECK_HEADERS(stdlib.h string.h unistd.h sys/select.h malloc.h \
 		termio.h stdarg.h getopt.h)
 AC_CHECK_HEADER(sys/file.h, ,AC_DEFINE(NO_SYS_FILE))
 AC_MSG_CHECKING(for TIOCGWINSZ in sys/ioctl.h)
-AC_TRY_COMPILE([#include <sys/types.h>
-#include <sys/ioctl.h>], [int x = TIOCGWINSZ;],
-	       AC_DEFINE(GWINSZ_IN_SYS_IOCTL) AC_MSG_RESULT(found),
-	       AC_MSG_RESULT(not found))
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
+#include <sys/ioctl.h>]], [[int x = TIOCGWINSZ;]])],[AC_DEFINE(GWINSZ_IN_SYS_IOCTL) AC_MSG_RESULT(found)],[AC_MSG_RESULT(not found)])
 AC_MSG_CHECKING(for sys/time.h and sys/select.h clash)
-AC_TRY_COMPILE([#include <sys/types.h>],
-[#ifdef HAVE_SYS_TIME_H
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>]], [[#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
-#endif], AC_MSG_RESULT(none), AC_DEFINE(NO_SELECT_H) AC_MSG_RESULT(yes))
+#endif]])],[AC_MSG_RESULT(none)],[AC_DEFINE(NO_SELECT_H) AC_MSG_RESULT(yes)])
 dnl Types
-AC_TYPE_SIGNAL
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
-dnl Stock AC_CHECK_SIZEOF(off_t) is broken!
-AC_MSG_CHECKING(size of off_t)
-AC_TRY_COMPILE([#include "confdefs.h"
-	       #include <sys/types.h>], [size_t len = sizeof(off_t);],
-	       [AC_TRY_RUN([#include "confdefs.h"
-	       		   #include <sys/types.h>
-			   #include <stdio.h>
-			   main() {
-			  	FILE *fp = fopen("conftestval", "w");
-				if(!fp) exit(1);
-				fprintf(fp, "%d\n", sizeof(off_t));
-				fclose(fp);
-				exit(0);
-			   }], sizeof_off_t=`cat conftestval`
-			       AC_DEFINE_UNQUOTED(SIZEOF_OFF_T, $sizeof_off_t)
-			       AC_MSG_RESULT($sizeof_off_t),
-			   AC_DEFINE(SIZEOF_OFF_T, 0) AC_MSG_RESULT(0))],
-	       AC_DEFINE(SIZEOF_OFF_T, 0) AC_MSG_RESULT(0))
-dnl AC_CHECK_SIZEOF(off_t)
+AC_CHECK_SIZEOF(off_t)
 AC_CHECK_SIZEOF(long)
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(int *)
@@ -149,26 +113,21 @@ dnl Library routines
 AC_FUNC_STRFTIME
 AC_FUNC_ALLOCA
 AC_FUNC_VPRINTF
-AC_FUNC_WAIT3
 AC_CHECK_FUNCS(snprintf strtol strtod strtoul random fmod strcasecmp strerror \
 	       bcopy strchr strstr strtok gettimeofday ftime fsync \
-	       setrlimit waitpid sys_errlist tzset setsid timezone \
+	       setrlimit wait3 waitpid sys_errlist tzset setsid timezone \
 	       on_exit atexit sighold getrusage getloadavg mallopt \
 	       gethostname uname getdtablesize strcasestr \
                getopt_long strlcpy strlcat)
 AC_MSG_CHECKING(if programs can declare prototypes for getpwent suite)
-AC_TRY_COMPILE([#include <sys/types.h>
-extern struct passwd *getpwuid();], [struct passwd *z; z = getpwuid(0);],
-	       AC_MSG_RESULT(yes),
-	       AC_DEFINE(HAVE_GETPW_DECLS) AC_MSG_RESULT(nope))
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
+extern struct passwd *getpwuid();]], [[struct passwd *z; z = getpwuid(0);]])],[AC_MSG_RESULT(yes)],[AC_DEFINE(HAVE_GETPW_DECLS) AC_MSG_RESULT(nope)])
 dnl Structures
-AC_TIME_WITH_SYS_TIME
 AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
 AC_MSG_CHECKING(union wait)
-AC_TRY_COMPILE([#include <sys/types.h>
-#include <sys/wait.h>],
-                 [union wait status; int pid; pid = wait (&status);
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
+#include <sys/wait.h>]], [[union wait status; int pid; pid = wait (&status);
 #ifdef WEXITSTATUS
 /* Some POSIXoid systems have both the new-style macros and the old
    union wait type, and they do not work together.  If union wait
@@ -179,25 +138,17 @@ if (WEXITSTATUS (status) != 0) pid = -1;
 /* Make sure union wait works with waitpid.  */
 pid = waitpid (-1, &status, 0);
 #endif
-],
-		AC_DEFINE(HAVE_UNION_WAIT) AC_MSG_RESULT(found),
-		AC_MSG_RESULT(not found))
+]])],[AC_DEFINE(HAVE_UNION_WAIT) AC_MSG_RESULT(found)],[AC_MSG_RESULT(not found)])
 AC_MSG_CHECKING(for struct linger)
-AC_TRY_COMPILE([#include <stdio.h>
-#include <sys/signal.h>],
-	       [struct linger ll;],
-	       AC_MSG_RESULT(found),
-	       AC_DEFINE(NO_STRUCT_LINGER) AC_MSG_RESULT(not found))
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
+#include <sys/signal.h>]], [[struct linger ll;]])],[AC_MSG_RESULT(found)],[AC_DEFINE(NO_STRUCT_LINGER) AC_MSG_RESULT(not found)])
 dnl AC_MSG_CHECKING(for ancient in_addr)
-dnl AC_TRY_COMPILE([#include <stdio.h>
+dnl AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
 dnl #include <netinet/in.h>
-dnl #include <arpa/inet.h>],
-dnl	       [struct in_addr ina; ina.S_un.S_addr = 0x00000000;],
-dnl	       AC_MSG_RESULT(you poor soul) AC_DEFINE(HAVE_ANCIENT_TCP),
-dnl	       AC_MSG_RESULT(no))
+dnl #include <arpa/inet.h>]], [[dnl	       struct in_addr ina; ina.S_un.S_addr = 0x00000000;]])],[dnl	       AC_MSG_RESULT(you poor soul) AC_DEFINE(HAVE_ANCIENT_TCP)],[dnl	       AC_MSG_RESULT(no)])
 dnl Extras
 AC_MSG_CHECKING(whether you have SystemV or BSD signals)
-AC_TRY_RUN([#include <signal.h>
+AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <signal.h>
 int count = 0;
 RETSIGTYPE sighandle() {
   count++;
@@ -209,32 +160,20 @@ main() {
   kill(getpid(), SIGINT);	/* definately ignored. */
   kill(getpid(), SIGINT);	/* terminated under SysV */
   exit(1);
-}], AC_MSG_RESULT(bsd), AC_DEFINE(HAVE_SYSV_SIGNALS) AC_MSG_RESULT(sysv))
-dnl Package configuration
-if test "${with_gdbm+set}" = set; then
-	unset ac_cv_lib_gdbm
-	AC_CHECK_LIB(gdbm, gdbm_open,
-		     [dbm_lib="-lgdbm"
-		      xdbm_lib="gdbm"], dbm_lib="-lgdbm")
-	if test "${ac_cv_lib_gdbm}" = no; then
-		AC_MSG_WARN(no working GDBM library found.)
-		xdbm_lib="NONE"
-	fi
-	if test "${xdbm_lib}" != "NONE"; then
-		unset ac_cv_lib_gdbm
-		AC_CHECK_LIB($xdbm_lib, gdbm_setopt, true,
-		     	     AC_MSG_WARN(this package requires at least GDBM version 1.7.1.))
-	fi
+}]])],[AC_MSG_RESULT(bsd)],[AC_DEFINE(HAVE_SYSV_SIGNALS) AC_MSG_RESULT(sysv)],[])
+dnl Database configuration
+unset ac_cv_lib_gdbm
+AC_CHECK_LIB(gdbm, gdbm_open,
+	     [dbm_lib="-lgdbm"
+	      xdbm_lib="gdbm"], dbm_lib="-lgdbm")
+if test "${ac_cv_lib_gdbm}" = no; then
+	AC_MSG_WARN(no working GDBM library found.)
+	xdbm_lib="NONE"
 fi
-if test "${with_bsddbm+set}" = set; then
-	dnl Here's a macro set for you!
-	unset ac_cv_lib_c
-	AC_CHECK_LIB(c, dbopen, dbm_lib="",
-		     [AC_CHECK_LIB(db, dbopen, dbm_lib="-ldb",
-				   [AC_CHECK_LIB(bsddb, dbopen,
-						 dbm_lib="-lbsddb",
-						 [AC_MSG_WARN(no working BSD dbm library found.)
-						  dbm_lib="-ldb"])])])
+if test "${xdbm_lib}" != "NONE"; then
+	unset ac_cv_lib_gdbm
+	AC_CHECK_LIB($xdbm_lib, gdbm_setopt, true,
+	     	     AC_MSG_WARN(this package requires at least GDBM version 1.7.1.))
 fi
 AC_SUBST(dbm_lib)
 AC_SUBST(dbm_def)
@@ -242,4 +181,5 @@ AC_SUBST(dbm_src)
 AC_SUBST(dbm_obj)
 AC_SUBST(termlib)
 dnl Done
-AC_OUTPUT(Makefile hash/Makefile compat/Makefile sha/Makefile)
+AC_CONFIG_FILES([Makefile compat/Makefile sha/Makefile])
+AC_OUTPUT

@@ -53,6 +53,10 @@
 #define VOID	char
 #endif				/* HAVE_VOID_PTR */
 
+#ifndef RETSIGTYPE
+#define RETSIGTYPE	void
+#endif				/* RETSIGTYPE */
+
 /* version number. */
 #define VERSION		"2.0.7p0"
 

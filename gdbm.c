@@ -51,7 +51,7 @@ static datum key, cont;
 static int *obj_work = (int *)NULL;
 static int work_siz = 0;
 
-static void gdbm_panic _ANSI_ARGS_((char *));
+static void gdbm_panic _ANSI_ARGS_((const char *));
 static char *gdbm_pack_data _ANSI_ARGS_((char *, char *, int));
 static char *gdbm_pack_lock _ANSI_ARGS_((char *, struct boolexp *));
 static char *gdbm_pack_string _ANSI_ARGS_((char *, char *));
@@ -74,7 +74,7 @@ extern gdbm_error gdbm_errno;
 
 /* This is simply a wrapper around panic(). */
 static void gdbm_panic(mesg)
-    char *mesg;
+    const char *mesg;
 {
   panic("GDBM panic: %s\n", mesg);
 }
