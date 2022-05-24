@@ -228,7 +228,7 @@ int main(argc, argv)
 
   fprintf(stderr, "TeenyMUD %s database conversion system.\n",
   	  teenymud_version);
-  fprintf(stdout, "TeenyMUD %s is Copyright(C) 1993, 1994, 1995 Jason Downs.\n",
+  fprintf(stdout, "TeenyMUD %s is Copyright(C) 1993, 1994, 1995, 2013, 2022 Jason Downs.\n",
           teenymud_version);
   fputs("TeenyMUD is free software and comes with absolutely no warranty.\n",
         stdout);
