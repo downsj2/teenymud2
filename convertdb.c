@@ -317,6 +317,13 @@ int main(argc, argv)
         fputs("Hmm, looks like a TinyMUD database.  Buh.\n", stderr);
     }
 
+#if SIZEOF_TIME_T < 8
+    /* Complain, but otherwise continue. */
+    if (read_flags & DB_LARGETIME) {
+      fputs("WARNING: Loading a large time_t database on a small time_t architecture!\n", stderr);
+    }
+#endif
+
     fputs("Loading text database", stderr);
     fflush(stderr);
     if(text_load(text, read_version, read_flags, read_total) == -1) {
@@ -335,6 +342,8 @@ int main(argc, argv)
       fputs("  [PARENTS]", stderr);
     if (read_flags & DB_IMMUTATTRS)
       fputs("  [IMMUTATTRS]", stderr);
+    if (read_flags & DB_LARGETIME)
+      fputs("  [LARGETIME]", stderr);
     fputc('\n', stderr);
 
     if (read_version < 300)

@@ -32,11 +32,16 @@
 #define DB_DESTARRAY	0x0004	/* exits have a destination array */
 #define DB_PARENTS	0x0008	/* objects have multiple parents */
 #define DB_IMMUTATTRS	0x0010	/* attributes have immutable flag */
+#define DB_LARGETIME	0x0020	/* time_t is larger than 32bits */
 
 #define DB_GFILTER	0x1000	/* don't output garbage */
 
 #define OUTPUT_VERSION	301
+#if SIZEOF_TIME_T > 4
+#define OUTPUT_FLAGS	(DB_DESTARRAY|DB_IMMUTATTRS|DB_LARGETIME)
+#else
 #define OUTPUT_FLAGS	(DB_DESTARRAY|DB_IMMUTATTRS)
+#endif
 
 #define TXTBUFFSIZ	LARGEBUFFSIZ
 
