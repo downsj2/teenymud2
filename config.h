@@ -2,7 +2,7 @@
 
 /*
  *		       This file is part of TeenyMUD II.
- *		 Copyright(C) 1993, 1994, 1995, 2013 by Jason Downs.
+ *		 Copyright(C) 1993, 1994, 1995, 2013, 2022 by Jason Downs.
  *                           All rights reserved.
  * 
  * TeenyMUD II is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
 #endif				/* RETSIGTYPE */
 
 /* version number. */
-#define VERSION		"2.0.7p0"
+#define VERSION		"2.0.8p0"
 
 /* maximum length of a player name */
 #define MAXPNAMELEN	16

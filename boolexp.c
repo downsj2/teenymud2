@@ -4,7 +4,7 @@
 
 /*
  *		       This file is part of TeenyMUD II.
- *	      Portions Copyright(C) 1993, 1994, 1995, 2013 by Jason Downs.
+ *	      Portions Copyright(C) 1993, 1994, 1995, 2013, 2022 by Jason Downs.
  *			      All rights reserved.
  *
  * The following specifies terms and conditions of redistribution,

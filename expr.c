@@ -4,7 +4,7 @@
 
 /*
  *		       This file is part of TeenyMUD II.
- *	    Copyright(C) 1995, 2013 by Jason Downs.  All rights reserved.
+ *	    Copyright(C) 1995, 2013, 2022 by Jason Downs.  All rights reserved.
  * 
  * TeenyMUD II is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

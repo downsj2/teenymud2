@@ -4,7 +4,7 @@
 
 /*
  *		       This file is part of TeenyMUD II.
- *		 Copyright(C) 1993, 1994, 1995, 2013 by Jason Downs.
+ *		 Copyright(C) 1993, 1994, 1995, 2013, 2022 by Jason Downs.
  *                           All rights reserved.
  * 
  * TeenyMUD II is free software; you can redistribute it and/or modify
@@ -205,7 +205,7 @@ int main(argc, argv)
   ptable_init();
 
   /* let the world know we live! */
-  fprintf(stdout, "TeenyMUD %s is Copyright(C) 1993, 1994, 1995, 2013 Jason Downs.\n",
+  fprintf(stdout, "TeenyMUD %s is Copyright(C) 1993, 1994, 1995, 2013, 2022 Jason Downs.\n",
   	  teenymud_version);
   fputs("TeenyMUD is free software and comes with absolutely no warranty.\n",
   	stdout);

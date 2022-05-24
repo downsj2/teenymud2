@@ -4,7 +4,7 @@
 
 /*
  *		       This file is part of TeenyMUD II.
- *		 Copyright(C) 1993, 1994, 1995, 2013 by Jason Downs.
+ *		 Copyright(C) 1993, 1994, 1995, 2013, 2022 by Jason Downs.
  *                           All rights reserved.
  * 
  * TeenyMUD II is free software; you can redistribute it and/or modify
@@ -194,8 +194,8 @@ struct mstat mudstat;		/* global stat struct */
 
 /* version string, make it look like an ID. */
 #if defined(__STDC__) && defined(__DATE__)
-const char teenymud_id[] = "@(#)TeenyMUD v2.0.7 PL#0 (Built " __DATE__ ")";
+const char teenymud_id[] = "@(#)TeenyMUD v2.0.8 PL#0 (Built " __DATE__ ")";
 #else
-const char teenymud_id[] = "@(#)TeenyMUD v2.0.7 PL#0";
+const char teenymud_id[] = "@(#)TeenyMUD v2.0.8 PL#0";
 #endif
-const char teenymud_version[] = "2.0.7p0";
+const char teenymud_version[] = "2.0.8p0";
