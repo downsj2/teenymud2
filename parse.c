@@ -59,16 +59,10 @@ char *exec(player, cause, source, string, flags, argc, argv)
   char buffer[MEDBUFFSIZ+2];
   char *ptr = buffer;
   char *tptr, *nptr, *eptr;
-  char *attr, anm[3], nbuf[MAXPNAMELEN + 3], *name;
+  char *attr, anm[3], nbuf[MAXPNAMELEN + 3], selfbuf[MAXPNAMELEN + 6], *name;
   char cbuf[64], pbuf[64], sbuf[64], *wstr;
   int aflags, asource, gender, powner;
   int increment = 1;
-
-  static char *subjective[4] = {"", "it", "she", "he"};
-  static char *objective[4] = {"", "it", "her", "him"};
-  static char *possessive[4] = {"", "its", "her", "his"};
-  static char *reflexive[4] = {"", "itself", "herself", "himself"};
-  static char *absolute[4] = {"", "its", "hers", "his"};
 
   if (!*string)
     return((char *)NULL);
@@ -86,11 +80,17 @@ char *exec(player, cause, source, string, flags, argc, argv)
   gender = genderof(cause);
   if(get_str_elt(cause, NAME, &name) == -1)
     name = "???";		/* XXX */
-  strcpy(nbuf, name);
-  strcat(nbuf, "'s");
+  snprintf(nbuf, sizeof(nbuf), "%s's", name);
+  snprintf(selfbuf, sizeof(selfbuf), "%s self", name);
   snprintf(cbuf, sizeof(cbuf), "#%d", cause);
   snprintf(pbuf, sizeof(pbuf), "#%d", player);
   snprintf(sbuf, sizeof(sbuf), "#%d", source);
+
+  char *subjective[4] = {name, "they", "she", "he"};
+  char *objective[4] = {name, "them", "her", "him"};
+  char *possessive[4] = {nbuf, "theirs", "her", "his"};
+  char *reflexive[4] = {selfbuf, "themself", "herself", "himself"};
+  char *absolute[4] = {nbuf, "theirs", "hers", "his"};
 
   while(*wstr && (ptr - buffer) < MEDBUFFSIZ) {
     switch(*wstr) {
@@ -187,23 +187,23 @@ char *exec(player, cause, source, string, flags, argc, argv)
 	    break;
 	  case 's':
 	  case 'S':
-	    tptr = (gender == 0) ? name : subjective[gender];
+	    tptr = subjective[gender];
 	    break;
 	  case 'o':
 	  case 'O':
-	    tptr = (gender == 0) ? name : objective[gender];
+	    tptr = objective[gender];
 	    break;
 	  case 'p':
 	  case 'P':
-	    tptr = (gender == 0) ? nbuf : possessive[gender];
+	    tptr = possessive[gender];
 	    break;
 	  case 'a':
 	  case 'A':
-	    tptr = (gender == 0) ? nbuf : absolute[gender];
+	    tptr = absolute[gender];
 	    break;
 	  case 'r':
 	  case 'R':
-	    tptr = (gender == 0) ? name : reflexive[gender];
+	    tptr = reflexive[gender];
 	    break;
 	  case '#':
 	    tptr = cbuf;
@@ -452,18 +452,15 @@ int genderof(player)
 
   if ((attr_get_parent(player, SEX, &str, &aflags, &source) == -1)
       || (str == (char *)NULL))
-    return (0);
+    return (GENDER_UNSPECIFIED);
 
   switch (to_lower(str[0])) {
-  case 'n':
-  case 'i':
-    return (1);
   case 'f':
-    return (2);
+    return (GENDER_FEMALE);
   case 'm':
-    return (3);
+    return (GENDER_MALE);
   default:
-    return (0);
+    return (GENDER_NONBINARY);
   }
 }
 

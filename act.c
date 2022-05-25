@@ -150,9 +150,10 @@ int can_hear(obj)
 void hear_alert(cause, chear, obj)
     int cause, chear, obj;
 {
-  int loc, gender, nhear;
+  int loc, nhear;
   char *name;
   char buff[BUFFSIZ];
+  const char *pronouns[4] = {"their", "their", "her", "his"};
 
   if((get_int_elt(obj, LOC, &loc) == -1)
      || (get_str_elt(obj, NAME, &name) == -1)) {
@@ -166,11 +167,7 @@ void hear_alert(cause, chear, obj)
     snprintf(buff, sizeof(buff), "%s grows ears and can now hear.", name);
     notify_contents_loc(loc, cause, obj, buff, obj, NOT_NOPUPPET);
   } else if(chear && !nhear) {
-    gender = genderof(obj);
-
-    snprintf(buff, sizeof(buff), "%s loses %s ears and becomes deaf.", name,
-            (((gender == 0) || (gender == 1)) ? "its" :
-	    ((gender == 2) ? "her" : "his")));
+    snprintf(buff, sizeof(buff), "%s loses %s ears and becomes deaf.", name, pronouns[genderof(obj)]);
     notify_contents_loc(loc, cause, obj, buff, obj, 0);
   }
 }

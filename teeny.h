@@ -146,6 +146,12 @@ extern int Atable_count;
 #define STTY_FLGS	(Atable[43].flags)
 #define ALIAS_FLGS	(Atable[47].flags)
 
+/* Genders */
+#define GENDER_UNSPECIFIED	0
+#define GENDER_NONBINARY	1
+#define GENDER_FEMALE		2
+#define GENDER_MALE		3
+
 /* Object flags are 64bits long, broken into two 32bit words. */
 #ifndef FLAGS_LEN
 #define FLAGS_LEN	2	/* number of words */
