@@ -54,14 +54,15 @@ static char gender[16];
  * We have to read TinyMUD objects all in one gulp, since their
  * field order is so incompatible.
  */
+#define TINYMUD_BUFFSIZE	1025
 static struct {
-  char name[512];
-  char description[512];
-  char fail[512];
-  char succ[512];
-  char ofail[512];
-  char osucc[512];
-  char password[512];
+  char name[TINYMUD_BUFFSIZE];
+  char description[TINYMUD_BUFFSIZE];
+  char fail[TINYMUD_BUFFSIZE];
+  char succ[TINYMUD_BUFFSIZE];
+  char ofail[TINYMUD_BUFFSIZE];
+  char osucc[TINYMUD_BUFFSIZE];
+  char password[TINYMUD_BUFFSIZE];
 
   struct boolexp *lock;
 
@@ -1369,6 +1370,8 @@ int text_load(in, read_version, read_flags, read_total)
         }
       } else if(read_version < 0) {		/* TinyMUD */
         char *nptr;
+
+	bzero((VOID *) &tinyobj, sizeof(tinyobj));
 
         /* Snarf up the object data. */
 
