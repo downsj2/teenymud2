@@ -182,3 +182,6 @@
 	- Updated autoconf to a modern version.  Legacy platforms will no longer work.
 	- Fixed minor compiler warnings and bugs.
 	- Completely removed bsddb support.
+
+### Changes since TeenyMUD 2.0.8:
+	- Fixed non-binary pronouns.

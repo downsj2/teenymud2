@@ -1,6 +1,6 @@
 # Readme
 
-NOTE: This is version of 2.0.8 of TeenyMUD, an update to the 2.0.5 releases.
+NOTE: This is version of 2.0.9 of TeenyMUD, an update to the 2.0.5 releases.
 It is intended to make TeenyMUD compile and run on modern systems.
 
 It will almost certainly not work on any of the ancient systems it was

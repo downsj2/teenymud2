@@ -58,7 +58,7 @@
 #endif				/* RETSIGTYPE */
 
 /* version number. */
-#define VERSION		"2.0.8p0"
+#define VERSION		"2.0.9"
 
 /* maximum length of a player name */
 #define MAXPNAMELEN	16

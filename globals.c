@@ -194,8 +194,10 @@ struct mstat mudstat;		/* global stat struct */
 
 /* version string, make it look like an ID. */
 #if defined(__STDC__) && defined(__DATE__)
-const char teenymud_id[] = "@(#)TeenyMUD v2.0.8 PL#0 (Built " __DATE__ ")";
+const char teenymud_id[] = "@(#)TeenyMUD " VERSION " (Built " __DATE__ ")";
+#elif defined(__STDC__)
+const char teenymud_id[] = "@(#)TeenyMUD " VERSION;
 #else
-const char teenymud_id[] = "@(#)TeenyMUD v2.0.8 PL#0";
+const char teenymud_id[] = "@(#)TeenyMUD";	/* Why bother? */
 #endif
-const char teenymud_version[] = "2.0.8p0";
+const char teenymud_version[] = VERSION;
