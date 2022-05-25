@@ -45,14 +45,10 @@ LDFLAGS= @LDFLAGS@
 P=
 
 # Choose your database library.
-DBMSRC=	@dbm_src@
-DBMOBJ=	@dbm_obj@
-DBMDEF=	@dbm_def@
-DBMLIB= @dbm_lib@
-
-# The termcap library.  Could be -ltermcap on BSD, -ltermlib on POSIX,
-# or even -lcurses on older SYSV and such.
-TERMCAP= @termlib@
+DBMSRC=	gdbm.c
+DBMOBJ=	gdbm.o
+DBMDEF=	-DUSE_GDBM
+DBMLIB= -lgdbm
 
 # Add an extra libraries you might need, here.
 #EXTRALIB= -lgnumalloc
@@ -69,10 +65,6 @@ MUDOBJ=	act.o attrutils.o boolexp.o buildcmds.o commands.o conf.o dbcmds.o \
 	wild.o wiz.o version.o
 CNVSRC=	convertdb.c textdb.c textin.c textout.c
 CNVOBJ= convertdb.o textdb.o textin.o textout.o
-SANSRC= sanity.c
-SANOBJ= sanity.o
-TDBSRC=	teenydbm.c
-TDBOBJ=	teenydbm.o
 DBSRC=	globals.c cache.c db.c ptable.c attributes.c boolutils.c
 DBOBJ=	globals.o cache.o db.o ptable.o attributes.o boolutils.o ${DBMOBJ}
 DDBOBJ=	dbconf.o
@@ -92,7 +84,6 @@ LIBS=	sha/sha.a ${DBMLIB} @LIBS@ compat/compat.a \
 CFLAGS=	${COPTS} ${INCLUDE} ${DBMDEF}
 LFLAGS= -abchnux ${INCLUDE} ${DBMDEF}
 
-# sanity doesn't work, teenydbm is under development
 all: teenymud convertdb
 
 # Subdirs
@@ -122,21 +113,18 @@ teenymud: ${P} compat.a sha.a ${MUDOBJ} ${DBOBJ} ${MSCOBJ}
 convertdb: ${P} compat.a ${CNVOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ}
 	${CC} ${CFLAGS} ${CNVOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ} -o convertdb ${LIBS} ${LDFLAGS}
 
-#sanity: ${P} compat.a ${SANOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ}
-#	${CC} ${CFLAGS} ${SANOBJ} ${DBOBJ} ${DDBOBJ} ${MSCOBJ} -o sanity ${LIBS} ${LDFLAGS}
-
 install:
 	@echo "You don't `install' this package automatically."
 
 clean:
 	cd compat;${MAKE} clean;cd ..
 	cd sha;${MAKE} clean;cd ..
-	-rm -f *.o teenymud convertdb sanity teenydbm
+	-rm -f *.o teenymud convertdb
 
 real-clean:
 	cd compat;${MAKE} real-clean;cd ..
 	cd sha;${MAKE} real-clean;cd ..
-	-rm -r *.o teenymud convertdb sanity teenydbm Makefile autoconf.h \
+	-rm -r *.o teenymud convertdb Makefile autoconf.h \
 	config.status config.log config.cache getdate.c buildnum
 
 # I don't know when the last time the lint rules actually worked was...
@@ -145,12 +133,6 @@ teenymud-lint:
 
 convertdb-lint:
 	lint ${LFLAGS} ${CNVSRC} ${DBSRC} ${MSCSRC}
-
-teenydbm-list:
-	list ${LFLAGS} ${CNVSRC} ${DBSRC} ${MSCSRC}
-
-sanity-lint:
-	lint ${LFLAGS} ${SANSRC} ${DBSRC} ${MSCSRC}
 
 lint: teenymud-lint convertdb-lint
 
@@ -234,7 +216,6 @@ convertdb.o: externs.h compat/getopt.h
 textdb.o: config.h conf.h teeny.h teenydb.h textdb.h externs.h
 textin.o: config.h conf.h teeny.h teenydb.h textdb.h sha/sha_wrap.h externs.h
 textout.o: config.h conf.h teeny.h teenydb.h textdb.h externs.h
-sanity.o: config.h conf.h teeny.h teenydb.h gnu/getopt.h externs.h
 globals.o: config.h conf.h teeny.h flaglist.h
 cache.o: config.h conf.h teeny.h teenydb.h externs.h
 db.o: config.h conf.h teeny.h teenydb.h ptable.h externs.h

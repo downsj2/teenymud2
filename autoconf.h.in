@@ -44,20 +44,11 @@
 /* Define if building universal (internal helper macro) */
 #undef AC_APPLE_UNIVERSAL_BUILD
 
-/* Define to 1 if using 'alloca.c'. */
-#undef C_ALLOCA
-
-/* Define to 1 if you have 'alloca', as a function or macro. */
-#undef HAVE_ALLOCA
-
-/* Define to 1 if <alloca.h> works. */
+/* Define to 1 if you have the <alloca.h> header file. */
 #undef HAVE_ALLOCA_H
 
 /* Define to 1 if you have the `atexit' function. */
 #undef HAVE_ATEXIT
-
-/* Define to 1 if you have the `bcopy' function. */
-#undef HAVE_BCOPY
 
 /* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.
    */
@@ -66,20 +57,8 @@
 /* Define to 1 if you have the <dirent.h> header file. */
 #undef HAVE_DIRENT_H
 
-/* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
-#undef HAVE_DOPRNT
-
 /* Define to 1 if you have the `fmod' function. */
 #undef HAVE_FMOD
-
-/* Define to 1 if you have the `fsync' function. */
-#undef HAVE_FSYNC
-
-/* Define to 1 if you have the `ftime' function. */
-#undef HAVE_FTIME
-
-/* Define to 1 if you have the `getdtablesize' function. */
-#undef HAVE_GETDTABLESIZE
 
 /* Define to 1 if you have the `gethostname' function. */
 #undef HAVE_GETHOSTNAME
@@ -111,9 +90,6 @@
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
-/* Define to 1 if you have the `malloc' library (-lmalloc). */
-#undef HAVE_LIBMALLOC
-
 /* Define to 1 if you have the `net' library (-lnet). */
 #undef HAVE_LIBNET
 
@@ -138,29 +114,17 @@
 /* Define to 1 if you have the <malloc.h> header file. */
 #undef HAVE_MALLOC_H
 
-/* Define to 1 if you have the `mallopt' function. */
-#undef HAVE_MALLOPT
-
 /* Define to 1 if you have the <minix/config.h> header file. */
 #undef HAVE_MINIX_CONFIG_H
 
 /* Define to 1 if you have the `on_exit' function. */
 #undef HAVE_ON_EXIT
 
-/* Define to 1 if you have the `random' function. */
-#undef HAVE_RANDOM
-
 /* Define to 1 if you have the `setrlimit' function. */
 #undef HAVE_SETRLIMIT
 
 /* Define to 1 if you have the `setsid' function. */
 #undef HAVE_SETSID
-
-/* Define to 1 if you have the `sighold' function. */
-#undef HAVE_SIGHOLD
-
-/* Define to 1 if you have the `snprintf' function. */
-#undef HAVE_SNPRINTF
 
 /* Define to 1 if you have the <stdarg.h> header file. */
 #undef HAVE_STDARG_H
@@ -174,21 +138,6 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
-/* Define to 1 if you have the `strcasecmp' function. */
-#undef HAVE_STRCASECMP
-
-/* Define to 1 if you have the `strcasestr' function. */
-#undef HAVE_STRCASESTR
-
-/* Define to 1 if you have the `strchr' function. */
-#undef HAVE_STRCHR
-
-/* Define to 1 if you have the `strerror' function. */
-#undef HAVE_STRERROR
-
-/* Define to 1 if you have the `strftime' function. */
-#undef HAVE_STRFTIME
-
 /* Define to 1 if you have the <strings.h> header file. */
 #undef HAVE_STRINGS_H
 
@@ -201,26 +150,8 @@
 /* Define to 1 if you have the `strlcpy' function. */
 #undef HAVE_STRLCPY
 
-/* Define to 1 if you have the `strstr' function. */
-#undef HAVE_STRSTR
-
-/* Define to 1 if you have the `strtod' function. */
-#undef HAVE_STRTOD
-
-/* Define to 1 if you have the `strtok' function. */
-#undef HAVE_STRTOK
-
-/* Define to 1 if you have the `strtol' function. */
-#undef HAVE_STRTOL
-
-/* Define to 1 if you have the `strtoul' function. */
-#undef HAVE_STRTOUL
-
 /* Define to 1 if `tm_zone' is a member of `struct tm'. */
 #undef HAVE_STRUCT_TM_TM_ZONE
-
-/* Define to 1 if you have the `sys_errlist' function. */
-#undef HAVE_SYS_ERRLIST
 
 /* Define to 1 if you have the <sys/params.h> header file. */
 #undef HAVE_SYS_PARAMS_H
@@ -249,15 +180,6 @@
 /* Define to 1 if you have the <sys/wait.h> header file. */
 #undef HAVE_SYS_WAIT_H
 
-/* Define to 1 if you have the <termcap.h> header file. */
-#undef HAVE_TERMCAP_H
-
-/* Define to 1 if you have the <termio.h> header file. */
-#undef HAVE_TERMIO_H
-
-/* Define to 1 if you have the `timezone' function. */
-#undef HAVE_TIMEZONE
-
 /* Define to 1 if your `struct tm' has `tm_zone'. Deprecated, use
    `HAVE_STRUCT_TM_TM_ZONE' instead. */
 #undef HAVE_TM_ZONE
@@ -277,15 +199,6 @@
 
 /* Define to 1 if you have the <varargs.h> header file. */
 #undef HAVE_VARARGS_H
-
-/* Define to 1 if you have the `vprintf' function. */
-#undef HAVE_VPRINTF
-
-/* Define to 1 if you have the `wait3' function. */
-#undef HAVE_WAIT3
-
-/* Define to 1 if you have the `waitpid' function. */
-#undef HAVE_WAITPID
 
 /* Define to 1 if you have the <wchar.h> header file. */
 #undef HAVE_WCHAR_H
@@ -322,14 +235,6 @@
 
 /* The size of `time_t', as computed by sizeof. */
 #undef SIZEOF_TIME_T
-
-/* If using the C implementation of alloca, define if you know the
-   direction of stack growth for your system; otherwise it will be
-   automatically deduced at runtime.
-	STACK_DIRECTION > 0 => grows toward higher addresses
-	STACK_DIRECTION < 0 => grows toward lower addresses
-	STACK_DIRECTION = 0 => direction of growth unknown */
-#undef STACK_DIRECTION
 
 /* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for

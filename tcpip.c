@@ -24,18 +24,9 @@
  *
  */
 
-/* AIX requires this to be the first thing in the file. */
-#ifdef __GNUC__
-#define alloca	__builtin_alloca
-#else	/* not __GNUC__ */
 #ifdef HAVE_ALLOCA_H
 #include <alloca.h>
-#else	/* not HAVE_ALLOCA_H */
-#ifdef _AIX
- #pragma alloca
-#endif	/* not _AIX */
-#endif	/* not HAVE_ALLOCA_H */
-#endif 	/* not __GNUC__ */
+#endif	/* HAVE_ALLOCA_H */
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -421,10 +412,6 @@ loop_start:
     /* in case of shutdown... */
     if(mudstat.status == MUD_STOPPED)
       done++;
-
-#ifdef C_ALLOCA
-    alloca(0);			/* garbage collect */
-#endif			/* C_ALLOCA */
   }
 }
 

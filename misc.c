@@ -24,19 +24,6 @@
  *
  */
 
-/* AIX requires this to be the first thing in the file. */
-#ifdef __GNUC__
-#define alloca	__builtin_alloca
-#else	/* not __GNUC__ */
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#else	/* not HAVE_ALLOCA_H */
-#ifdef _AIX
- #pragma alloca
-#endif	/* not _AIX */
-#endif	/* not HAVE_ALLOCA_H */
-#endif 	/* not __GNUC__ */
-
 #include <stdio.h>
 #include <sys/types.h>
 #ifdef HAVE_STRING_H
@@ -478,11 +465,6 @@ static void ty_malloc_report()
 void ty_malloc_init()
 {
   if(!malloc_inited) {
-#if defined(sun) && defined(M_MXFAST) && defined(HAVE_MALLOPT)
-    mallopt(M_MXFAST, 128);
-    mallopt(M_NLBLKS, 50);
-    mallopt(M_GRAIN, 16);
-#endif
 #ifdef MEMTRACKING
     mudstat.memlist = (struct mmem *)NULL;
     mudstat.memtotal = 0;
@@ -529,7 +511,7 @@ VOID *ty_malloc(size, where)
   if (newmem == (struct mmem *)NULL) {
     panic("%s: malloc() failed (%d bytes)\n", where, size);
   }
-  newmem->mfunc = (char *)malloc(srtlen(where)+1);
+  newmem->mfunc = (char *)malloc(strlen(where)+1);
   if (newmem->mfunc == (char *)NULL) {
     panic("%s: malloc() failed (%d bytes)\n", where, size);
   }

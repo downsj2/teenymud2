@@ -3,9 +3,6 @@ AC_CONFIG_SRCDIR([conf.c])
 AC_CONFIG_HEADERS([autoconf.h])
 AC_REVISION(: Configure for TeenyMUD 2.x)
 AC_PREREQ([2.71])
-dbm_def=-DUSE_GDBM
-dbm_src=gdbm.c
-dbm_obj=gdbm.o
 dnl System stuff
 AC_USE_SYSTEM_EXTENSIONS
 dnl Specials
@@ -55,10 +52,9 @@ struct table Table[] = {
   (Table[1].function)();
 ]])],[AC_DEFINE(HAVE_VOID_PTR) AC_MSG_RESULT(sure)],[AC_MSG_RESULT(nada)])
 dnl Headers
-AC_CHECK_HEADERS(stdlib.h string.h unistd.h sys/select.h malloc.h \
+AC_CHECK_HEADERS(alloca.h stdlib.h string.h unistd.h sys/select.h malloc.h \
 		sys/wait.h limits.h sys/time.h sys/params.h varargs.h \
-		dirent.h sys/ptem.h sys/pte.h sys/stream.h termcap.h \
-		termio.h stdarg.h getopt.h)
+		dirent.h sys/ptem.h sys/pte.h sys/stream.h stdarg.h getopt.h)
 AC_CHECK_HEADER(sys/file.h, ,AC_DEFINE(NO_SYS_FILE))
 AC_MSG_CHECKING(for TIOCGWINSZ in sys/ioctl.h)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
@@ -93,7 +89,6 @@ unset ac_cv_lib_socket
 AC_CHECK_LIB(socket, connect,
      	     AC_CHECK_LIB(socket, connect) \
      	     AC_CHECK_LIB(nsl, main), , -lnsl -lc)
-AC_CHECK_LIB(malloc, mallopt)
 dnl (...end Solaris)
 dnl (this is for SCO...)
 unset ac_cv_lib_socket
@@ -102,43 +97,13 @@ dnl (...SCO)
 AC_CHECK_LIB(nsl_s, main)
 AC_CHECK_LIB(bsd, main)
 AC_CHECK_LIB(resolv, gethostbyaddr, , , -lc)
-dnl (termcap stuff)
-realLIBS=$LIBS
-LIBS=""
-AC_CHECK_LIB(termcap, tgetent, termlib="-ltermcap",
-	     [AC_CHECK_LIB(termlib, tgetent, termlib="-ltermlib",
-	     		   AC_CHECK_LIB(curses, tgetent, termlib="-lcurses"))])
-LIBS=$realLIBS
 dnl Library routines
-AC_FUNC_STRFTIME
-AC_FUNC_ALLOCA
-AC_FUNC_VPRINTF
-AC_CHECK_FUNCS(snprintf strtol strtod strtoul random fmod strcasecmp strerror \
-	       bcopy strchr strstr strtok gettimeofday ftime fsync \
-	       setrlimit wait3 waitpid sys_errlist tzset setsid timezone \
-	       on_exit atexit sighold getrusage getloadavg mallopt \
-	       gethostname uname getdtablesize strcasestr \
-               getopt_long strlcpy strlcat)
-AC_MSG_CHECKING(if programs can declare prototypes for getpwent suite)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-extern struct passwd *getpwuid();]], [[struct passwd *z; z = getpwuid(0);]])],[AC_MSG_RESULT(yes)],[AC_DEFINE(HAVE_GETPW_DECLS) AC_MSG_RESULT(nope)])
+AC_CHECK_FUNCS(fmod gettimeofday setrlimit tzset setsid \
+	       on_exit atexit getrusage getloadavg \
+	       gethostname uname getopt_long strlcpy strlcat)
 dnl Structures
 AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
-AC_MSG_CHECKING(union wait)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-#include <sys/wait.h>]], [[union wait status; int pid; pid = wait (&status);
-#ifdef WEXITSTATUS
-/* Some POSIXoid systems have both the new-style macros and the old
-   union wait type, and they do not work together.  If union wait
-   conflicts with WEXITSTATUS et al, we don't want to use it at all.  */
-if (WEXITSTATUS (status) != 0) pid = -1;
-#endif
-#ifdef HAVE_WAITPID
-/* Make sure union wait works with waitpid.  */
-pid = waitpid (-1, &status, 0);
-#endif
-]])],[AC_DEFINE(HAVE_UNION_WAIT) AC_MSG_RESULT(found)],[AC_MSG_RESULT(not found)])
 AC_MSG_CHECKING(for struct linger)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
 #include <sys/signal.h>]], [[struct linger ll;]])],[AC_MSG_RESULT(found)],[AC_DEFINE(NO_STRUCT_LINGER) AC_MSG_RESULT(not found)])
@@ -175,11 +140,6 @@ if test "${xdbm_lib}" != "NONE"; then
 	AC_CHECK_LIB($xdbm_lib, gdbm_setopt, true,
 	     	     AC_MSG_WARN(this package requires at least GDBM version 1.7.1.))
 fi
-AC_SUBST(dbm_lib)
-AC_SUBST(dbm_def)
-AC_SUBST(dbm_src)
-AC_SUBST(dbm_obj)
-AC_SUBST(termlib)
 dnl Done
 AC_CONFIG_FILES([Makefile compat/Makefile sha/Makefile])
 AC_OUTPUT

@@ -29,15 +29,9 @@ CC=	@CC@
 RANLIB=	@RANLIB@
 CFLAGS=	${COPTS} -I.. -I${srcdir}/.. -I${srcdir}
 
-OBJ = compat.o random.o strerror.o strcasecmp.o strftime.o vprintf.o \
-	bcopy.o strtol.o strtod.o waitpid.o strstr.o strtok.o strchr.o \
-	alloca.o strtoul.o strcasestr.o getopt.o getopt1.o strlcat.o \
-	strlcpy.o
+OBJ = compat.o getopt.o getopt1.o strlcat.o strlcpy.o
 
-SRCS = compat.c random.c strerror.c strcasecmp.c strftime.c vprintf.c \
-	bcopy.c strtol.c strtod.c waitpid.c strstr.c strtok.c strchr.c \
-	alloca.c strtoul.c strcasestr.c getopt.c getopt1.c strlcat.c \
-	strlcpy.c
+SRCS = compat.c getopt.c getopt1.c strlcat.c strlcpy.c
 
 HDRS = ../autoconf.h ${srcdir}/../config.h
 
@@ -56,21 +50,6 @@ compat.a: ${P} ${OBJ}
 	${RANLIB} compat.a
 
 compat.o: ${srcdir}/../config.h
-random.o: ${srcdir}/../config.h
-strerror.o: ${srcdir}/../config.h
-strcasecmp.o: ${srcdir}/../config.h
-strftime.o: ${srcdir}/../config.h
-vprintf.o: ${srcdir}/../config.h
-bcopy.o: ${srcdir}/../config.h
-strtol.o: ${srcdir}/../config.h
-strtod.o: ${srcdir}/../config.h
-waitpid.o: ${srcdir}/../config.h
-strstr.o: ${srcdir}/../config.h
-strtok.o: ${srcdir}/../config.h
-strchr.o: ${srcdir}/../config.h
-alloca.o: ${srcdir}/../config.h
-strtoul.o: ${srcdir}/../config.h
-strcasestr.o: ${srcdir}/../config.h
 getopt.o: ${srcdir}/../config.h
 getopt1.o: ${srcdir}/../config.h
 strlcat.o: ${srcdir}/../config.h

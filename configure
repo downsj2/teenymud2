@@ -647,15 +647,8 @@ ac_includes_default="\
 #endif"
 
 ac_header_c_list=
-ac_func_c_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
-termlib
-dbm_obj
-dbm_src
-dbm_def
-dbm_lib
-ALLOCA
 EGREP
 GREP
 SET_MAKE
@@ -2667,7 +2660,6 @@ as_fn_append ac_header_c_list " sys/types.h sys_types_h HAVE_SYS_TYPES_H"
 as_fn_append ac_header_c_list " unistd.h unistd_h HAVE_UNISTD_H"
 as_fn_append ac_header_c_list " wchar.h wchar_h HAVE_WCHAR_H"
 as_fn_append ac_header_c_list " minix/config.h minix_config_h HAVE_MINIX_CONFIG_H"
-as_fn_append ac_func_c_list " vprintf HAVE_VPRINTF"
 # Check that the precious variables saved in the cache have kept the same
 # value.
 ac_cache_corrupted=false
@@ -2742,9 +2734,6 @@ ac_config_headers="$ac_config_headers autoconf.h"
 
 
 
-dbm_def=-DUSE_GDBM
-dbm_src=gdbm.c
-dbm_obj=gdbm.o
 
 
 
@@ -5657,6 +5646,12 @@ else $as_nop
 printf "%s\n" "nada" >&6; }
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+ac_fn_c_check_header_compile "$LINENO" "alloca.h" "ac_cv_header_alloca_h" "$ac_includes_default"
+if test "x$ac_cv_header_alloca_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_ALLOCA_H 1" >>confdefs.h
+
+fi
 ac_fn_c_check_header_compile "$LINENO" "stdlib.h" "ac_cv_header_stdlib_h" "$ac_includes_default"
 if test "x$ac_cv_header_stdlib_h" = xyes
 then :
@@ -5739,18 +5734,6 @@ ac_fn_c_check_header_compile "$LINENO" "sys/stream.h" "ac_cv_header_sys_stream_h
 if test "x$ac_cv_header_sys_stream_h" = xyes
 then :
   printf "%s\n" "#define HAVE_SYS_STREAM_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "termcap.h" "ac_cv_header_termcap_h" "$ac_includes_default"
-if test "x$ac_cv_header_termcap_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_TERMCAP_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "termio.h" "ac_cv_header_termio_h" "$ac_includes_default"
-if test "x$ac_cv_header_termio_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_TERMIO_H 1" >>confdefs.h
 
 fi
 ac_fn_c_check_header_compile "$LINENO" "stdarg.h" "ac_cv_header_stdarg_h" "$ac_includes_default"
@@ -6417,49 +6400,6 @@ fi
 
 fi
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for mallopt in -lmalloc" >&5
-printf %s "checking for mallopt in -lmalloc... " >&6; }
-if test ${ac_cv_lib_malloc_mallopt+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lmalloc  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char mallopt ();
-int
-main (void)
-{
-return mallopt ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_lib_malloc_mallopt=yes
-else $as_nop
-  ac_cv_lib_malloc_mallopt=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_malloc_mallopt" >&5
-printf "%s\n" "$ac_cv_lib_malloc_mallopt" >&6; }
-if test "x$ac_cv_lib_malloc_mallopt" = xyes
-then :
-  printf "%s\n" "#define HAVE_LIBMALLOC 1" >>confdefs.h
-
-  LIBS="-lmalloc $LIBS"
-
-fi
-
 unset ac_cv_lib_socket
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for socket in -lsocket" >&5
 printf %s "checking for socket in -lsocket... " >&6; }
@@ -6627,430 +6567,10 @@ then :
 
 fi
 
-realLIBS=$LIBS
-LIBS=""
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for tgetent in -ltermcap" >&5
-printf %s "checking for tgetent in -ltermcap... " >&6; }
-if test ${ac_cv_lib_termcap_tgetent+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-ltermcap  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char tgetent ();
-int
-main (void)
-{
-return tgetent ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_lib_termcap_tgetent=yes
-else $as_nop
-  ac_cv_lib_termcap_tgetent=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_termcap_tgetent" >&5
-printf "%s\n" "$ac_cv_lib_termcap_tgetent" >&6; }
-if test "x$ac_cv_lib_termcap_tgetent" = xyes
-then :
-  termlib="-ltermcap"
-else $as_nop
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for tgetent in -ltermlib" >&5
-printf %s "checking for tgetent in -ltermlib... " >&6; }
-if test ${ac_cv_lib_termlib_tgetent+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-ltermlib  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char tgetent ();
-int
-main (void)
-{
-return tgetent ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_lib_termlib_tgetent=yes
-else $as_nop
-  ac_cv_lib_termlib_tgetent=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_termlib_tgetent" >&5
-printf "%s\n" "$ac_cv_lib_termlib_tgetent" >&6; }
-if test "x$ac_cv_lib_termlib_tgetent" = xyes
-then :
-  termlib="-ltermlib"
-else $as_nop
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for tgetent in -lcurses" >&5
-printf %s "checking for tgetent in -lcurses... " >&6; }
-if test ${ac_cv_lib_curses_tgetent+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lcurses  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char tgetent ();
-int
-main (void)
-{
-return tgetent ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_lib_curses_tgetent=yes
-else $as_nop
-  ac_cv_lib_curses_tgetent=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_curses_tgetent" >&5
-printf "%s\n" "$ac_cv_lib_curses_tgetent" >&6; }
-if test "x$ac_cv_lib_curses_tgetent" = xyes
-then :
-  termlib="-lcurses"
-fi
-
-fi
-
-fi
-
-LIBS=$realLIBS
-
-  for ac_func in strftime
-do :
-  ac_fn_c_check_func "$LINENO" "strftime" "ac_cv_func_strftime"
-if test "x$ac_cv_func_strftime" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRFTIME 1" >>confdefs.h
-
-else $as_nop
-  # strftime is in -lintl on SCO UNIX.
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for strftime in -lintl" >&5
-printf %s "checking for strftime in -lintl... " >&6; }
-if test ${ac_cv_lib_intl_strftime+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lintl  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char strftime ();
-int
-main (void)
-{
-return strftime ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_lib_intl_strftime=yes
-else $as_nop
-  ac_cv_lib_intl_strftime=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_intl_strftime" >&5
-printf "%s\n" "$ac_cv_lib_intl_strftime" >&6; }
-if test "x$ac_cv_lib_intl_strftime" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRFTIME 1" >>confdefs.h
-
-LIBS="-lintl $LIBS"
-fi
-
-fi
-
-done
-# The Ultrix 4.2 mips builtin alloca declared by alloca.h only works
-# for constant arguments.  Useless!
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for working alloca.h" >&5
-printf %s "checking for working alloca.h... " >&6; }
-if test ${ac_cv_working_alloca_h+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <alloca.h>
-int
-main (void)
-{
-char *p = (char *) alloca (2 * sizeof (int));
-			  if (p) return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_working_alloca_h=yes
-else $as_nop
-  ac_cv_working_alloca_h=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_working_alloca_h" >&5
-printf "%s\n" "$ac_cv_working_alloca_h" >&6; }
-if test $ac_cv_working_alloca_h = yes; then
-
-printf "%s\n" "#define HAVE_ALLOCA_H 1" >>confdefs.h
-
-fi
-
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for alloca" >&5
-printf %s "checking for alloca... " >&6; }
-if test ${ac_cv_func_alloca_works+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  if test $ac_cv_working_alloca_h = yes; then
-  ac_cv_func_alloca_works=yes
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdlib.h>
-#include <stddef.h>
-#ifndef alloca
-# ifdef __GNUC__
-#  define alloca __builtin_alloca
-# elif defined _MSC_VER
-#  include <malloc.h>
-#  define alloca _alloca
-# else
-#  ifdef  __cplusplus
-extern "C"
-#  endif
-void *alloca (size_t);
-# endif
-#endif
-
-int
-main (void)
-{
-char *p = (char *) alloca (1);
-				    if (p) return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_func_alloca_works=yes
-else $as_nop
-  ac_cv_func_alloca_works=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_alloca_works" >&5
-printf "%s\n" "$ac_cv_func_alloca_works" >&6; }
-fi
-
-if test $ac_cv_func_alloca_works = yes; then
-
-printf "%s\n" "#define HAVE_ALLOCA 1" >>confdefs.h
-
-else
-  # The SVR3 libPW and SVR4 libucb both contain incompatible functions
-# that cause trouble.  Some versions do not even contain alloca or
-# contain a buggy version.  If you still want to use their alloca,
-# use ar to extract alloca.o from them instead of compiling alloca.c.
-
-ALLOCA=\${LIBOBJDIR}alloca.$ac_objext
-
-printf "%s\n" "#define C_ALLOCA 1" >>confdefs.h
-
-
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking stack direction for C alloca" >&5
-printf %s "checking stack direction for C alloca... " >&6; }
-if test ${ac_cv_c_stack_direction+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  if test "$cross_compiling" = yes
-then :
-  ac_cv_c_stack_direction=0
-else $as_nop
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$ac_includes_default
-int
-find_stack_direction (int *addr, int depth)
-{
-  int dir, dummy = 0;
-  if (! addr)
-    addr = &dummy;
-  *addr = addr < &dummy ? 1 : addr == &dummy ? 0 : -1;
-  dir = depth ? find_stack_direction (addr, depth - 1) : 0;
-  return dir + dummy;
-}
-
-int
-main (int argc, char **argv)
-{
-  return find_stack_direction (0, argc + !argv + 20) < 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"
-then :
-  ac_cv_c_stack_direction=1
-else $as_nop
-  ac_cv_c_stack_direction=-1
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_stack_direction" >&5
-printf "%s\n" "$ac_cv_c_stack_direction" >&6; }
-printf "%s\n" "#define STACK_DIRECTION $ac_cv_c_stack_direction" >>confdefs.h
-
-
-fi
-
-ac_func=
-for ac_item in $ac_func_c_list
-do
-  if test $ac_func; then
-    ac_fn_c_check_func "$LINENO" $ac_func ac_cv_func_$ac_func
-    if eval test \"x\$ac_cv_func_$ac_func\" = xyes; then
-      echo "#define $ac_item 1" >> confdefs.h
-    fi
-    ac_func=
-  else
-    ac_func=$ac_item
-  fi
-done
-
-if test "x$ac_cv_func_vprintf" = xno
-then :
-  ac_fn_c_check_func "$LINENO" "_doprnt" "ac_cv_func__doprnt"
-if test "x$ac_cv_func__doprnt" = xyes
-then :
-
-printf "%s\n" "#define HAVE_DOPRNT 1" >>confdefs.h
-
-fi
-
-fi
-ac_fn_c_check_func "$LINENO" "snprintf" "ac_cv_func_snprintf"
-if test "x$ac_cv_func_snprintf" = xyes
-then :
-  printf "%s\n" "#define HAVE_SNPRINTF 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strtol" "ac_cv_func_strtol"
-if test "x$ac_cv_func_strtol" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRTOL 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strtod" "ac_cv_func_strtod"
-if test "x$ac_cv_func_strtod" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRTOD 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strtoul" "ac_cv_func_strtoul"
-if test "x$ac_cv_func_strtoul" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRTOUL 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "random" "ac_cv_func_random"
-if test "x$ac_cv_func_random" = xyes
-then :
-  printf "%s\n" "#define HAVE_RANDOM 1" >>confdefs.h
-
-fi
 ac_fn_c_check_func "$LINENO" "fmod" "ac_cv_func_fmod"
 if test "x$ac_cv_func_fmod" = xyes
 then :
   printf "%s\n" "#define HAVE_FMOD 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strcasecmp" "ac_cv_func_strcasecmp"
-if test "x$ac_cv_func_strcasecmp" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRCASECMP 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strerror" "ac_cv_func_strerror"
-if test "x$ac_cv_func_strerror" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRERROR 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "bcopy" "ac_cv_func_bcopy"
-if test "x$ac_cv_func_bcopy" = xyes
-then :
-  printf "%s\n" "#define HAVE_BCOPY 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strchr" "ac_cv_func_strchr"
-if test "x$ac_cv_func_strchr" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRCHR 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strstr" "ac_cv_func_strstr"
-if test "x$ac_cv_func_strstr" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRSTR 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strtok" "ac_cv_func_strtok"
-if test "x$ac_cv_func_strtok" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRTOK 1" >>confdefs.h
 
 fi
 ac_fn_c_check_func "$LINENO" "gettimeofday" "ac_cv_func_gettimeofday"
@@ -7059,40 +6579,10 @@ then :
   printf "%s\n" "#define HAVE_GETTIMEOFDAY 1" >>confdefs.h
 
 fi
-ac_fn_c_check_func "$LINENO" "ftime" "ac_cv_func_ftime"
-if test "x$ac_cv_func_ftime" = xyes
-then :
-  printf "%s\n" "#define HAVE_FTIME 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "fsync" "ac_cv_func_fsync"
-if test "x$ac_cv_func_fsync" = xyes
-then :
-  printf "%s\n" "#define HAVE_FSYNC 1" >>confdefs.h
-
-fi
 ac_fn_c_check_func "$LINENO" "setrlimit" "ac_cv_func_setrlimit"
 if test "x$ac_cv_func_setrlimit" = xyes
 then :
   printf "%s\n" "#define HAVE_SETRLIMIT 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "wait3" "ac_cv_func_wait3"
-if test "x$ac_cv_func_wait3" = xyes
-then :
-  printf "%s\n" "#define HAVE_WAIT3 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "waitpid" "ac_cv_func_waitpid"
-if test "x$ac_cv_func_waitpid" = xyes
-then :
-  printf "%s\n" "#define HAVE_WAITPID 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "sys_errlist" "ac_cv_func_sys_errlist"
-if test "x$ac_cv_func_sys_errlist" = xyes
-then :
-  printf "%s\n" "#define HAVE_SYS_ERRLIST 1" >>confdefs.h
 
 fi
 ac_fn_c_check_func "$LINENO" "tzset" "ac_cv_func_tzset"
@@ -7107,12 +6597,6 @@ then :
   printf "%s\n" "#define HAVE_SETSID 1" >>confdefs.h
 
 fi
-ac_fn_c_check_func "$LINENO" "timezone" "ac_cv_func_timezone"
-if test "x$ac_cv_func_timezone" = xyes
-then :
-  printf "%s\n" "#define HAVE_TIMEZONE 1" >>confdefs.h
-
-fi
 ac_fn_c_check_func "$LINENO" "on_exit" "ac_cv_func_on_exit"
 if test "x$ac_cv_func_on_exit" = xyes
 then :
@@ -7123,12 +6607,6 @@ ac_fn_c_check_func "$LINENO" "atexit" "ac_cv_func_atexit"
 if test "x$ac_cv_func_atexit" = xyes
 then :
   printf "%s\n" "#define HAVE_ATEXIT 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "sighold" "ac_cv_func_sighold"
-if test "x$ac_cv_func_sighold" = xyes
-then :
-  printf "%s\n" "#define HAVE_SIGHOLD 1" >>confdefs.h
 
 fi
 ac_fn_c_check_func "$LINENO" "getrusage" "ac_cv_func_getrusage"
@@ -7143,12 +6621,6 @@ then :
   printf "%s\n" "#define HAVE_GETLOADAVG 1" >>confdefs.h
 
 fi
-ac_fn_c_check_func "$LINENO" "mallopt" "ac_cv_func_mallopt"
-if test "x$ac_cv_func_mallopt" = xyes
-then :
-  printf "%s\n" "#define HAVE_MALLOPT 1" >>confdefs.h
-
-fi
 ac_fn_c_check_func "$LINENO" "gethostname" "ac_cv_func_gethostname"
 if test "x$ac_cv_func_gethostname" = xyes
 then :
@@ -7159,18 +6631,6 @@ ac_fn_c_check_func "$LINENO" "uname" "ac_cv_func_uname"
 if test "x$ac_cv_func_uname" = xyes
 then :
   printf "%s\n" "#define HAVE_UNAME 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "getdtablesize" "ac_cv_func_getdtablesize"
-if test "x$ac_cv_func_getdtablesize" = xyes
-then :
-  printf "%s\n" "#define HAVE_GETDTABLESIZE 1" >>confdefs.h
-
-fi
-ac_fn_c_check_func "$LINENO" "strcasestr" "ac_cv_func_strcasestr"
-if test "x$ac_cv_func_strcasestr" = xyes
-then :
-  printf "%s\n" "#define HAVE_STRCASESTR 1" >>confdefs.h
 
 fi
 ac_fn_c_check_func "$LINENO" "getopt_long" "ac_cv_func_getopt_long"
@@ -7192,30 +6652,6 @@ then :
 
 fi
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking if programs can declare prototypes for getpwent suite" >&5
-printf %s "checking if programs can declare prototypes for getpwent suite... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <sys/types.h>
-extern struct passwd *getpwuid();
-int
-main (void)
-{
-struct passwd *z; z = getpwuid(0);
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"
-then :
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-printf "%s\n" "yes" >&6; }
-else $as_nop
-  printf "%s\n" "#define HAVE_GETPW_DECLS 1" >>confdefs.h
- { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: nope" >&5
-printf "%s\n" "nope" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether struct tm is in sys/time.h or time.h" >&5
 printf %s "checking whether struct tm is in sys/time.h or time.h... " >&6; }
 if test ${ac_cv_struct_tm+y}
@@ -7399,41 +6835,6 @@ printf "%s\n" "#define HAVE_TZNAME 1" >>confdefs.h
   fi
 fi
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking union wait" >&5
-printf %s "checking union wait... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <sys/types.h>
-#include <sys/wait.h>
-int
-main (void)
-{
-union wait status; int pid; pid = wait (&status);
-#ifdef WEXITSTATUS
-/* Some POSIXoid systems have both the new-style macros and the old
-   union wait type, and they do not work together.  If union wait
-   conflicts with WEXITSTATUS et al, we don't want to use it at all.  */
-if (WEXITSTATUS (status) != 0) pid = -1;
-#endif
-#ifdef HAVE_WAITPID
-/* Make sure union wait works with waitpid.  */
-pid = waitpid (-1, &status, 0);
-#endif
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"
-then :
-  printf "%s\n" "#define HAVE_UNION_WAIT 1" >>confdefs.h
- { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: found" >&5
-printf "%s\n" "found" >&6; }
-else $as_nop
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: not found" >&5
-printf "%s\n" "not found" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for struct linger" >&5
 printf %s "checking for struct linger... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -7593,11 +6994,6 @@ printf "%s\n" "$as_me: WARNING: this package requires at least GDBM version 1.7.
 fi
 
 fi
-
-
-
-
-
 ac_config_files="$ac_config_files Makefile compat/Makefile sha/Makefile"
 
 cat >confcache <<\_ACEOF
